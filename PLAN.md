@@ -29,7 +29,14 @@ Blah
 - RAM
 - GFX
 - HDD
-- Optical drives
-- Mouse & keyboard combo *optional*
-- OS
+- Optical drive
+- OS incl. Ubuntu ;)
 
+#### Optional product components
+
+- Display
+- Mouse & keyboard
+- Additional optical drives
+- External storage
+- Microsoft Office
+- Game bundles
