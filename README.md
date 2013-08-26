@@ -33,6 +33,7 @@ Plans, notes, etc.
 #### Post types
 
 - **product -** Product
+- **component -** Product component (CPU, OS, etc)
 - **cart -** Shopping cart
 - **lineitem -** Shopping cart line item
 - **invoice -** Customer invoice/receipt
