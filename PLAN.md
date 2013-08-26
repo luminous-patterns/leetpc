@@ -25,6 +25,7 @@ LEETPC Plan
 - RAM
 - GFX
 - HDD
+- Sound
 - Optical drive
 - OS incl. Ubuntu ;)
 
