@@ -1,11 +1,13 @@
 LEETPC WordPress Source
 ======
 
-### Beware
+Beware
+------
 
 This repo contains the code (wordpress plugins and themes) that power LEETPC.  Use your access wisely.
 
-### Plans, notes, etc.
+Plans, notes, etc.
+-------
 
 #### Order flow
 
