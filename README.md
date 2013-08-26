@@ -6,6 +6,19 @@ Beware
 
 This repo contains the code (wordpress plugins and themes) that power LEETPC.  Use your access wisely.
 
+Useful links
+------
+
+#### Internal
+www.leetpc.com.au
+www.leetpc.com.au/wp-admin
+www.leetpc.com.au/cpanel
+
+#### External
+www.wordpress.org
+www.html5blank.com
+www.integratedweb.com.au
+
 Plans, notes, etc.
 -------
 
