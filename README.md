@@ -10,14 +10,14 @@ Useful links
 ------
 
 #### Internal
-www.leetpc.com.au
-www.leetpc.com.au/wp-admin
-www.leetpc.com.au/cpanel
+- www.leetpc.com.au
+- www.leetpc.com.au/wp-admin
+- www.leetpc.com.au/cpanel
 
 #### External
-www.wordpress.org
-www.html5blank.com
-www.integratedweb.com.au
+- www.wordpress.org
+- www.html5blank.com
+- www.integratedweb.com.au
 
 Plans, notes, etc.
 -------
