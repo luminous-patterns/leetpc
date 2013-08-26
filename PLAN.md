@@ -12,9 +12,17 @@ LEETPC Plan
 7. PC is built and shipped to happy customer
 8. $$$
 
+#### All computers come with minimum
+
+- 3x USB 2.0
+- 3x USB 3.0
+- 5.1 HD Audio
+- DVI
+- HDMI (video output)
+
 #### Types of computer (Products)
 
-- Budget PC [$300 - $900]
+- Budget PC [$450 - $900]
 - Pro PC [$700 - $1,200]
 - Enterprise PC [$1,000 - $3,000]
 - Gaming & Media PC [$1,500 - $4,500]
@@ -25,12 +33,12 @@ LEETPC Plan
 - RAM
 - GFX
 - HDD
-- Sound
 - Optical drive
 - OS incl. Ubuntu ;)
 
 #### Optional product components
 
+- Sound
 - Display
 - Mouse & keyboard
 - Additional optical drives
