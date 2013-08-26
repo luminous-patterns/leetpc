@@ -30,6 +30,25 @@ Plans, notes, etc.
 4. **/order -** The page where names are taken, and credit cards are processed
 5. **/order/success -** The page shown to the lucky punters whom's payment has been accepted
 
+#### Post types
+
+- **product -** Product
+- **cart -** Shopping cart
+- **lineitem -** Shopping cart line item
+- **invoice -** Customer invoice/receipt
+
+#### Pages needed
+
+- **/choose** Product selection
+- **/contact-us** General contact
+- **/customer-care** Customer care (contact)
+- **/customize/*PRODUCT_NUMBER*** Customize product
+- **/invoice/*INVOICE_NUMBER*** Invoice details
+- **/my-cart** Customer's shopping cart
+- **/product/*PRODUCT_NUMBER*** Product information
+- **/order** Order form
+- **/order/success** Order success
+
 #### Designs / templates
 
 - Main (wrapper/header/footer) template
