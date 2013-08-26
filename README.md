@@ -1,4 +1,4 @@
-leetpc
+LEETPC WordPress Source
 ======
 
 ### Beware
