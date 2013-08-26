@@ -1,10 +1,6 @@
 LEETPC Plan
 ===========
 
-#### The jist
-
-Blah
-
 #### How it works
 
 1. Customer visits www.leetpc.com.au
@@ -16,12 +12,12 @@ Blah
 7. PC is built and shipped to happy customer
 8. $$$
 
-#### Types of computer
+#### Types of computer (Products)
 
-- Budget [$300 - $900]
-- Pro [$700 - $1,200]
-- Enterprise [$1,000 - $3,000]
-- Gaming & Media [$1,500 - $4,500]
+- Budget PC [$300 - $900]
+- Pro PC [$700 - $1,200]
+- Enterprise PC [$1,000 - $3,000]
+- Gaming & Media PC [$1,500 - $4,500]
 
 #### Product components
 
