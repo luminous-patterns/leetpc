@@ -29,7 +29,7 @@ html {
 	font-size:62.5%;
 }
 body {
-	font:300 11px/1.4 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font: 300 14px/1.5 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	color:#444;
 	background-color: #111;
 }
@@ -79,9 +79,8 @@ input:focus {
 	width: 900px;
 	margin:0 auto;
 	position:relative;
-	background-color: #fff;
+	background: #fff linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(255,255,255,0.9) 20px,rgba(255,255,255,0) 100%);
 	display: block;
-	border-radius: 5px 5px 0 0;
 	min-height: 600px;
 	padding: 20px 240px 100px 20px;
 }
@@ -93,18 +92,68 @@ section {
 .header {
 	width: 900px;
 	margin: 0 auto;
+	position: relative;
+}
+.header a.cart {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    color: #eee;
+    font-family: 'Oxygen-Regular';
+    line-height: 30px;
+}
+.header a.cart span {
+    font-size: 0.8em;
+    color: #999;
 }
 /* logo */
 .logo {
 	display: block;
-	margin: 10px 0;
+	margin: 20px 0;
 }
 .logo-img {
 	height: 30px;
 }
 /* nav */
 .nav {
-	
+	font-family: 'Oxygen-Bold', sans-serif;
+	/* text-transform: uppercase; */
+	background: linear-gradient(to bottom, rgba(100,100,100,1) 0%,rgba(70,70,70,1) 48%,rgba(50,50,50,1) 49%,rgba(41,41,41,1) 100%);
+	line-height: 38px;
+	border-radius: 2px 2px 0 0;
+	border-bottom: 1px solid #00;
+	font-size: 0.8em;
+	height: 41px;
+	border-left: 1px solid rgba(255,255,255,0.2);
+	border-top: 1px solid rgba(255,255,255,0.4);
+	border-right: 1px solid rgba(0,0,0,0.2);
+}
+.nav li {
+    display: inline-block;
+    font-size: 1.2em;
+    border-right: 1px solid rgba(0,0,0,0.2);
+    border-left: 1px solid rgba(255,255,255,0.2);
+    float: left;
+}
+.nav li:first-of-type {
+	border-left: none;
+}
+.nav ul {
+	padding: 0;
+	margin: 0;
+	height: 40px;
+	border-right: 1px solid rgba(255,255,255,0.2);
+	display: inline-block;
+}
+.nav a {
+	color: #ddd;
+	padding: 0 20px;
+	display: inline-block;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
+}
+.nav a:hover {
+	color: #fff;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.4), 0 0 10px rgba(255,255,255,0.3);
 }
 /* sidebar */
 .sidebar {
@@ -114,6 +163,7 @@ section {
 	bottom: 0px;
 	/* overflow: hidden; */
 	width: 200px;
+	font-size: 0.85em;
 }
 /* footer */
 .footer {
@@ -124,6 +174,7 @@ section {
 	bottom: 0;
 	left: 0;
 	right: 0;
+	font-size: 0.8em;
 }
 .footer a {
 	color: #ddd;
@@ -146,19 +197,26 @@ section {
 \*------------------------------------*/
 
 @font-face {
-	font-family:'Font-Name';
-	src:url('fonts/font-name.eot');
-	src:url('fonts/font-name.eot?#iefix') format('embedded-opentype'),
-		url('fonts/font-name.woff') format('woff'),
-		url('fonts/font-name.ttf') format('truetype'),
-		url('fonts/font-name.svg#font-name') format('svg');
+	font-family:'Oxygen-Regular';
+	src:url('fonts/Oxygen-Regular.tff');
+	src:url('fonts/Oxygen-Regular.ttf') format('truetype');
+    font-weight:normal;
+    font-style:normal;
+}
+@font-face {
+	font-family:'Oxygen-Bold';
+	src:url('fonts/Oxygen-Bold.tff');
+	src:url('fonts/Oxygen-Bold.ttf') format('truetype');
     font-weight:normal;
     font-style:normal;
 }
 h1 {
+	color: #a71966;
+	font-family: 'Oxygen-Bold', sans-serif;
+	font-size: 2.5em;
+	font-weight: normal;
+	line-height: 1em;
     margin: 0 0 0.67em;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 0.5em;
 }
 
 /*------------------------------------*\
