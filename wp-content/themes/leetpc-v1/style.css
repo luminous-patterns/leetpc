@@ -31,6 +31,7 @@ html {
 body {
 	font:300 11px/1.4 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	color:#444;
+	background-color: #111;
 }
 /* clear */
 .clear:before,
@@ -75,20 +76,31 @@ input:focus {
 /* wrapper */
 .wrapper {
 	max-width:1280px;
-	width:95%;
+	width: 900px;
 	margin:0 auto;
 	position:relative;
+	background-color: #fff;
+	display: block;
+	border-radius: 5px 5px 0 0;
+	min-height: 600px;
+	padding: 20px 240px 100px 20px;
+}
+section {
+	/* margin-right: 220px; */
+	/* padding: 20px; */
 }
 /* header */
 .header {
-	
+	width: 900px;
+	margin: 0 auto;
 }
 /* logo */
 .logo {
-	
+	display: block;
+	margin: 10px 0;
 }
 .logo-img {
-	
+	height: 30px;
 }
 /* nav */
 .nav {
@@ -96,11 +108,25 @@ input:focus {
 }
 /* sidebar */
 .sidebar {
-	
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	bottom: 0px;
+	/* overflow: hidden; */
+	width: 200px;
 }
 /* footer */
 .footer {
-	
+	background-color: #444;
+	padding: 10px 20px;
+	color: #aaa;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+.footer a {
+	color: #ddd;
 }
 
 /*------------------------------------*\
@@ -128,6 +154,11 @@ input:focus {
 		url('fonts/font-name.svg#font-name') format('svg');
     font-weight:normal;
     font-style:normal;
+}
+h1 {
+    margin: 0 0 0.67em;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5em;
 }
 
 /*------------------------------------*\
