@@ -6,29 +6,21 @@ Description: LEETPC Store functionality for WordPress
 Author: Cal Milne
 Version: 1.0.0
 Author URI: http://www.leetpc.com.au
-Copyright 2012 Integrated Web Services
+Copyright 2013 Cal Milne
 */
 
 /**
- * Functions, taxonomies, rewrites, metaboxes, etc.
+ * Include our core functions
  **/
-
-require_once( 'registry.php' );
-require_once( 'functions.php' );
-require_once( 'taxonomies.php' );
-require_once( 'rewrites.php' );
-require_once( 'metaboxes.php' );
+include_once( 'functions.php' );
+include_once( 'taxonomies.php' );
 
 /**
- * Main class
+ * Include the main library
  **/
-
-require_once( 'leetpcstore.class.php' );
+include_once( 'leetpcstore.class.php' );
 
 /**
- * Initialize
+ * Get started!
  **/
-
-$leetPcStore = new leetPcStore();
-
-$leetPcStore->init();
+new leetPcStore();
