@@ -57,3 +57,16 @@ PC10813-XG9
 - External storage
 - Microsoft Office
 - Game bundles
+
+#### Custom fields
+
+##### PRODUCTS
+
+- $ Price
+
+##### COMPONENTS
+
+- Manufacturer Website Link
+- $ Price
+- $ RRP
+- $ Internal
