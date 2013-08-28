@@ -252,11 +252,20 @@ input:focus {
     display: inline-block;
     margin-top: 2px;
 }
-.single-product .add-to-cart {
-    line-height: 2em;
+.single-product button {
+    line-height: 31px;
     vertical-align: top;
     margin: 0;
     padding: 0 10px;
+    background: linear-gradient(to bottom, rgba(200,50,150,1) 0%,rgba(160,30,120,1) 48%,rgba(120,30,100,1) 49%,rgba(70,15,70,1) 100%);
+    color: #fff;
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.4);
+    font-family: oxygen;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-left: 10px;
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
 }
 .single-product .product-type {
     color: #999;
@@ -266,6 +275,12 @@ input:focus {
 }
 .single-product .product-config input[type="radio"] {
     margin-right: 5px;
+}
+.single-product .customizing .product-price .customize {
+	display: none;
+}
+.single-product .customizing .editor-content {
+	display: none;
 }
 /* choose pc */
 .page.choose .wrapper {

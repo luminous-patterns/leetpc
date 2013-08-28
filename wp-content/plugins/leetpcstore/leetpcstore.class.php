@@ -147,11 +147,11 @@ class leetPcStore {
 	 */
 	public function initAdmin() {
 
-		wp_register_style( $this->_name . '-css', $this->_url . 'css/admin.css' );
-		wp_register_script( $this->_name . '-js', $this->_url . 'js/admin.js', $this->_admin_js_dependencies, $this->_admin_js_revision );
+		wp_register_style( $this->_name . '-admin-css', $this->_url . 'css/admin.css' );
+		wp_register_script( $this->_name . '-admin-js', $this->_url . 'js/admin.js', $this->_admin_js_dependencies, $this->_admin_js_revision );
 		
-		wp_enqueue_style( $this->_name . '-css' );
-		wp_enqueue_script( $this->_name . '-js' );
+		wp_enqueue_style( $this->_name . '-admin-css' );
+		wp_enqueue_script( $this->_name . '-admin-js' );
 
 	}
 

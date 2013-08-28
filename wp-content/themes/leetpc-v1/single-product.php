@@ -1,4 +1,29 @@
 <?php get_header(); ?>
+
+	<?php
+
+	$product = get_post_custom();
+
+	$component_ids = explode( ',', $product['components'][0] );
+
+	$components = array();
+
+	foreach ( $component_ids as $id ) {
+
+		$def = preg_match( '/\*$/', $id );
+		$id = $def ? substr( $id, 10, -1 ) : substr( $id, 10 );
+
+		$c = get_post( $id );
+
+		$terms = get_the_terms( $c->ID, 'component_group' );
+		$terms_keys = array_keys( $terms );
+		list( $type, $sub_type ) = explode( '-', $terms[$terms_keys[0]]->slug );
+
+		$components[$type][] = $c;
+
+	}
+
+	?>
 	
 	<section role="main">
 	
@@ -18,9 +43,9 @@
 
 			<div class="product-price">
 				<div class="amount">
-					$2,499.00
+					$<?php echo number_format( $product['price'][0] ); ?>
 				</div>
-				<button class="add-to-cart">Customise &amp; Buy</button>
+				<button class="customize">Customize &amp; Buy</button>
 			</div>
 			
 			<div class="product-type"><?php $cat = get_terms( 'product_type' ); echo $cat[1]->name; ?> Series</div>
@@ -31,7 +56,7 @@
 
 			</div>
 
-			<h2>Default PC configuration</h2>
+			<h2>Default specifications</h2>
 
 			<div class="product-config">
 

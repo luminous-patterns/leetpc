@@ -12,13 +12,14 @@ Copyright 2013 Cal Milne
 /**
  * Include our core functions
  **/
-include_once( 'functions.php' );
-include_once( 'taxonomies.php' );
+require_once( 'functions.php' );
+require_once( 'taxonomies.php' );
+require_once( 'metaboxes.php' );
 
 /**
  * Include the main library
  **/
-include_once( 'leetpcstore.class.php' );
+require_once( 'leetpcstore.class.php' );
 
 /**
  * Get started!

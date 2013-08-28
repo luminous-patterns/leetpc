@@ -54,14 +54,37 @@ function leetpcstore_taxonomy_init() {
 			'publicly_queryable' => true,
 			'exclude_from_search' => false,
 			'hierarchical' => true,
-			'rewrite' => false,
-			//'rewrite' => array( 'slug' => 'product', 'with_front' => false ),
+			// 'rewrite' => true,
+			'rewrite' => array( 'slug' => 'product', 'with_front' => false ),
 			'query_var' => true,
 			'supports' => array( 'title', 'editor', 'thumbnail', 'comments', 'revisions', 'page-attributes' ),
 			'has_archive' => false,
-			//'has_archive' => 'product',
+			'has_archive' => 'products',
 			'show_in_nav_menus' => true,
 			'menu_position' => 25
+		)
+	);
+
+	// Component Groups
+	register_taxonomy( 'component_group',
+		array( 'component' ),
+		array(
+			'hierarchical' => true,
+			'labels' => array(
+				'name' => 'Component Groups',
+				'singular_name' => 'Component Group',
+				'search_items' =>  'Search Component Groups',
+				'all_items' => 'All Component Groups',
+				'parent_item' => 'Parent Component Group',
+				'parent_item_colon' => 'Parent Component Group:',
+				'edit_item' => 'Edit Group',
+				'update_item' => 'Update Group',
+				'add_new_item' => 'Add New Group',
+				'new_item_name' => 'New Group Name'
+			),
+			'show_ui' => true,
+			'query_var' => true,
+			'rewrite' => false,
 		)
 	);
 
