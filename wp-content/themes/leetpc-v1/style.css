@@ -29,7 +29,7 @@ html {
 	font-size:62.5%;
 }
 body {
-	font: 300 14px/1.5 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font: normal 14px/1.5 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	color:#444;
 	background-color: #111;
 }
@@ -51,7 +51,7 @@ img {
 	vertical-align:bottom;
 }
 a {
-	color:#444;
+	color: #a71966;
 	text-decoration:none;
 }
 a:hover {
@@ -84,9 +84,10 @@ input:focus {
 	min-height: 600px;
 	padding: 20px 240px 100px 20px;
 }
-section {
-	/* margin-right: 220px; */
-	/* padding: 20px; */
+.editor-content {
+	font-family: roboto;
+	line-height: 1.6em;
+	color: #777;
 }
 /* header */
 .header {
@@ -99,7 +100,7 @@ section {
     top: 20px;
     right: 0;
     color: #eee;
-    font-family: 'Oxygen-Regular';
+    font-family: oxygen;
     line-height: 30px;
 }
 .header a.cart span {
@@ -116,7 +117,8 @@ section {
 }
 /* nav */
 .nav {
-	font-family: 'Oxygen-Bold', sans-serif;
+	font-family: oxygen, sans-serif;
+	font-weight: bold;
 	/* text-transform: uppercase; */
 	background: linear-gradient(to bottom, rgba(100,100,100,1) 0%,rgba(70,70,70,1) 48%,rgba(50,50,50,1) 49%,rgba(41,41,41,1) 100%);
 	line-height: 38px;
@@ -184,6 +186,91 @@ section {
     PAGES
 \*------------------------------------*/
 
+/* single product */
+.single-product .wrapper {
+	padding-right: 20px;
+	padding-left: 290px;
+}
+.single-product .product-config {
+    margin-bottom: 1em;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+.single-product .product-config table {
+    width: 100%;
+}
+.single-product .product-config td {
+    border-left: 1px solid #ddd;
+    font-size: 0.9em;
+    padding: 10px 15px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    background-color: #fff;
+    font-family: oxygen;
+    line-height: 26px;
+    position: relative;
+}
+.single-product .product-config td.first-row {
+    border-top: 1px solid #eee;
+}
+.single-product .product-config th {
+    font-size: 0.8em;
+    text-align: right;
+    width: 140px;
+    padding: 0 15px 0 0;
+    color: #555;
+    font-family: oxygen;
+    font-weight: bold;
+    vertical-align: top;
+    line-height: 25px;
+    padding: 10px 15px 10px 10px;
+    background-color: #f3f3f3;
+}
+.single-product .product-config td a {
+    color: #aaa;
+    font-size: 0.8em;
+    float: right;
+}
+.single-product .product-config td a:hover {
+	color: #027;
+}
+.single-product .wp-post-image {
+	position: absolute;
+	left: 20px;
+	top: 20px;
+	width: 250px;
+}
+.single-product .product-price {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-align: right;
+}
+.single-product .product-price .amount {
+	font-family: oxygen, sans-serif;
+    font-size: 2em;
+    line-height: 1em;
+    display: inline-block;
+    margin-top: 2px;
+}
+.single-product .add-to-cart {
+    line-height: 2em;
+    vertical-align: top;
+    margin: 0;
+    padding: 0 10px;
+}
+.single-product .product-type {
+    color: #999;
+    font-family: oxygen;
+    font-size: 0.9em;
+    margin-top: 0.4em;
+}
+.single-product .product-config input[type="radio"] {
+    margin-right: 5px;
+}
+/* choose pc */
+.page.choose .wrapper {
+	padding-right: 20px;
+}
 
 
 /*------------------------------------*\
@@ -197,26 +284,47 @@ section {
 \*------------------------------------*/
 
 @font-face {
-	font-family:'Oxygen-Regular';
-	src:url('fonts/Oxygen-Regular.tff');
-	src:url('fonts/Oxygen-Regular.ttf') format('truetype');
-    font-weight:normal;
-    font-style:normal;
+	font-family: oxygen;
+	src: url('fonts/Oxygen-Regular.tff');
+	src: url('fonts/Oxygen-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 @font-face {
-	font-family:'Oxygen-Bold';
-	src:url('fonts/Oxygen-Bold.tff');
-	src:url('fonts/Oxygen-Bold.ttf') format('truetype');
-    font-weight:normal;
-    font-style:normal;
+	font-family: oxygen;
+	src: url('fonts/Oxygen-Bold.tff');
+	src: url('fonts/Oxygen-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+	font-family: roboto;
+	src: url('fonts/Roboto-Regular.tff');
+	src: url('fonts/Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+	font-family: roboto;
+	src: url('fonts/Roboto-Bold.tff');
+	src: url('fonts/Roboto-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
 }
 h1 {
 	color: #a71966;
-	font-family: 'Oxygen-Bold', sans-serif;
+	font-family: oxygen, sans-serif;
 	font-size: 2.5em;
-	font-weight: normal;
+	font-weight: bold;
 	line-height: 1em;
-    margin: 0 0 0.67em;
+    
+	margin: 0;
+}
+h2 {
+    font-family: oxygen;
+    font-weight: normal;
+    color: #999;
+    margin-top: 2em;
 }
 
 /*------------------------------------*\
@@ -392,8 +500,3 @@ a img.aligncenter {
 		orphans:3;
 		widows:3;
 	}
-	h2,
-	h3 {
-		page-break-after:avoid;
-	}
-}
