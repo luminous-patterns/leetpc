@@ -20,6 +20,18 @@ LEETPC Plan
 - DVI
 - HDMI (video output)
 
+#### PC Product Numbers
+
+**Example**
+PC10813-XG9
+
+- Two letter product type **PC**
+- The number **1**
+- Current month number (two digits) **08**
+- Current year number (last two digits) **13**
+- A hyphen '-'
+- The model number **XG9**
+
 #### Types of computer (Products)
 
 - Budget PC [$450 - $900]
