@@ -7,6 +7,7 @@
 	$component_ids = explode( ',', $product['components'][0] );
 
 	$components = array();
+	$defaults = array();
 
 	foreach ( $component_ids as $id ) {
 
@@ -20,6 +21,10 @@
 		list( $type, $sub_type ) = explode( '-', $terms[$terms_keys[0]]->slug );
 
 		$components[$type][] = $c;
+
+		if ( $def ) {
+			$defaults[$type] = $c;
+		}
 
 	}
 
@@ -45,7 +50,7 @@
 				<div class="amount">
 					$<?php echo number_format( $product['price'][0] ); ?>
 				</div>
-				<button class="customize">Customize &amp; Buy</button>
+				<button class="customize">Customize &amp; Order</button>
 			</div>
 			
 			<div class="product-type"><?php $cat = get_terms( 'product_type' ); echo $cat[1]->name; ?> Series</div>
@@ -65,20 +70,22 @@
 					<tr>
 						<th>CPU</th>
 						<td>
-							Intel Core i7 3930K (3.20Ghz / Six Core)
-							<!-- <a href="#">downgrade</a> -->
+							<!-- <?php echo $defaults['cpu']->post_title; ?> -->
+							<?php foreach ( $components['cpu'] as $cpu ) : ?>
+							<div><input type="radio" <?php if ( $defaults['cpu']->ID == $cpu->ID ) echo 'checked="checked"' ?> /> <?php echo $cpu->post_title; ?></div>
+							<?php endforeach; ?>
 						</td>
 					</tr>
 
 					<tr>
 						<th>Motherboard</th>
-						<td>ASUS SABERTOOTH-X79</td>
+						<td><?php echo $defaults['motherboard']->post_title; ?></td>
 					</tr>
 
 					<tr>
 						<th>Memory (RAM)</th>
 						<td>
-							16GB DDR3 1866MHz (G.Skill 4x4GB)
+							<?php echo $defaults['ram']->post_title; ?>
 							<!-- <a href="#">upgrade/downgrade</a> -->
 						</td>
 					</tr>
@@ -86,7 +93,7 @@
 					<tr>
 						<th>Primary HDD</th>
 						<td>
-							2x 1TB Seagate SATAIII
+							<?php echo $defaults['hdd']->post_title; ?>
 							<!-- <a href="#">upgrade/downgrade</a> -->
 						</td>
 					</tr>
@@ -94,7 +101,7 @@
 					<tr>
 						<th>Video (GFX)</th>
 						<td>
-							ASUS ROG Matrix 7970 Platinum
+							<?php echo $defaults['videocard']->post_title; ?>
 							<!-- <a href="#">upgrade/downgrade</a> -->
 						</td>
 					</tr>
@@ -102,7 +109,7 @@
 					<tr>
 						<th>Optical</th>
 						<td>
-							Pioneer 15x Blu-Ray Writer
+							<?php echo $defaults['optical']->post_title; ?>
 							<!-- <a href="#">upgrade</a> -->
 						</td>
 					</tr>
@@ -118,7 +125,7 @@
 					<tr>
 						<th>Operating System</th>
 						<td>
-							Windows 8 Ultimate
+							<?php echo $defaults['os']->post_title; ?>
 							<!-- <a href="#">upgrade/downgrade</a> -->
 						</td>
 					</tr>

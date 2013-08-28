@@ -10,7 +10,7 @@ var LEETPCStoreAdmin = {
 		jQuery( '#product_metabox .components-list .component' ).on( 'click', jQuery.proxy( this.calculatePrices, this ) );
 		jQuery( '#product_metabox .components-list .group .title' ).on( 'click', this.toggleGroup );
 
-		if ( this.comInputEl.length > 0 ) {
+		if ( this.comInputEl.length > 0 && this.comInputEl.val() ) {
 			this.importComponents();
 		}
 

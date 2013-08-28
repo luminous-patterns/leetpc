@@ -23,18 +23,17 @@
     border-bottom: none;
 }
 #product_metabox .components-list li.group .title {
-    background-color: #ddd;
+    background: linear-gradient(to top,#ececec,#f9f9f9);
     cursor: pointer;
     margin: 0;
     padding: 0 5px;
     line-height: 24px;
     font-weight: bold;
     border-bottom: 1px solid #ccc;
-    border-top: 1px solid #ccc;
     color: #333;
 }
 #product_metabox .components-list li.group.sub-group .title {
-    background-color: #eee;
+    background: #eee;
     border-top: none;
     font-weight: normal;
     font-size: 0.9em;
@@ -55,8 +54,8 @@
     color: #777;
 }
 #product_metabox .components-list li.group {
+    border-bottom: 1;
     padding: 0;
-    margin: 0;
 }
 #product_metabox .components-list input {
     margin-right: 5px;
@@ -69,6 +68,9 @@
     float: right;
     font-size: 0.9em;
     color: #999;
+}
+#product_metabox .components-list .sub-group ul {
+    border-bottom: 1px solid #ddd;
 }
 #product_metabox .loading-overlay {
     background-color: rgba(249,249,249,0.7);
