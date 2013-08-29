@@ -39,10 +39,10 @@ if ( get_post_type() == 'product' ) {
 		<input type="hidden" name="product-id" value="" />
 
 		<div class="form-header">
-			<h3 class="product-name">PC10813-XG9</h3>
+			<h3 class="product-name">Customize Product</h3>
 			<div class="sub-total">
 				<div class="amount">
-					&dollar;2,499.00
+					&dollar;<?php echo number_format( $product['price'][0] ); ?>
 				</div>
 			</div>
 		</div>

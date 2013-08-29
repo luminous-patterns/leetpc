@@ -62,6 +62,11 @@ if (function_exists('add_theme_support'))
 	Functions
 \*------------------------------------*/
 
+function customize_product_form( $product_id ) {
+    setup_postdata( $GLOBALS['post'] =& get_post( $product_id ) );
+    include( 'form-customize.php' );
+}
+
 // HTML5 Blank navigation
 function html5blank_nav()
 {

@@ -416,18 +416,33 @@ button.secondary {
 }
 .customize-form .component-table {
     border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
 .customize-form .component-table table {
     margin-top: 0px;
+    width: 100%;
 }
 .customize-form .component-table td {
     background-color: #f3f3f3;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-    border-bottom: 1px solid #bbb;
+    padding: 10px;
 }
 .customize-form .component-table th {
-    width: 200px;
-    border-right: 1px solid #c3c3c3;
+    width: 160px;
+    text-align: right;
+    padding: 10px;
+    background-color: #e5e5e5;
+    font-size: 0.85em;
+    font-family: oxygen;
+    border-right: 1px solid #bbb;
+}
+.customize-form .sub-total {
+    font-family: roboto;
+    font-size: 2em;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    line-height: 1;
+    color: #555;
 }
 
 

@@ -53,7 +53,7 @@
 				<button class="customize">Customize &amp; Order</button>
 			</div>
 			
-			<div class="product-type"><?php $cat = get_terms( 'product_type' ); echo $cat[1]->name; ?> Series</div>
+			<div class="product-type"><?php $cat = get_terms( 'product_type' ); echo $cat[1]->name; ?> PC</div>
 
 			<div class="editor-content">
 

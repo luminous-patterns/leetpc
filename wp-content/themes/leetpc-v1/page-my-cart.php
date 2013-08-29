@@ -81,6 +81,4 @@
 	</section>
 	<!-- /section -->
 
-	<?php include( 'form-customize.php' ); ?>
-
 <?php get_footer(); ?>

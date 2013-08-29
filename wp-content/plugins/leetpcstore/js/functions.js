@@ -28,7 +28,38 @@ var LEETPCStore = {
 	},
 
 	customizeProduct: function() {
-		alert( '/customize/' + window.location.pathname.split( '/' )[2] ); 
+
+		// alert( '/customize/' + window.location.pathname.split( '/' )[2] );
+
+		var that = this;
+		var product_id = this.postID;
+
+		var url = '/wp-admin/admin-ajax.php';
+		var opts = { 
+			method: 'post',
+			data: { 
+				action: 'get_customize_form',
+				product_id: product_id 
+			}, 
+			success: jQuery.proxy( that.openCustomizeForm, that )
+		};
+
+		jQuery.ajax( url, opts );
+
+	},
+
+	openCustomizeForm: function( r ) {
+
+		this.customizeFormEl = jQuery( r );
+
+		this.customizeFormEl.find( 'button.secondary' ).bind( 'click', jQuery.proxy( this.closeCustomizeForm, this ) );
+
+		jQuery( 'body' ).append( this.customizeFormEl );
+
+	},
+
+	closeCustomizeForm: function() {
+		this.customizeFormEl.remove();
 	},
 
 	updateCart: function( n ) {

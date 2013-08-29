@@ -95,6 +95,12 @@ class leetPcStore {
 		add_action( 'init',                                        array( &$this, 'init' ) );
 		add_action( 'admin_init',                                  array( &$this, 'initAdmin' ) );
 
+		add_action( 'wp_ajax_add_to_cart',                         array( &$this, 'addProductToCart' ) );
+		add_action( 'wp_ajax_nopriv_add_to_cart',                  array( &$this, 'addProductToCart' ) );
+
+		add_action( 'wp_ajax_get_customize_form',                  array( &$this, 'getCustomizeForm' ) );
+		add_action( 'wp_ajax_nopriv_get_customize_form',           array( &$this, 'getCustomizeForm' ) );
+
 		/*
 
 		add_action( 'init',                                        array( &$this, 'init' ) );
@@ -104,6 +110,30 @@ class leetPcStore {
 		add_action( 'wp_ajax_nopriv_METHOD_NAME',                  array( &$this, 'METHOD_NOPRIV' ) );
 
 		*/
+
+	}
+
+	private function echoJsonExit( $x ) {
+		header( 'Content-type: application/json' );
+		echo json_encode( $x );
+		exit;
+	}
+
+	public function getCustomizeForm() {
+		customize_product_form( $_POST['product_id'] );
+		exit;
+	}
+
+	public function addProductToCart() {
+
+		if ( !array_key_exists( 'product_id', $_POST ) ) {
+			$this->echoJsonExit( array( 'code' => 400, 'message' => 'Product ID not specified' ) );
+		}
+
+		$product_id = $_POST['product_id'];
+		$component_ids = array_key_exists( 'component_ids', $_POST ) ? $_POST['component_ids'] : array();
+
+		$this->echoJsonExit( array( 'code' => 200, 'product_id' => $product_id, 'components' => explode( ',', $component_ids ) ) );
 
 	}
 
