@@ -26,11 +26,13 @@
     background: linear-gradient(to top,#ececec,#f9f9f9);
     cursor: pointer;
     margin: 0;
-    padding: 0 5px;
-    line-height: 24px;
+    padding: 0 10px;
+    line-height: 34px;
     font-weight: bold;
     border-bottom: 1px solid #ccc;
     color: #333;
+    position: relative;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.6);
 }
 #product_metabox .components-list li.group.sub-group .title {
     background: #eee;
@@ -44,14 +46,18 @@
 #product_metabox .components-list li.group .title:hover {
     color: #139;
 }
-#product_metabox .components-list li.group-title:first-of-type {
-    border-top: none;
-}
 #product_metabox .components-list li.group .title .values {
     display: inline-block;
     font-size: 0.9em;
     font-weight: normal;
-    color: #777;
+    color: #999;
+    position: absolute;
+    left: 150px;
+}
+#product_metabox .components-list li.group .title .values strong {
+    color: #333;
+    font-weight: normal;
+    margin-right: 20px;
 }
 #product_metabox .components-list li.group {
     border-bottom: 1;

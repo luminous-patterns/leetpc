@@ -66,10 +66,25 @@ var LEETPCStoreAdmin = {
 
 		jQuery( '#product_metabox .components-list' ).find( 'li.group > div.title' ).each( function() {
 
-			jQuery( this ).find( '.values' ).html( '' );
+			var valuesEl = jQuery( this ).find( '.values' );
+
+			valuesEl.html( '' );
 
 			var group = jQuery( this ).text().toLowerCase();
-			jQuery( this ).find( '.values' ).html( that.getSelectedComponents( group ).join( ', ' ) );
+			var components = _.sortBy( that.getSelectedComponents( group ), function( i ) { return i.substr(-1) != '*'; } );
+			var componentNames = [];
+
+			for ( var i = 0; i < components.length; i++ ) {
+				
+				var comName = components[i];
+				var def = comName.substr( -1 ) == '*';
+
+				comName = jQuery( '.components-list li.' + comName.replace( '*', '' ) ).clone().find( 'label .cost' ).empty().parent().parent().text().trim();
+
+				if ( def ) valuesEl.prepend( jQuery( '<strong>' + comName + '</strong>' ) );
+				else valuesEl.append( comName + ( i < components.length - 1 ? ', ' : '' ) );
+
+			}
 
 		} );
 

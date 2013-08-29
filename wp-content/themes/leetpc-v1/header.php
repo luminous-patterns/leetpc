@@ -38,6 +38,7 @@
 			</div>
 			<!-- /logo -->
 
+			<a href="#" class="toggle-nav"></a>
 			<a href="/my-cart/" class="cart">My cart <span>| No items</span></a>
 			
 			<!-- nav -->

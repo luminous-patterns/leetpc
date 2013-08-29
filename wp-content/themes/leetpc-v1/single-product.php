@@ -70,10 +70,7 @@
 					<tr>
 						<th>CPU</th>
 						<td>
-							<!-- <?php echo $defaults['cpu']->post_title; ?> -->
-							<?php foreach ( $components['cpu'] as $cpu ) : ?>
-							<div><input type="radio" <?php if ( $defaults['cpu']->ID == $cpu->ID ) echo 'checked="checked"' ?> /> <?php echo $cpu->post_title; ?></div>
-							<?php endforeach; ?>
+							<?php echo $defaults['cpu']->post_title; ?>
 						</td>
 					</tr>
 

@@ -7,7 +7,7 @@
 		
 		add_meta_box(
 			'product_metabox', // HTML 'id' attribute of the edit screen section
-			'Method Details', // Title of the edit screen section, visible to user
+			'Product Meta', // Title of the edit screen section, visible to user
 			'product_metabox', // Function that prints out the HTML for the edit screen section.
 			'product', // The type of Write screen on which to show the edit screen section
 			'normal', // The part of the page where the edit screen section should be shown
@@ -189,7 +189,7 @@
 		
 		add_meta_box(
 			'component_metabox',
-			'Component Details',
+			'Component Meta',
 			'component_metabox',
 			'component',
 			'normal',
@@ -248,16 +248,16 @@
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="comp_attr[price]">Price $</label></th>
+				<th scope="row"><label for="comp_attr[cost]">Cost $</label></th>
 				<td>
-					<input type="text" name="comp_attr[price]" id="comp_attr[price]" class="regular-text" value="<?php echo $current['price']; ?>" />
+					<input type="text" name="comp_attr[cost]" id="comp_attr[cost]" class="regular-text" value="<?php echo $current['cost']; ?>" />
 				</td>
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="comp_attr[cost]">Cost $</label></th>
+				<th scope="row"><label for="comp_attr[price]">Price $</label></th>
 				<td>
-					<input type="text" name="comp_attr[cost]" id="comp_attr[cost]" class="regular-text" value="<?php echo $current['cost']; ?>" />
+					<input type="text" name="comp_attr[price]" id="comp_attr[price]" class="regular-text" value="<?php echo $current['price']; ?>" />
 				</td>
 			</tr>
 

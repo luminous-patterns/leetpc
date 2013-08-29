@@ -1,19 +1,15 @@
-			<!-- footer -->
-			<footer class="footer" role="contentinfo">
-				
-				<!-- copyright -->
-				<p class="copyright">
-					&copy; <?php echo date("Y"); ?> Copyright <?php bloginfo('name'); ?>. <?php _e('Powered by', 'html5blank'); ?> 
-					<a href="//wordpress.org" title="WordPress">WordPress</a> &amp; <a href="//html5blank.com" title="HTML5 Blank">HTML5 Blank</a>.
-					<br />ABN 62 842 988 455
-				</p>
-				<!-- /copyright -->
-				
-			</footer>
-			<!-- /footer -->
 		
 		</div>
 		<!-- /wrapper -->
+
+		<footer class="footer" role="contentinfo">
+			
+			<p class="copyright">
+				Designed and developed by <a href="http://www.linkedin.com/profile/view?id=45607988">Cal Milne</a>
+				<br />&copy; <?php echo date("Y"); ?> Copyright. ABN 62 842 988 455
+			</p>
+			
+		</footer>
 
 		<?php wp_footer(); ?>
 		
