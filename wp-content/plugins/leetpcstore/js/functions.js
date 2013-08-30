@@ -27,6 +27,49 @@ var LEETPCStore = {
 
 	},
 
+	refreshCart: function( r ) {
+		console.log('refresh cart',r);
+	},
+
+	emptyCart: function() {
+
+		var that = this;
+		var url = '/wp-admin/admin-ajax.php';
+		var opts = { 
+			method: 'post',
+			data: { 
+				action: 'empty_cart'
+			}, 
+			success: jQuery.proxy( that.refreshCart, that )
+		};
+
+		jQuery.ajax( url, opts );
+
+	},
+
+	addToCart: function( product_id ) {
+
+		var that = this;
+		var data = { 
+			action: 'add_to_cart',
+			product_id: product_id
+		};
+
+		if ( arguments.length > 1 ) {
+			data.component_ids = arguments[1];
+		}
+
+		var url = '/wp-admin/admin-ajax.php';
+		var opts = { 
+			method: 'post',
+			data: data, 
+			success: jQuery.proxy( that.refreshCart, that )
+		};
+
+		jQuery.ajax( url, opts );
+
+	},
+
 	customizeProduct: function() {
 
 		// alert( '/customize/' + window.location.pathname.split( '/' )[2] );
@@ -53,8 +96,19 @@ var LEETPCStore = {
 		this.customizeFormEl = jQuery( r );
 
 		this.customizeFormEl.find( 'button.secondary' ).bind( 'click', jQuery.proxy( this.closeCustomizeForm, this ) );
+		this.customizeFormEl.find( 'button.add-to-cart' ).bind( 'click', jQuery.proxy( this.onClickAddToCart, this ) );
 
 		jQuery( 'body' ).append( this.customizeFormEl );
+
+	},
+
+	onClickAddToCart: function( e ) {
+
+		var attrsEl = jQuery( e.target ).parents( '.product-attrs' );
+		var product_id = attrsEl.find( 'input[name=product_id]' ).val();
+		var component_ids = attrsEl.find( 'input[name=component_ids]' ).val();
+
+		this.addToCart( product_id, component_ids );
 
 	},
 

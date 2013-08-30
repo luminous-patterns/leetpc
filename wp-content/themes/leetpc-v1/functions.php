@@ -62,6 +62,70 @@ if (function_exists('add_theme_support'))
 	Functions
 \*------------------------------------*/
 
+function sort_components( $a, $b ) {
+    if ( $a['price_diff'] == $b['price_diff'] ) {
+        return 0;
+    }
+    return ( $a['price_diff'] < $b['price_diff'] ) ? -1 : 1;
+}
+
+function print_component_options( $type, $components, $defaults, $attrs ) {
+
+    $d = $defaults[$type];
+
+    $cs = array();
+
+    if ( count( $components[$type] ) < 1 ) {
+
+        ?>
+
+            <div>
+                <label>
+                    <?php echo $c->post_title; ?>
+                </label>
+            </div>
+
+        <?php
+
+    }
+
+    foreach ( $components[$type] as $c ) : 
+
+        $def_price = max( $attrs[$d->ID]['price'][0], $attrs[$d->ID]['cost'][0] );
+        $price = max( $attrs[$c->ID]['price'][0], $attrs[$c->ID]['cost'][0] );
+
+        $cs[] = array( 
+            'c' => $c,
+            'price_diff' => number_format( $price - $def_price )
+        );
+
+    endforeach;
+
+    usort( $cs, 'sort_components' );
+
+    foreach ( $cs as $x ) : 
+
+        $c = $x['c'];
+        $price_diff = $x['price_diff'];
+
+        $checked = $c->ID == $d->ID ? 'checked="checked"' : '';
+
+        ?>
+
+            <div>
+                <label>
+                    <input type="radio" name="<?php echo $type; ?>" value="component-<?php echo $c->ID; ?>" data-price-diff="<?php echo $price_diff; ?>" <?php echo $checked; ?> />
+                    <?php echo $c->post_title; ?>
+                    <span class="price-diff"><?php if ( $price_diff ) echo ( $price_diff > 0 ? '+' : '-' ) . '&dollar;' . number_format( abs( $price_diff ), 2 ); ?></span>
+                </label>
+            </div>
+
+        <?php
+
+    endforeach;
+
+}
+
 function customize_product_form( $product_id ) {
     setup_postdata( $GLOBALS['post'] =& get_post( $product_id ) );
     include( 'form-customize.php' );

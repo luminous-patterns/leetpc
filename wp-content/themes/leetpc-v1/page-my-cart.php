@@ -46,6 +46,10 @@
 
 			</table>
 
+			<div class="promo-code">
+				<a href="#">Add promo code / voucher</a>
+			</div>
+
 			<div class="sub-total">
 				<h3>Sub-total</h3>
 				<div class="amount">

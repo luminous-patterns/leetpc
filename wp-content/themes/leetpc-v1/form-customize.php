@@ -1,13 +1,15 @@
 <?php
 
-if ( get_post_type() == 'product' ) {
+if ( get_post_type() == 'product' ) :
 
 	$product = get_post_custom();
 
 	$component_ids = explode( ',', $product['components'][0] );
 
 	$components = array();
+	$selected = array();
 	$defaults = array();
+	$attrs = array();
 
 	foreach ( $component_ids as $id ) {
 
@@ -24,96 +26,108 @@ if ( get_post_type() == 'product' ) {
 
 		if ( $def ) {
 			$defaults[$type] = $c;
+			$selected[] = 'component-' . $c->ID;
 		}
+
+		$attrs[$c->ID] = get_post_custom( $c->ID );
 
 	}
 
-}
+	?>
 
-?>
+	<div class="customize-form-wrapper">
 
-<div class="customize-form-wrapper">
+		<div class="customize-form product-attrs">
 
-	<div class="customize-form">
+			<input type="hidden" name="product_id" value="<?php the_ID(); ?>" />
+			<input type="hidden" name="component_ids" value="<?php echo implode( ',', $selected ); ?>" />
 
-		<input type="hidden" name="product-id" value="" />
+			<input type="hidden" name="product_base_price" value="<?php echo $product['price'][0]; ?>" />
+			<input type="hidden" name="product_price_diffs" value="0.00" />
 
-		<div class="form-header">
-			<h3 class="product-name">Customize Product</h3>
-			<div class="sub-total">
-				<div class="amount">
-					&dollar;<?php echo number_format( $product['price'][0] ); ?>
+			<div class="form-header">
+				<h3 class="product-name">Customize PC</h3>
+				<div class="sub-total">
+					<div class="amount">
+						&dollar;<?php echo number_format( $product['price'][0] ); ?>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="component-table">
+			<div class="component-list">
 
-			<table>
+				<div class="component component-cpu">
+					<h4>CPU</h4>
+					<div class="component-options">
+						<?php print_component_options( 'cpu', $components, $defaults, $attrs ); ?>
+					</div>
+				</div>
 
-				<tr>
-					<th>CPU</th>
-					<td>
-						<select><option><?php echo $defaults['cpu']->post_title; ?></option></select>
-					</td>
-				</tr>
+				<div class="component component-motherboard">
+					<h4>Motherboard</h4>
+					<div class="component-options">
+						<?php print_component_options( 'motherboard', $components, $defaults, $attrs ); ?>
+					</div>
+				</div>
 
-				<tr>
-					<th>Motherboard</th>
-					<td><?php echo $defaults['motherboard']->post_title; ?></td>
-				</tr>
+				<div class="component component-ram">
+					<h4>Memory (RAM)</h4>
+					<div class="component-options">
+						<?php echo $defaults['ram']->post_title; ?>
+					</div>
+				</div>
 
-				<tr>
-					<th>Memory (RAM)</th>
-					<td>
-						<select><option><?php echo $defaults['ram']->post_title; ?></option></select>
-					</td>
-				</tr>
+				<div class="component component-hdd">
+					<h4>Primary HDDs</h4>
+					<div class="component-options">
+						<?php echo $defaults['hdd']->post_title; ?>
+					</div>
+				</div>
 
-				<tr>
-					<th>Primary HDD</th>
-					<td>
-						<select><option><?php echo $defaults['hdd']->post_title; ?></option></select>
-					</td>
-				</tr>
+				<div class="component component-hdd">
+					<h4>Secondary HDDs</h4>
+					<div class="component-options">
+						<?php echo $defaults['hdd']->post_title; ?>
+					</div>
+				</div>
 
-				<tr>
-					<th>Video (GFX)</th>
-					<td>
-						<select><option><?php echo $defaults['videocard']->post_title; ?></option></select>
-					</td>
-				</tr>
+				<div class="component component-videocard">
+					<h4>Video (GFX)</h4>
+					<div class="component-options">
+						<?php echo $defaults['videocard']->post_title; ?>
+					</div>
+				</div>
 
-				<tr>
-					<th>Optical</th>
-					<td>
-						<select><option><?php echo $defaults['optical']->post_title; ?></option></select>
-					</td>
-				</tr>
+				<div class="component component-optical">
+					<h4>Optical</h4>
+					<div class="component-options">
+						<?php echo $defaults['optical']->post_title; ?>
+					</div>
+				</div>
 
-				<tr>
-					<th>Sound</th>
-					<td>
+				<div class="component component-sound">
+					<h4>Sound</h4>
+					<div class="component-options">
 						Realtek® ALC892 8-Channel HD Audio
-					</td>
-				</tr>
+					</div>
+				</div>
 
-				<tr>
-					<th>Operating System</th>
-					<td>
-						<select><option><?php echo $defaults['os']->post_title; ?></option></select>
-					</td>
-				</tr>
+				<div class="component component-os">
+					<h4>Operating System</h4>
+					<div class="component-options">
+						<?php print_component_options( 'os', $components, $defaults, $attrs ); ?>
+					</div>
+				</div>
 
-			</table>
+			</div>
 
-		</div>
+			<div class="form-footer">
+				<button class="secondary">Cancel</button>
+				<button class="add-to-cart">Add to cart</button>
+			</div>
 
-		<div class="form-footer">
-			<button class="secondary">Cancel</button>
-			<button>Add to cart</button>
 		</div>
 
 	</div>
 
-</div>
+<?php endif; ?>

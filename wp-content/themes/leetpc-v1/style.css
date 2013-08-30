@@ -313,6 +313,11 @@ button.secondary {
 	margin-top: 30px;
 	text-align: right;
 }
+.page.my-cart .promo-code {
+    margin-top: 15px;
+    text-align: right;
+    font-size: 0.85em;
+}
 .page.my-cart table {
 	margin-top: 30px;
 	width: 100%;
@@ -386,7 +391,7 @@ button.secondary {
 	background: rgba(0,0,0,0.7);
 }
 .customize-form {
-	background-color: #fff;
+	background-color: #f3f3f3;
 	width: 800px;
 	margin: 40px auto;
 	border-radius: 2px;
@@ -397,9 +402,12 @@ button.secondary {
 .customize-form .product-name {
     padding: 0 15px;
     font-family: oxygen;
-    font-size: 2em;
-    line-height: 1em;
+    font-size: 1.5em;
+    line-height: 27px;
     margin: 15px 0;
+    font-weight: normal;
+    color: #aaa;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
 }
 .page .customize-form .sub-total {
     margin: 0;
@@ -414,27 +422,6 @@ button.secondary {
 .customize-form .form-footer button {
     margin-left: 10px;
 }
-.customize-form .component-table {
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-}
-.customize-form .component-table table {
-    margin-top: 0px;
-    width: 100%;
-}
-.customize-form .component-table td {
-    background-color: #f3f3f3;
-    padding: 10px;
-}
-.customize-form .component-table th {
-    width: 160px;
-    text-align: right;
-    padding: 10px;
-    background-color: #e5e5e5;
-    font-size: 0.85em;
-    font-family: oxygen;
-    border-right: 1px solid #bbb;
-}
 .customize-form .sub-total {
     font-family: roboto;
     font-size: 2em;
@@ -444,7 +431,42 @@ button.secondary {
     line-height: 1;
     color: #555;
 }
-
+.customize-form .component-list {
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+    font-family: roboto;
+}
+.customize-form .component-list h4 {
+    margin: 0 0 5px;
+    font-size: 0.8em;
+    font-family: oxygen;
+    display: inline-block;
+    width: 150px;
+    vertical-align: top;
+}
+.customize-form .component-list .component {
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+}
+.customize-form .component-list .component div.component-options {
+    display: inline-block;
+    font-size: 0.9em;
+}
+.customize-form .price-diff {
+    color: #999;
+    margin-left: 10px;
+}
+.customize-form .component-options input[type="radio"] {
+    vertical-align: top;
+    margin-top: 2px;
+    margin-right: 7px;
+}
+.customize-form .component-options div {
+    margin-bottom: 7px;
+}
+.customize-form .component-options div:last-of-type {
+    margin-bottom: 0;
+}
 
 /*------------------------------------*\
     IMAGES
@@ -597,6 +619,10 @@ h2 {
 }
 @media only screen and (max-width:768px) {
 
+	.wrapper, .single-product .wrapper {
+		padding: 30px;
+	}
+
 	.customize-form {
 		border-radius: 0;
 		margin: 40px 0;
@@ -605,8 +631,7 @@ h2 {
 		top: 0;
 		left: 0;
 		right: 0;
-	
-}
+	}
 
 }
 @media only screen and (max-width:950px) {
