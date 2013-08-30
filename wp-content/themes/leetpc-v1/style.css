@@ -381,8 +381,8 @@ button.secondary {
     font-size: 1.8em;
     color: #222;
 }
-/* customize form */
-.customize-form-wrapper {
+/* modals */
+.modal-wrapper {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -390,7 +390,7 @@ button.secondary {
 	bottom: 0;
 	background: rgba(0,0,0,0.7);
 }
-.customize-form {
+.modal-wrapper .modal {
 	background-color: #f3f3f3;
 	width: 800px;
 	margin: 40px auto;
@@ -399,7 +399,7 @@ button.secondary {
 	box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 	position: relative;
 }
-.customize-form .product-name {
+.modal .modal-header h3 {
     padding: 0 15px;
     font-family: oxygen;
     font-size: 1.5em;
@@ -409,20 +409,26 @@ button.secondary {
     color: #aaa;
     text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
 }
-.page .customize-form .sub-total {
+.modal .modal-body {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+.modal .modal-footer {
+    padding: 15px;
+    text-align: right;
+}
+.modal .modal-footer button {
+    margin-left: 10px;
+}
+/* customize form */
+.page .modal.customize-form .sub-total {
     margin: 0;
     position: absolute;
     top: 10px;
     right: 15px;
 }
-.customize-form .form-footer {
-    padding: 15px;
-    text-align: right;
-}
-.customize-form .form-footer button {
-    margin-left: 10px;
-}
-.customize-form .sub-total {
+.modal.customize-form .sub-total {
     font-family: roboto;
     font-size: 2em;
     position: absolute;
@@ -431,12 +437,12 @@ button.secondary {
     line-height: 1;
     color: #555;
 }
-.customize-form .component-list {
+.modal.customize-form .component-list {
     border-top: 1px solid #ddd;
     background-color: #fff;
     font-family: roboto;
 }
-.customize-form .component-list h4 {
+.modal.customize-form .component-list h4 {
     margin: 0 0 5px;
     font-size: 0.8em;
     font-family: oxygen;
@@ -444,27 +450,27 @@ button.secondary {
     width: 150px;
     vertical-align: top;
 }
-.customize-form .component-list .component {
+.modal.customize-form .component-list .component {
     border-bottom: 1px solid #ddd;
     padding: 15px;
 }
-.customize-form .component-list .component div.component-options {
+.modal.customize-form .component-list .component div.component-options {
     display: inline-block;
     font-size: 0.9em;
 }
-.customize-form .price-diff {
+.modal.customize-form .price-diff {
     color: #999;
     margin-left: 10px;
 }
-.customize-form .component-options input[type="radio"] {
+.modal.customize-form .component-options input[type="radio"] {
     vertical-align: top;
     margin-top: 2px;
     margin-right: 7px;
 }
-.customize-form .component-options div {
+.modal.customize-form .component-options div {
     margin-bottom: 7px;
 }
-.customize-form .component-options div:last-of-type {
+.modal.customize-form .component-options div:last-of-type {
     margin-bottom: 0;
 }
 
@@ -623,14 +629,44 @@ h2 {
 		padding: 30px;
 	}
 
-	.customize-form {
+	.modal-wrapper .modal {
+		position: fixed;
 		border-radius: 0;
-		margin: 40px 0;
+		margin: 0;
 		width: auto;
 		bottom: 0;
 		top: 0;
 		left: 0;
 		right: 0;
+	}
+
+	.modal-wrapper .modal .modal-header, 
+	.modal-wrapper .modal .modal-body,
+	.modal-wrapper .modal .modal-footer {
+		position: absolute;
+		bottom: 0;
+		top: 0;
+		left: 0;
+		right: 0;
+	}
+
+	.modal-wrapper .modal .modal-header {
+		bottom: auto;
+		height: 57px;
+	}
+
+	.modal-wrapper .modal .modal-body {
+	    background-color: #fff;
+	    border-bottom: 2px solid #ddd;
+	    border-top: 2px solid #ddd;
+	    top: 58px;
+	    bottom: 70px;
+	    overflow-y: scroll;
+	}
+
+	.modal-wrapper .modal .modal-footer {
+		top: auto;
+		height: 68px;
 	}
 
 }

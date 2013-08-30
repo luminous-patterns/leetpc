@@ -75,17 +75,19 @@ function print_component_options( $type, $components, $defaults, $attrs ) {
 
     $cs = array();
 
-    if ( count( $components[$type] ) < 1 ) {
+    if ( count( $components[$type] ) < 2 ) {
 
         ?>
 
             <div>
                 <label>
-                    <?php echo $c->post_title; ?>
+                    <?php echo $components[$type][0]->post_title; ?>
                 </label>
             </div>
 
         <?php
+
+        return;
 
     }
 
@@ -129,6 +131,10 @@ function print_component_options( $type, $components, $defaults, $attrs ) {
 function customize_product_form( $product_id ) {
     setup_postdata( $GLOBALS['post'] =& get_post( $product_id ) );
     include( 'form-customize.php' );
+}
+
+function checkout_step( $step ) {
+    include( 'checkout.php' );
 }
 
 // HTML5 Blank navigation

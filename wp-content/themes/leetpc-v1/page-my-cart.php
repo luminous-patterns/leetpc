@@ -1,4 +1,10 @@
-<?php get_header(); ?>
+<?php 
+
+	get_header(); 
+
+	$cart = get_cart();
+
+?>
 	
 	<!-- section -->
 	<section role="main">
@@ -24,23 +30,36 @@
 
 				<tbody>
 
-					<tr class="line-item line-item-308387">
-						<td class="qty-col"><input type="text" size="2" value="1" /></td>
-						<td class="description-col">
-							<h3>Blah de blah</h3>
-							<p>Some random information about the product that is being sold</p>
-						</td>
-						<td class="price-col">&dollar;2,499.00</td>
-					</tr>
+					<?php foreach( $cart['items'] as $k => $item ) : 
 
-					<tr class="line-item line-item-308387">
-						<td class="qty-col"><input type="text" size="2" value="1" /></td>
-						<td class="description-col">
-							<h3>Blah de blah</h3>
-							<p>Some random information about the product that is being sold</p>
-						</td>
-						<td class="price-col">&dollar;799.00</td>
-					</tr>
+						$product = get_post( $item['product_id'] );
+						$meta = get_post_custom( $item['product_id'] );
+						// echo $item['qty'] . 'x Product ID: ' . $item['product_id'] . ' // Component IDs: ' . implode( ', ', $item['component_ids'] ); }; 
+
+						// $components = array();
+
+						// foreach ( $item['component_ids'] as $cid ) {
+						// 	$c = get_post( str_replace( 'component-', '', $cid ) );
+						// 	$c = get_post( $cid );
+						// 	$components[] = $c->post_title;
+						// }
+
+						?>
+
+						<tr class="line-item line-item-<?php echo $k; ?>">
+							<td class="qty-col"><input type="text" size="2" value="1" /></td>
+							<td class="description-col">
+								<h3><a href="<?php echo get_permalink( $product->ID ); ?>"><?php echo $product->post_title; ?></a></h3>
+								<ul><?php foreach( $item['component_ids'] as $cid ) :
+									$c = get_post( str_replace( 'component-', '', $cid ) );
+									?>
+									<li><?php echo $c->post_title; ?></li>
+								<?php endforeach; ?></ul>
+							</td>
+							<td class="price-col">&dollar;<?php echo number_format( $meta['price'][0], 2 ); ?></td>
+						</tr>
+
+					<?php endforeach; ?>
 					
 				</tbody>
 
@@ -53,12 +72,12 @@
 			<div class="sub-total">
 				<h3>Sub-total</h3>
 				<div class="amount">
-					$3,298.00
+					&dollar;<?php echo number_format( $cart['sub_total'], 2 ); ?>
 				</div>
 			</div>
 
 			<div class="checkout-btn-container">
-				<button class="customize">Checkout &amp; Finalize Order</button>
+				<button class="checkout">Checkout &amp; Finalize Order</button>
 			</div>
 
 			<h2>Postage estimator</h2>

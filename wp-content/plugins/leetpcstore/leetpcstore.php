@@ -9,6 +9,8 @@ Author URI: http://www.leetpc.com.au
 Copyright 2013 Cal Milne
 */
 
+session_start();
+
 /**
  * Include our core functions
  **/

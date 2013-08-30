@@ -104,6 +104,9 @@ class leetPcStore {
 		add_action( 'wp_ajax_get_customize_form',                  array( &$this, 'getCustomizeForm' ) );
 		add_action( 'wp_ajax_nopriv_get_customize_form',           array( &$this, 'getCustomizeForm' ) );
 
+		add_action( 'wp_ajax_get_checkout_step',                   array( &$this, 'getCheckoutStep' ) );
+		add_action( 'wp_ajax_nopriv_get_checkout_step',            array( &$this, 'getCheckoutStep' ) );
+
 		/*
 
 		add_action( 'init',                                        array( &$this, 'init' ) );
@@ -124,6 +127,11 @@ class leetPcStore {
 
 	public function getCustomizeForm() {
 		customize_product_form( $_POST['product_id'] );
+		exit;
+	}
+
+	public function getCheckoutStep() {
+		checkout_step( $_POST['step'] );
 		exit;
 	}
 

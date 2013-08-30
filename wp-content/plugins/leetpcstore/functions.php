@@ -2,7 +2,7 @@
 
 function get_cart() {
 	init_cart();
-	return $GLOBALS['wp_session']['shopping_cart'];
+	return $_SESSION['shopping_cart'];
 }
 
 function get_cart_key( $product_id, $component_ids ) {
@@ -12,42 +12,83 @@ function get_cart_key( $product_id, $component_ids ) {
 
 function add_product_to_cart( $product_id, $component_ids = array(), $qty = 1 ) {
 
-	global $wp_session;
-
 	init_cart();
 
 	$key = get_cart_key( $product_id, $component_ids );
 
-	if ( !array_key_exists( $key, $wp_session['shopping_cart']['items'] ) ) {
-		$wp_session['shopping_cart']['items_count'] += $qty;
-		$wp_session['shopping_cart']['items'][$key] = array(
-			'product_id' => $product_id,
-			'component_ids' => $component_ids,
-			'qty' => $qty//,
-			// 'price' => calcProductPrice( $product_id, $component_ids )
+	if ( !array_key_exists( $key, $_SESSION['shopping_cart']['items'] ) ) {
+
+		$price = calc_product_price( $product_id, $component_ids );
+
+		$_SESSION['shopping_cart']['items'][$key] = array(
+			'product_id'       => $product_id,
+			'component_ids'    => $component_ids,
+			'qty'              => $qty,
+			'price'            => $price
 		);
+
 	}
 
 	return $line_item;
 
 }
 
+function calc_product_price( $product_id, $component_ids ) {
+
+	$product = get_post( $product_id );
+	$meta = get_post_custom( $product_id );
+
+	$sub_total = $meta['price'][0];
+
+	foreach ( $component_ids as $i ) {
+		$c = get_post_custom( $i );
+		$sub_total += $c['price'][0];
+	}
+
+	return $sub_total;
+
+}
+
 function empty_cart() {
-	$GLOBALS['wp_session']['shopping_cart']['items'] = array();
-	$GLOBALS['wp_session']['shopping_cart']['items_count'] = 0;
+	init_cart( true );
 	return true;
 }
 
-function init_cart() {
-	if ( !$GLOBALS['wp_session'] || !array_key_exists( 'shopping_cart', $GLOBALS['wp_session'] ) ) {
-		$GLOBALS['wp_session']['shopping_cart'] = array(
+function init_cart( $empty_cart = false ) {
+
+	if ( !array_key_exists( 'shopping_cart', $_SESSION ) || $empty_cart ) {
+
+		$_SESSION['shopping_cart'] = array(
 			'sub_total'     => 0.00,
 			'created'       => time(),
 			'items'         => array(),
 			'items_count'   => 0
 		);
+
+		return true;
+
 	}
+
+	if ( count( $_SESSION['shopping_cart']['items'] ) > 0 ) {
+		calc_cart_totals();
+	}
+
 	return true;
+
+}
+
+function calc_cart_totals() {
+
+	$_SESSION['shopping_cart']['sub_total'] = 0.00;
+	$_SESSION['shopping_cart']['items_count'] = 0;
+
+	foreach ( $_SESSION['shopping_cart']['items'] as $k => $item ) {
+
+		$_SESSION['shopping_cart']['sub_total'] += calc_product_price( $item['product_id'], $item['component_ids'] ) * $item['qty'];
+		$_SESSION['shopping_cart']['items_count'] += $item['qty'];
+
+	}
+
 }
 
 function update_line_item_qty( $line_item_key, $qty ) {

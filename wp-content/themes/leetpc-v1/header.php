@@ -39,7 +39,7 @@
 			<!-- /logo -->
 
 			<a href="#" class="toggle-nav"></a>
-			<a href="/my-cart/" class="cart">My cart <span>| No items</span></a>
+			<a href="/my-cart/" class="cart">My cart <span>| <?php $cart = get_cart(); $cart_items = $cart['items_count']; echo $cart_items ? $cart_items : 'No'; ?> item<?php if ( $cart_items != 1 ) echo 's'; ?></span></a>
 			
 			<!-- nav -->
 			<nav class="nav" role="navigation">
