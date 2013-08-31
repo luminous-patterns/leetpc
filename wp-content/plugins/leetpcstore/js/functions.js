@@ -34,7 +34,7 @@ var LEETPCStore = {
 	},
 
 	refreshCart: function( r ) {
-		
+
 		this.updateCart( r.cart.items_count );
 
 		if ( this.pageType != 'my-cart' ) {
@@ -56,6 +56,42 @@ var LEETPCStore = {
 		};
 
 		jQuery.ajax( url, opts );
+
+	},
+
+	onClickChangeSelection: function( ev ) {
+
+		ev.preventDefault();
+
+		var el = jQuery( ev.target );
+		var cEl = el.parents( '.component-options' );
+
+		cEl.find( '.selected' ).hide();
+		cEl.find( '.options' ).show();
+
+	},
+
+	onClickCustomizeOption: function( ev ) {
+
+		var el = jQuery( ev.target );
+		var cEl = el.parents( '.component-options' );
+
+		var optionHtmlEl = jQuery( '<div>' + el.parent().html() + '</div>' );
+		optionHtmlEl.find( 'input' ).remove();
+
+		cEl.find( '.selected label' ).html( optionHtmlEl.html() );
+
+		this.refreshCustomize();
+
+		cEl.find( '.selected' ).show();
+		cEl.find( '.options' ).hide();
+
+	},
+
+	refreshCustomize: function() {
+
+		this.refreshCustomizePrice();
+		this.refreshFinalComponents();
 
 	},
 
@@ -104,7 +140,7 @@ var LEETPCStore = {
 
 		this.currentModalEl = jQuery( r );
 
-		this.currentModalEl.find( 'button.secondary' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
+		this.currentModalEl.find( 'button.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
 		this.currentModalEl.find( 'button.add-to-cart' ).bind( 'click', jQuery.proxy( this.onClickAddToCart, this ) );
 
 		jQuery( 'body' ).css( 'overflow-y', 'hidden' ).append( this.currentModalEl );
@@ -134,10 +170,59 @@ var LEETPCStore = {
 
 		this.currentModalEl = jQuery( r );
 
-		this.currentModalEl.find( 'button.secondary' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
+		this.currentModalEl.find( 'button.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
 		this.currentModalEl.find( 'button.add-to-cart' ).bind( 'click', jQuery.proxy( this.onClickAddToCart, this ) );
+		this.currentModalEl.find( 'input[type=radio]' ).bind( 'click', jQuery.proxy( this.onClickCustomizeOption, this ) );
+		this.currentModalEl.find( '.change-selection' ).bind( 'click', jQuery.proxy( this.onClickChangeSelection, this ) );
 
 		jQuery( 'body' ).css( 'overflow-y', 'hidden' ).append( this.currentModalEl );
+
+		this.refreshCustomize();
+
+	},
+
+	getCustomizeSelections: function() {
+
+		var selections = [];
+
+		jQuery( '.component-list input:checked' ).each( function() {
+			selections[selections.length] = jQuery( this ).val();
+		} );
+
+		return selections;
+
+	},
+
+	calcCustomizePrice: function() {
+
+		var sub_total = parseFloat( this.currentModalEl.find( 'input[name=product_base_price]' ).val() );
+
+		jQuery( '.component-list input:checked' ).each( function() {
+			sub_total += parseFloat( jQuery( this ).attr('data-price-diff') );
+		} );
+
+		return sub_total;
+
+	},
+
+	refreshCustomizePrice: function() {
+
+		jQuery( '.customize-form .sub-total .amount' ).html( '&dollar;' + this.calcCustomizePrice().toLocaleString() );
+
+	},
+
+	refreshFinalComponents: function() {
+
+		var componentInputs = jQuery( '.customize-form .component-list input' );
+		var components = componentInputs.serializeArray();
+
+		var final_components = [];
+
+		jQuery( components ).each( function( i, c ) {
+			final_components.push( c.value );
+		} );
+
+		jQuery( '.customize-form input[name=final_selection]' ).val( final_components.join( ',' ) );
 
 	},
 
@@ -145,7 +230,7 @@ var LEETPCStore = {
 
 		var attrsEl = jQuery( e.target ).parents( '.product-attrs' );
 		var product_id = attrsEl.find( 'input[name=product_id]' ).val();
-		var component_ids = attrsEl.find( 'input[name=component_ids]' ).val();
+		var component_ids = attrsEl.find( 'input[name=final_selection]' ).val();
 
 		this.addToCart( product_id, component_ids );
 

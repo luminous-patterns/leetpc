@@ -467,11 +467,20 @@ button.secondary {
     margin-top: 2px;
     margin-right: 7px;
 }
-.modal.customize-form .component-options div {
+.modal.customize-form .component-options div.options {
+	display: none;
+}
+.modal.customize-form .component-options div.options div {
     margin-bottom: 7px;
 }
-.modal.customize-form .component-options div:last-of-type {
+.modal.customize-form .component-options div.options div:last-of-type {
     margin-bottom: 0;
+}
+.modal.customize-form .change-selection {
+    line-height: 20px;
+    padding: 0 6px;
+    font-size: 0.9em;
+    margin-top: -2px;
 }
 
 /*------------------------------------*\

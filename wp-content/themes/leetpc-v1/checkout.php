@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="modal-footer">
-			<button class="secondary">Cancel</button>
+			<button class="secondary close-modal">Cancel</button>
 			<button class="next-step">Continue</button>
 		</div>
 

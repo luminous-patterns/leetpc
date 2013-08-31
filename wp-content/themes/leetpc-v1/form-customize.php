@@ -7,7 +7,7 @@ if ( get_post_type() == 'product' ) :
 	$component_ids = explode( ',', $product['components'][0] );
 
 	$components = array();
-	$selected = array();
+	$default_ids = array();
 	$defaults = array();
 	$attrs = array();
 
@@ -26,7 +26,7 @@ if ( get_post_type() == 'product' ) :
 
 		if ( $def ) {
 			$defaults[$type] = $c;
-			$selected[] = 'component-' . $c->ID;
+			$default_ids[] = 'component-' . $c->ID;
 		}
 
 		$attrs[$c->ID] = get_post_custom( $c->ID );
@@ -40,7 +40,9 @@ if ( get_post_type() == 'product' ) :
 		<div class="modal customize-form-modal customize-form product-attrs">
 
 			<input type="hidden" name="product_id" value="<?php the_ID(); ?>" />
-			<input type="hidden" name="component_ids" value="<?php echo implode( ',', $selected ); ?>" />
+			<input type="hidden" name="static_component_ids" value="<?php echo implode( ',', $default_ids ); ?>" />
+			<input type="hidden" name="component_ids" value="<?php echo implode( ',', $default_ids ); ?>" />
+			<input type="hidden" name="final_selection" value="" />
 
 			<input type="hidden" name="product_base_price" value="<?php echo $product['price'][0]; ?>" />
 			<input type="hidden" name="product_price_diffs" value="0.00" />
@@ -86,13 +88,6 @@ if ( get_post_type() == 'product' ) :
 						</div>
 					</div>
 
-					<div class="component component-hdd">
-						<h4>Secondary HDDs</h4>
-						<div class="component-options">
-							<?php print_component_options( 'hdd', $components, $defaults, $attrs ); ?>
-						</div>
-					</div>
-
 					<div class="component component-videocard">
 						<h4>Video (GFX)</h4>
 						<div class="component-options">
@@ -121,12 +116,19 @@ if ( get_post_type() == 'product' ) :
 						</div>
 					</div>
 
+					<div class="component component-case">
+						<h4>Case</h4>
+						<div class="component-options">
+							<?php print_component_options( 'case', $components, $defaults, $attrs ); ?>
+						</div>
+					</div>
+
 				</div>
 			
 			</div>
 
 			<div class="modal-footer">
-				<button class="secondary">Cancel</button>
+				<button class="secondary close-modal">Cancel</button>
 				<button class="add-to-cart">Add to cart</button>
 			</div>
 

@@ -41,7 +41,7 @@ function calc_product_price( $product_id, $component_ids ) {
 	$sub_total = $meta['price'][0];
 
 	foreach ( $component_ids as $i ) {
-		$c = get_post_custom( $i );
+		$c = get_post_custom( preg_replace( '/^component-/', '', $i ) );
 		$sub_total += $c['price'][0];
 	}
 
@@ -73,6 +73,8 @@ function init_cart( $empty_cart = false ) {
 		calc_cart_totals();
 	}
 
+	// var_dump($_SESSION['shopping_cart']);
+
 	return true;
 
 }
@@ -84,6 +86,7 @@ function calc_cart_totals() {
 
 	foreach ( $_SESSION['shopping_cart']['items'] as $k => $item ) {
 
+		$_SESSION['shopping_cart']['items'][$k]['price'] = calc_product_price( $item['product_id'], $item['component_ids'] );
 		$_SESSION['shopping_cart']['sub_total'] += calc_product_price( $item['product_id'], $item['component_ids'] ) * $item['qty'];
 		$_SESSION['shopping_cart']['items_count'] += $item['qty'];
 

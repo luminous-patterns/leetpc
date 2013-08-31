@@ -49,6 +49,7 @@
 						<tr class="line-item line-item-<?php echo $k; ?>">
 							<td class="qty-col"><input type="text" size="2" value="1" /></td>
 							<td class="description-col">
+								<?php echo get_the_post_thumbnail( $product->ID, 'medium', array( 'class' => 'product-thumbnail' ) ); ?>
 								<h3><a href="<?php echo get_permalink( $product->ID ); ?>"><?php echo $product->post_title; ?></a></h3>
 								<ul><?php foreach( $item['component_ids'] as $cid ) :
 									$c = get_post( str_replace( 'component-', '', $cid ) );
@@ -56,7 +57,7 @@
 									<li><?php echo $c->post_title; ?></li>
 								<?php endforeach; ?></ul>
 							</td>
-							<td class="price-col">&dollar;<?php echo number_format( $meta['price'][0], 2 ); ?></td>
+							<td class="price-col">&dollar;<?php echo calc_product_price( $item['product_id'], explode( ',', $item['component_ids'] ) ); ?></td>
 						</tr>
 
 					<?php endforeach; ?>

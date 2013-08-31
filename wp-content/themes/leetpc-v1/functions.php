@@ -75,21 +75,26 @@ function print_component_options( $type, $components, $defaults, $attrs ) {
 
     $cs = array();
 
+    ?>
+
+        <div class="selected <?php if ( count( $components[$type] ) > 1 ) echo 'has-options'; ?>">
+            <label>
+                <?php echo $defaults[$type]->post_title; ?>
+            </label>
+            <?php if ( count( $components[$type] ) > 1 ) : ?>
+                <button class="secondary change-selection">Change</button>
+            <?php else : ?>
+                <input type="hidden" name="<?php echo $type; ?>" value="component-<?php echo $d->ID; ?>" data-price-diff="0" />
+            <?php endif; ?>
+        </div>
+
+    <?php
+
     if ( count( $components[$type] ) < 2 ) {
-
-        ?>
-
-            <div>
-                <label>
-                    <?php echo $components[$type][0]->post_title; ?>
-                </label>
-            </div>
-
-        <?php
-
         return;
-
     }
+
+    echo '<div class="options">';
 
     foreach ( $components[$type] as $c ) : 
 
@@ -104,6 +109,8 @@ function print_component_options( $type, $components, $defaults, $attrs ) {
     endforeach;
 
     usort( $cs, 'sort_components' );
+
+    $variable_components = array();
 
     foreach ( $cs as $x ) : 
 
@@ -125,6 +132,8 @@ function print_component_options( $type, $components, $defaults, $attrs ) {
         <?php
 
     endforeach;
+
+    echo '</div>';
 
 }
 
