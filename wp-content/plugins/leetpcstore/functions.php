@@ -1,5 +1,11 @@
 <?php
 
+// Create cart class
+
+function &get_product( $product_id ) {
+	return $GLOBALS['leetpc']->getProduct( $product_id );
+}
+
 function get_cart() {
 	init_cart();
 	return $_SESSION['shopping_cart'];
@@ -34,19 +40,8 @@ function add_product_to_cart( $product_id, $component_ids = array(), $qty = 1 ) 
 }
 
 function calc_product_price( $product_id, $component_ids ) {
-
-	$product = get_post( $product_id );
-	$meta = get_post_custom( $product_id );
-
-	$sub_total = $meta['price'][0];
-
-	foreach ( $component_ids as $i ) {
-		$c = get_post_custom( preg_replace( '/^component-/', '', $i ) );
-		$sub_total += $c['price'][0];
-	}
-
-	return $sub_total;
-
+	$product = get_product( $product_id );
+	return $product->calcPrice( $component_ids );
 }
 
 function empty_cart() {
@@ -94,24 +89,32 @@ function calc_cart_totals() {
 
 }
 
-function update_line_item_qty( $line_item_key, $qty ) {
+function remove_line_item( $line_item_key ) {
 
-	// global $wp_session;
+	init_cart();
 
-	// if ( !$wp_session['shopping_cart'] || !array_key_exists( $line_item_key, $wp_session['shopping_cart']['items'] ) ) {
-	// 	return false;
-	// }
+	if ( array_key_exists( $line_item_key, $_SESSION['shopping_cart']['items'] ) ) {
+		unset( $_SESSION['shopping_cart']['items'][$line_item_key] );
+	}
 
-	// if ( $qty < 1 ) {
-	// 	return remove_line_item( $line_item_key );
-	// }
-
-	// $wp_session['shopping_cart']['items_count'] = $wp_session['shopping_cart']['items_count']
-
-	// $wp_session['shopping_cart']['items'][$line_item_key]['qty'] = $qty;
-	// return true;
+	return true;
 
 }
+
+// function update_line_item_qty( $line_item_key, $qty ) {
+
+// 	$cart = get_cart();
+
+// 	if ( $qty < 1 ) {
+// 		return remove_line_item( $line_item_key );
+// 	}
+
+// 	$_SESSION['shopping_cart']['items_count'] = $_SESSION['shopping_cart']['items_count']
+
+// 	$_SESSION['shopping_cart']['items'][$line_item_key]['qty'] = $qty;
+// 	return true;
+
+// }
 
 // function calcProductPrice( $product_id, $component_ids = array() ) {
 

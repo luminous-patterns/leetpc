@@ -98,8 +98,8 @@ function print_component_options( $type, $components, $defaults, $attrs ) {
 
     foreach ( $components[$type] as $c ) : 
 
-        $def_price = max( $attrs[$d->ID]['price'][0], $attrs[$d->ID]['cost'][0] );
-        $price = max( $attrs[$c->ID]['price'][0], $attrs[$c->ID]['cost'][0] );
+        $def_price = $attrs[$d->ID]['price'][0];
+        $price = $attrs[$c->ID]['price'][0];
 
         $cs[] = array( 
             'c' => $c,

@@ -18,6 +18,8 @@ require_once( 'functions.php' );
 require_once( 'taxonomies.php' );
 require_once( 'metaboxes.php' );
 
+require_once( 'product.class.php' );
+
 /**
  * Include the main library
  **/

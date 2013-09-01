@@ -16,7 +16,12 @@ var LEETPCStore = {
 
 		this.bodyClasses = jQuery( 'body' ).attr( 'class' ).split( ' ' );
 
+		jQuery( document ).keyup( jQuery.proxy( this.onKeyUp, this ) );
+
 		jQuery( 'button.checkout' ).bind( 'click', jQuery.proxy( this.checkout, this ) );
+
+		jQuery( '.toggle-nav' ).bind( 'click', jQuery.proxy( this.toggleNav, this ) );
+		jQuery( '.remove-line-item' ).bind( 'click', jQuery.proxy( this.removeLineItem, this ) );
 
 		if ( this.bodyClasses.indexOf( 'single-product' ) > -1 ) {
 			this.pageType = 'single-product';
@@ -33,6 +38,18 @@ var LEETPCStore = {
 
 	},
 
+	onKeyUp: function( ev ) {
+
+		if ( ev.keyCode == 27 ) { //escape
+			this.closeModal();
+		}
+
+	},
+
+	toggleNav: function() {
+		jQuery( '.nav' ).toggle();
+	},
+
 	refreshCart: function( r ) {
 
 		this.updateCart( r.cart.items_count );
@@ -43,20 +60,20 @@ var LEETPCStore = {
 
 	},
 
-	emptyCart: function() {
+	refreshPage: function( r ) {
+		window.location.reload();
+	},
 
+	removeLineItem: function( ev ) {
 		var that = this;
-		var url = '/wp-admin/admin-ajax.php';
-		var opts = { 
-			method: 'post',
-			data: { 
-				action: 'empty_cart'
-			}, 
-			success: jQuery.proxy( that.refreshCart, that )
-		};
+		var lineItemEl = jQuery( ev.target ).parents( '.line-item' );
+		lineItemEl.addClass( 'removing' );
+		this.adminAjax( { action: 'remove_from_cart', line_item_id: lineItemEl.attr( 'data-line-item-id' ) }, this.refreshPage );
+	},
 
-		jQuery.ajax( url, opts );
-
+	emptyCart: function() {
+		var that = this;
+		this.adminAjax( { action: 'empty_cart' }, this.refreshCart );
 	},
 
 	onClickChangeSelection: function( ev ) {
@@ -107,41 +124,73 @@ var LEETPCStore = {
 			data.component_ids = arguments[1];
 		}
 
+		this.adminAjax( data, this.refreshCart );
+
+	},
+
+	adminAjax: function( data, onSuccess ) {
+
+		var that = this;
 		var url = '/wp-admin/admin-ajax.php';
 		var opts = { 
 			method: 'post',
 			data: data, 
-			success: jQuery.proxy( that.refreshCart, that )
+			success: jQuery.proxy( onSuccess, that )
 		};
 
 		jQuery.ajax( url, opts );
+
+	},
+
+	removeFromCart: function( lineitem_id ) {
+
+		var that = this;
+		var data = { 
+			action: 'remove_from_cart',
+			lineitem_id: lineitem_id
+		};
+
+		this.adminAjax( data, this.refreshCart );
 
 	},
 
 	checkout: function() {
 
 		var that = this;
-
-		var url = '/wp-admin/admin-ajax.php';
-		var opts = { 
-			method: 'post',
-			data: { 
-				action: 'get_checkout_step',
-				step: 1
-			}, 
-			success: jQuery.proxy( that.openCheckoutForm, that )
+		var data = { 
+			action: 'get_checkout_step',
+			step: 1
 		};
 
-		jQuery.ajax( url, opts );
+		this.adminAjax( data, this.openCheckoutForm );
+
+	},
+
+	onClickNextStep: function( ev ) {
+
+		var that = this;
+		var data = { 
+			action: 'get_checkout_step',
+			step: parseInt( jQuery( ev.target ).parents( '.checkout-modal' ).find( 'input[name=step]' ).val() ) + 1
+		};
+
+		data.submitted = [];
+		jQuery( jQuery( ev.target ).parents( '.checkout-modal' ).find( 'input[name=step]' ).serializeArray() ).each( function( i, m ) {
+			console.log(i,m);
+		} );
+
+		this.adminAjax( data, this.openCheckoutForm );
 
 	},
 
 	openCheckoutForm: function( r ) {
 
+		this.closeModal();
+
 		this.currentModalEl = jQuery( r );
 
 		this.currentModalEl.find( 'button.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
-		this.currentModalEl.find( 'button.add-to-cart' ).bind( 'click', jQuery.proxy( this.onClickAddToCart, this ) );
+		this.currentModalEl.find( 'button.next-step' ).bind( 'click', jQuery.proxy( this.onClickNextStep, this ) );
 
 		jQuery( 'body' ).css( 'overflow-y', 'hidden' ).append( this.currentModalEl );
 
@@ -151,18 +200,12 @@ var LEETPCStore = {
 
 		var that = this;
 		var product_id = this.postID;
-
-		var url = '/wp-admin/admin-ajax.php';
-		var opts = { 
-			method: 'post',
-			data: { 
-				action: 'get_customize_form',
-				product_id: product_id 
-			}, 
-			success: jQuery.proxy( that.openCustomizeForm, that )
+		var data = { 
+			action: 'get_customize_form',
+			product_id: product_id 
 		};
 
-		jQuery.ajax( url, opts );
+		this.adminAjax( data, this.openCustomizeForm );
 
 	},
 
@@ -237,9 +280,11 @@ var LEETPCStore = {
 	},
 
 	closeModal: function() {
-		jQuery( 'body' ).css( 'overflow-y', 'auto' );
-		this.currentModalEl.remove();
-		this.currentModalEl = null;
+		if ( this.currentModalEl ) {
+			jQuery( 'body' ).css( 'overflow-y', 'auto' );
+			this.currentModalEl.remove();
+			this.currentModalEl = null;
+		}
 	},
 
 	updateCart: function( n ) {

@@ -336,6 +336,9 @@ button.secondary {
 	font-size: 0.9em;
 	color: #888;
 }
+.page.my-cart table .removing td {
+	opacity: 0.3;
+}
 .page.my-cart table .qty-col {
     width: 13%;
 }
@@ -359,8 +362,10 @@ button.secondary {
     width: 100%;
 }
 .page.my-cart table td h3 {
-	margin: 0;
+	margin: 0 0 10px;
 	font-family: oxygen;
+	font-size: 1.5em;
+	line-height: 1;
 }
 .page.my-cart table td.description-col {
     font-size: 0.9em;
@@ -376,10 +381,16 @@ button.secondary {
     margin: 0;
     font-weight: normal;
 }
+.page.my-cart table td h3 a {
+    color: #555;
+}
 .page.my-cart .sub-total .amount {
     font-family: roboto;
     font-size: 1.8em;
     color: #222;
+}
+.page.my-cart table .actions {
+    font-size: 0.9em;
 }
 /* modals */
 .modal-wrapper {
@@ -414,12 +425,27 @@ button.secondary {
     border-bottom: 1px solid #ddd;
     border-top: 1px solid #ddd;
 }
+.modal .modal-body .row {
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+}
 .modal .modal-footer {
     padding: 15px;
     text-align: right;
 }
 .modal .modal-footer button {
     margin-left: 10px;
+}
+.modal .modal-body input[type="text"] {
+    width: 200px;
+}
+input[type="text"] {
+    line-height: 23px;
+    padding: 0 5px;
+    font-family: roboto;
+    border: 1px solid #ccc;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.07);
+    font-size: 0.9em;
 }
 /* customize form */
 .page .modal.customize-form .sub-total {
@@ -442,10 +468,11 @@ button.secondary {
     background-color: #fff;
     font-family: roboto;
 }
-.modal.customize-form .component-list h4 {
+.modal.customize-form .component-list h4, .modal .modal-body .row label {
     margin: 0 0 5px;
     font-size: 0.8em;
     font-family: oxygen;
+    font-weight: bold;
     display: inline-block;
     width: 150px;
     vertical-align: top;
@@ -606,6 +633,33 @@ h2 {
 
 	.nav {
 		display: none;
+		position: fixed;
+		top: 63px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1000;
+		background: #333;
+		border: 0;
+		height: auto;
+	}
+	.nav .menu-item {
+	    display: block;
+	    float: none;
+	    background: #333;
+	    border-bottom: 1px solid #555;
+	    line-height: 50px;
+	}
+	.nav .menu-item a {
+	    display: block;
+	}
+	.nav ul {
+	    display: block;
+	    border: 0;
+	    height: auto;
+	}
+	.nav ul li {
+		border-left: none;
 	}
 
 	.header .toggle-nav {
@@ -631,12 +685,16 @@ h2 {
 		display: none;
 	}
 
+	.modal.customize-form .component-list h4 {
+		display: block;
+	}
+
 }
 @media only screen and (max-width:768px) {
 
-	.wrapper, .single-product .wrapper {
+/*	.wrapper, .single-product .wrapper {
 		padding: 30px;
-	}
+	}*/
 
 	.modal-wrapper .modal {
 		position: fixed;

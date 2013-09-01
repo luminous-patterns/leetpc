@@ -67,10 +67,14 @@ class leetPcStore {
 	 */
 	private $_path;
 
+	private $_productsCache = array();
+
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
+
+		$GLOBALS['leetpc'] = &$this;
 
 		$this->_dir                     = WP_PLUGIN_DIR . '/' . $this->_name;
 		$this->_path                    = $this->_dir . '/' . $this->_name . '.php';
@@ -97,6 +101,9 @@ class leetPcStore {
 
 		add_action( 'wp_ajax_add_to_cart',                         array( &$this, 'addProductToCart' ) );
 		add_action( 'wp_ajax_nopriv_add_to_cart',                  array( &$this, 'addProductToCart' ) );
+
+		add_action( 'wp_ajax_remove_from_cart',                    array( &$this, 'removeProductFromCart' ) );
+		add_action( 'wp_ajax_nopriv_remove_from_cart',             array( &$this, 'removeProductFromCart' ) );
 
 		add_action( 'wp_ajax_empty_cart',                          array( &$this, 'emptyCart' ) );
 		add_action( 'wp_ajax_nopriv_empty_cart',                   array( &$this, 'emptyCart' ) );
@@ -125,6 +132,13 @@ class leetPcStore {
 		exit;
 	}
 
+	public function &getProduct( $id ) {
+		if ( !array_key_exists( $id, $this->_productsCache ) ) {
+			$this->_productsCache[$id] = new lpcProduct( $id );
+		}
+		return $this->_productsCache[$id];
+	}
+
 	public function getCustomizeForm() {
 		customize_product_form( $_POST['product_id'] );
 		exit;
@@ -137,6 +151,11 @@ class leetPcStore {
 
 	public function emptyCart() {
 		empty_cart();
+		$this->echoJsonExit( array( 'code' => 200, 'cart' => get_cart() ) );
+	}
+
+	public function removeProductFromCart() {
+		remove_line_item( $_POST['line_item_id'] );
 		$this->echoJsonExit( array( 'code' => 200, 'cart' => get_cart() ) );
 	}
 

@@ -32,32 +32,26 @@
 
 					<?php foreach( $cart['items'] as $k => $item ) : 
 
-						$product = get_post( $item['product_id'] );
-						$meta = get_post_custom( $item['product_id'] );
-						// echo $item['qty'] . 'x Product ID: ' . $item['product_id'] . ' // Component IDs: ' . implode( ', ', $item['component_ids'] ); }; 
-
-						// $components = array();
-
-						// foreach ( $item['component_ids'] as $cid ) {
-						// 	$c = get_post( str_replace( 'component-', '', $cid ) );
-						// 	$c = get_post( $cid );
-						// 	$components[] = $c->post_title;
-						// }
+						$product = get_product( $item['product_id'] );
 
 						?>
 
-						<tr class="line-item line-item-<?php echo $k; ?>">
+						<tr class="line-item line-item-<?php echo $k; ?>" data-line-item-id="<?php echo $k; ?>">
 							<td class="qty-col"><input type="text" size="2" value="1" /></td>
 							<td class="description-col">
-								<?php echo get_the_post_thumbnail( $product->ID, 'medium', array( 'class' => 'product-thumbnail' ) ); ?>
-								<h3><a href="<?php echo get_permalink( $product->ID ); ?>"><?php echo $product->post_title; ?></a></h3>
-								<ul><?php foreach( $item['component_ids'] as $cid ) :
+								<!-- <?php echo get_the_post_thumbnail( $product->post->ID, 'medium', array( 'class' => 'product-thumbnail' ) ); ?> -->
+								<h3><a href="<?php echo get_permalink( $product->post->ID ); ?>"><?php echo $product->post->post_title; ?></a></h3>
+								<div class="actions">
+									<a href="#">Details</a> |
+									<a href="#" class="remove-line-item">Remove</a>
+								</div>
+								<!--<ul><?php foreach( $item['component_ids'] as $cid ) :
 									$c = get_post( str_replace( 'component-', '', $cid ) );
 									?>
 									<li><?php echo $c->post_title; ?></li>
-								<?php endforeach; ?></ul>
+								<?php endforeach; ?></ul>-->
 							</td>
-							<td class="price-col">&dollar;<?php echo calc_product_price( $item['product_id'], explode( ',', $item['component_ids'] ) ); ?></td>
+							<td class="price-col">&dollar;<?php echo $product->calcPrice( $item['component_ids'] ); ?></td>
 						</tr>
 
 					<?php endforeach; ?>
