@@ -169,14 +169,14 @@ var LEETPCStore = {
 	onClickNextStep: function( ev ) {
 
 		var that = this;
-		var data = { 
+		var data = {
 			action: 'get_checkout_step',
-			step: parseInt( jQuery( ev.target ).parents( '.checkout-modal' ).find( 'input[name=step]' ).val() ) + 1
+			step: parseInt( jQuery( ev.target ).parents( '.checkout-modal' ).find( 'input[name=current_step]' ).val() ) + 1,
+			submitted: {}
 		};
 
-		data.submitted = [];
-		jQuery( jQuery( ev.target ).parents( '.checkout-modal' ).find( 'input[name=step]' ).serializeArray() ).each( function( i, m ) {
-			console.log(i,m);
+		jQuery( jQuery( ev.target ).parents( '.checkout-modal' ).find( ':input' ).serializeArray() ).each( function( i, m ) {
+			data.submitted[m.name] = m.value;
 		} );
 
 		this.adminAjax( data, this.openCheckoutForm );

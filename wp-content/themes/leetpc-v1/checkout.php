@@ -62,42 +62,50 @@
 
 			<div class="row checkout-field acct-firstname">
 				<label>First name</label>
-				<input type="text" name="" />
+				<input type="text" name="acct-firstname" />
 			</div>
 
 			<div class="row checkout-field acct-lastname">
 				<label>Last name</label>
-				<input type="text" name="" />
+				<input type="text" name="acct-lastname" />
 			</div>
 
 			<div class="row checkout-field acct-email">
 				<label>Email</label>
-				<input type="text" name="" />
+				<input type="text" name="acct-email" />
 			</div>
 
 			<div class="row checkout-field acct-phone">
 				<label>Phone</label>
-				<input type="text" name="" />
+				<input type="text" name="acct-phone" />
 			</div>
 
 			<div class="row checkout-field acct-street">
 				<label>Street</label>
-				<input type="text" name="" />
+				<input type="text" name="acct-street" />
 			</div>
 
 			<div class="row checkout-field acct-postcode">
 				<label>Postcode</label>
-				<input type="text" name="" />
+				<input type="text" name="acct-postcode" />
 			</div>
 
 			<div class="row checkout-field acct-suburb">
 				<label>Suburb</label>
-				<input type="text" name="" />
+				<input type="text" name="acct-suburb" />
 			</div>
 
 			<div class="row checkout-field acct-state">
 				<label>State</label>
-				<input type="text" name="" />
+				<select name="acct-state">
+					<option>ACT</option>
+					<option>NSW</option>
+					<option>NT</option>
+					<option>QLD</option>
+					<option>TAS</option>
+					<option>VIC</option>
+					<option>WA</option>
+				</select>
 			</div>
 
 		</div>
@@ -111,6 +119,8 @@
 		<?php elseif ( $step == '2' ) : ?>
 
 		<div class="modal-body">
+
+			<?php echo var_dump( $_REQUEST ); ?>
 
 			<div class="row checkout-field cc-name">
 				<label>FULL name on card</label>

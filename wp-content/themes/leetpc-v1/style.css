@@ -685,7 +685,7 @@ h2 {
 		display: none;
 	}
 
-	.modal.customize-form .component-list h4 {
+	.modal.customize-form .component-list h4, .modal .modal-body label {
 		display: block;
 	}
 
