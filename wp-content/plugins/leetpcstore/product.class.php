@@ -63,6 +63,10 @@ class lpcProduct {
 
 	}
 
+	public function get( $k ) {
+		return $this->meta[$k][0];
+	}
+
 	public function printComponentOptions( $type ) {
 		return print_component_options( $type, $this->components, $this->comDefaults, $this->comAttrs );
 	}

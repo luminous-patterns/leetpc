@@ -128,7 +128,8 @@ if ( get_post_type() == 'product' ) :
 			</div>
 
 			<div class="modal-footer">
-				<button class="secondary close-modal">Cancel</button>
+				<!-- <button class="secondary close-modal">Cancel</button> -->
+				<a href="#" class="close-modal">Cancel</a>
 				<button class="add-to-cart">Add to cart</button>
 			</div>
 

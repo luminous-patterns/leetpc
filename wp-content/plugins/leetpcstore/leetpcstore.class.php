@@ -132,6 +132,24 @@ class leetPcStore {
 		exit;
 	}
 
+	// public function createInvoice( $params ) {
+
+	// 	// create invoice
+	// 	$post_id = wp_insert_post( array(
+	// 		'post_author'    => [ <user ID> ] //The user ID number of the author.
+	// 		'post_content'   => [ <the text of the post> ] //The full text of the post.
+	// 		'post_name'      => [ <the name> ] // The name (slug) for your post
+	// 		'post_status'    => 'publish' //Set the status of the new post.
+	// 		'post_title'     => [ <the title> ] //The title of your post.
+	// 		'post_type'      => 'invoice',
+	// 	) );
+
+	// 	// add line items
+
+	// 	// return invoice id
+
+	// }
+
 	public function &getProduct( $id ) {
 		if ( !array_key_exists( $id, $this->_productsCache ) ) {
 			$this->_productsCache[$id] = new lpcProduct( $id );
@@ -145,8 +163,32 @@ class leetPcStore {
 	}
 
 	public function getCheckoutStep() {
-		checkout_step( $_POST['step'] );
+
+
+		$step = $_POST['step'];
+
+		switch ( $step ) {
+
+			case '1':
+
+				break;
+
+			case '2':
+				if ( $_POST['submitted']['acct-registered'] ) {
+					$user = get_user_by( 'email', $_POST['submitted']['acct-email'] );
+					$valid_password = wp_check_password( $_POST['submitted']['acct-password'], $user->data->user_pass, $user->ID );
+					if ( !$user || !$valid_password ) {
+					   $step = 1;
+					}
+				}
+				break;
+
+		}
+
+		checkout_step( $step );
+
 		exit;
+
 	}
 
 	public function emptyCart() {

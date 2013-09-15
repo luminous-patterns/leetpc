@@ -68,6 +68,9 @@ input:focus {
 	outline:0;
 	border:1px solid #04A4CC;
 }
+.hidden {
+	display: none;
+}
 
 /*------------------------------------*\
     STRUCTURE
@@ -190,9 +193,98 @@ input:focus {
 }
 
 /*------------------------------------*\
+    COMMON ELEMENTS
+\*------------------------------------*/
+
+.product-price {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    text-align: right;
+}
+.product-price .amount {
+	font-family: oxygen, sans-serif;
+    font-size: 2em;
+    line-height: 1em;
+    display: inline-block;
+    margin-top: 2px;
+}
+button, .button {
+    background: linear-gradient(to bottom, rgba(200,50,150,1) 0%,rgba(160,30,120,1) 48%,rgba(131,31,132,1) 49%,rgba(107,19,90,1) 100%);
+    border-radius: 2px;
+    border-top: 1px solid rgba(160,30,120,1);
+    border-left: 1px solid rgba(160,30,120,1);
+    border-bottom: 1px solid rgba(30,0,30,1);
+    border-right: 1px solid rgba(70,15,70,1);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2);
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: oxygen;
+    font-size: 0.9em;
+    font-weight: bold;
+    line-height: 31px;
+    margin: 0;
+    padding: 0 15px;
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+    vertical-align: top;
+}
+button:hover, .button:hover {
+	color: #fff;
+}
+button.secondary, .button.secondary {
+	background: linear-gradient(to bottom, rgba(240,240,240,1) 0%,rgba(230,230,230,1) 48%,rgba(210,210,210,1) 49%,rgba(200,200,200,1) 100%);
+	color: #555;
+	text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #a4a4a4;
+	border-bottom: 1px solid #999;
+	border-left: 1px solid #ccc;
+}
+
+/*------------------------------------*\
     PAGES
 \*------------------------------------*/
 
+/* homepage */
+.page-template-template-home-php .wrapper {
+	background: #f5f5f5 linear-gradient(to bottom, #e5e5e5 0%,#f5f5f5 20px);
+}
+.product-sampler {
+	width: 900px;
+	margin: 0 auto;
+}
+.product-sampler .featured-product {
+	background: #fff linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(255,255,255,0.9) 20px,rgba(255,255,255,0) 100%);
+    padding: 30px 30px 30px 300px;
+	position: relative;
+	overflow: hidden;
+}
+.product-sampler .featured-product h1 {
+    color: #555;
+}
+.product-sampler .featured-product ul {
+    color: #555;
+    margin-bottom: 0;
+    margin-top: 30px;
+    list-style-type: square;
+    font-family: roboto;
+}
+.product-sampler .featured-product .button {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}
+.product-sampler .featured-product .wp-post-image {
+    position: absolute;
+    top: 30px;
+    right: 630px;
+}
+.product-sampler .product-price .amount {
+	color: #999;
+	font-size: 3em;
+	font-weight: bold;
+}
 /* single product */
 .single-product .wrapper {
 	padding-right: 30px;
@@ -245,46 +337,6 @@ input:focus {
 	left: 30px;
 	top: 30px;
 	width: 200px;
-}
-.single-product .product-price {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    text-align: right;
-}
-.single-product .product-price .amount {
-	font-family: oxygen, sans-serif;
-    font-size: 2em;
-    line-height: 1em;
-    display: inline-block;
-    margin-top: 2px;
-}
-button {
-    line-height: 31px;
-    vertical-align: top;
-    margin: 0;
-    padding: 0 15px;
-    background: linear-gradient(to bottom, rgba(200,50,150,1) 0%,rgba(160,30,120,1) 48%,rgba(131,31,132,1) 49%,rgba(107,19,90,1) 100%);
-    color: #fff;
-    border-radius: 2px;
-    border-top: 1px solid rgba(160,30,120,1);
-    font-family: oxygen;
-    font-size: 0.9em;
-    font-weight: bold;
-    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
-    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2);
-    border-left: 1px solid rgba(160,30,120,1);
-    border-bottom: 1px solid rgba(30,0,30,1);
-    border-right: 1px solid rgba(70,15,70,1);
-}
-button.secondary {
-	background: linear-gradient(to bottom, rgba(240,240,240,1) 0%,rgba(230,230,230,1) 48%,rgba(210,210,210,1) 49%,rgba(200,200,200,1) 100%);
-	color: #555;
-	text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
-	border-top: 1px solid #ccc;
-	border-right: 1px solid #a4a4a4;
-	border-bottom: 1px solid #999;
-	border-left: 1px solid #ccc;
 }
 .single-product button {
     margin-left: 10px;
@@ -345,6 +397,14 @@ button.secondary {
 .page.my-cart table th.qty-col {
     border-left: 1px solid #ddd;
 }
+.page.my-cart table .price {
+	font-size: 1.3em;
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	line-height: 1em;
+	font-family: roboto;
+}
 .page.my-cart table .price-col {
     width: 20%;
     text-align: right;
@@ -356,6 +416,7 @@ button.secondary {
     border-bottom: 1px solid #eee;
     font-family: roboto;
     padding: 15px;
+    position: relative;
     vertical-align: top;
 }
 .page.my-cart table td.qty-col input {
@@ -392,6 +453,24 @@ button.secondary {
 .page.my-cart table .actions {
     font-size: 0.9em;
 }
+.page.my-cart .details {
+    background-color: #f5f5f5;
+    padding: 3px 0;
+    margin-top: 15px;
+    border: 1px solid #e5e5e5;
+    border-radius: 2px;
+}
+.page.my-cart .details .price-diff {
+    background-color: #999;
+    padding: 0 5px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 0.9em;
+    line-height: 18px;
+    display: inline-block;
+    color: #fff;
+    margin-left: 10px;
+}
 /* modals */
 .modal-wrapper {
 	position: fixed;
@@ -402,13 +481,16 @@ button.secondary {
 	background: rgba(0,0,0,0.7);
 }
 .modal-wrapper .modal {
-	background-color: #f3f3f3;
-	width: 800px;
+	background-color: #111;
+	width: 600px;
 	margin: 40px auto;
 	border-radius: 2px;
 	padding: 1px;
 	box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 	position: relative;
+}
+.modal.checkout-modal {
+    width: 500px;
 }
 .modal .modal-header h3 {
     padding: 0 15px;
@@ -418,12 +500,17 @@ button.secondary {
     margin: 15px 0;
     font-weight: normal;
     color: #aaa;
-    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.8);
+}
+.modal .modal-header img.loading-anim {
+	position: absolute;
+	top: 20px;
+	right: 20px;
 }
 .modal .modal-body {
     background-color: #fff;
     border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd;
+    border-top: 3px solid rgba(160,30,120,1);
 }
 .modal .modal-body .row {
     border-bottom: 1px solid #ddd;
@@ -436,10 +523,44 @@ button.secondary {
 .modal .modal-footer button {
     margin-left: 10px;
 }
-.modal .modal-body input[type="text"] {
-    width: 200px;
+.modal .modal-footer button.previous-step {
+	float: left;
+	margin-left: 0;
 }
-input[type="text"] {
+.modal .modal-footer .close-modal {
+    line-height: 33px;
+    font-size: 0.9em;
+    color: #777;
+}
+.modal .modal-body input[type="text"], .modal .modal-body input[type="password"] {
+    width: 100px;
+}
+.modal .modal-body input.wide, .modal .modal-body input.wide {
+    width: 300px;
+}
+.modal .modal-body .row .options {
+    display: inline-block;
+    font-family: oxygen;
+    font-size: 0.8em;
+}
+.modal .modal-body .row .options label {
+    display: block;
+    font-weight: normal;
+    line-height: 1em;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+.modal .modal-body .row .options label input {
+    vertical-align: top;
+    margin-right: 5px;
+}
+.modal .modal-body {
+	font-size: 1.2em;
+}
+.modal .modal-body .row .options label:last-of-type {
+    margin-bottom: 0;
+}
+input[type="text"], input[type="password"] {
     line-height: 23px;
     padding: 0 5px;
     font-family: roboto;
@@ -483,7 +604,7 @@ input[type="text"] {
 }
 .modal.customize-form .component-list .component div.component-options {
     display: inline-block;
-    font-size: 0.9em;
+    font-size: 0.8em;
 }
 .modal.customize-form .price-diff {
     color: #999;
@@ -585,6 +706,19 @@ h2 {
 		padding: 20px;
 	}
 
+	.product-price {
+	    position: absolute;
+	    top: 20px;
+	    right: 20px;
+	    left: 20px;
+	}
+
+	.product-price .amount {
+		font-size: 1.5em;
+		font-weight: bold;
+		margin-top: 0;
+	}
+
 	.single-product .wp-post-image {
 		float: left;
 		margin-right: 20px;
@@ -594,13 +728,6 @@ h2 {
 
 	.single-product .editor-content {
 		margin-top: 70px;
-	}
-
-	.single-product .product-price {
-	    position: absolute;
-	    top: 20px;
-	    right: 20px;
-	    left: 20px;
 	}
 
 	.single-product .product-price .customize {
@@ -613,12 +740,6 @@ h2 {
 	    right: 0;
 	    top: 57px;
 	    margin-left: 0;
-	}
-
-	.single-product .product-price .amount {
-		font-size: 1.5em;
-		font-weight: bold;
-		margin-top: 0;
 	}
 
 	.single-product .product-type {
@@ -685,7 +806,17 @@ h2 {
 		display: none;
 	}
 
-	.modal.customize-form .component-list h4, .modal .modal-body label {
+	.modal.customize-form .component-list h4, .modal .modal-body .row label {
+		display: block;
+	
+		margin-bottom: 15px;
+}
+
+	.modal .modal-body input.wide {
+	    width: 100%;
+	}
+
+	.modal.customize-form .component-list .component div.component-options {
 		display: block;
 	}
 
@@ -724,8 +855,6 @@ h2 {
 
 	.modal-wrapper .modal .modal-body {
 	    background-color: #fff;
-	    border-bottom: 2px solid #ddd;
-	    border-top: 2px solid #ddd;
 	    top: 58px;
 	    bottom: 70px;
 	    overflow-y: scroll;

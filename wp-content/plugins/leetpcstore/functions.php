@@ -2,6 +2,42 @@
 
 // Create cart class
 
+function get_products( $args = array() ) {
+
+	$d = array(
+		'post_type' => 'product',
+		'sort_order' => 'DESC',
+		'sort_column' => 'post_title',
+		'hierarchical' => 1,
+		'exclude' => '',
+		'include' => '',
+		'meta_key' => '',
+		'meta_value' => '',
+		'authors' => '',
+		'child_of' => 0,
+		'parent' => -1,
+		'exclude_tree' => '',
+		'number' => '',
+		'offset' => 0,
+		'post_status' => 'publish'
+	);
+
+	$posts = get_pages( array_merge( $d, $args ) );
+
+	$products = array();
+
+	foreach ( $posts as $p ) {
+		$products[] = get_product( $p->ID );
+	}
+
+	return $products;
+
+}
+
+// function &create_invoice( $params ) {
+// 	return $GLOBALS['leetpc']->createInvoice( $params );
+// }
+
 function &get_product( $product_id ) {
 	return $GLOBALS['leetpc']->getProduct( $product_id );
 }
@@ -9,6 +45,11 @@ function &get_product( $product_id ) {
 function get_cart() {
 	init_cart();
 	return $_SESSION['shopping_cart'];
+}
+
+function get_cart_total() {
+	init_cart();
+	return $_SESSION['shopping_cart']['sub_total'];
 }
 
 function get_cart_key( $product_id, $component_ids ) {

@@ -22,6 +22,7 @@ var LEETPCStore = {
 
 		jQuery( '.toggle-nav' ).bind( 'click', jQuery.proxy( this.toggleNav, this ) );
 		jQuery( '.remove-line-item' ).bind( 'click', jQuery.proxy( this.removeLineItem, this ) );
+		jQuery( '.toggle-details' ).bind( 'click', jQuery.proxy( this.toggleDetailsEl, this ) );
 
 		if ( this.bodyClasses.indexOf( 'single-product' ) > -1 ) {
 			this.pageType = 'single-product';
@@ -36,6 +37,16 @@ var LEETPCStore = {
 			jQuery( 'article.product button.customize' ).bind( 'click', jQuery.proxy( this.customizeProduct, this ) );
 		}
 
+		if ( this.pageType == 'my-cart' ) {
+			this.postID = jQuery( 'article.product' ).attr( 'id' ).split( '-' )[1];
+			jQuery( 'article.product button.customize' ).bind( 'click', jQuery.proxy( this.customizeProduct, this ) );
+		}
+
+	},
+
+	toggleDetailsEl: function( ev ) {
+		ev.preventDefault();
+		jQuery( ev.target ).parents( '.line-item' ).find( '.details' ).toggleClass( 'hidden' );
 	},
 
 	onKeyUp: function( ev ) {
@@ -65,6 +76,7 @@ var LEETPCStore = {
 	},
 
 	removeLineItem: function( ev ) {
+		ev.preventDefault();
 		var that = this;
 		var lineItemEl = jQuery( ev.target ).parents( '.line-item' );
 		lineItemEl.addClass( 'removing' );
@@ -138,6 +150,10 @@ var LEETPCStore = {
 			success: jQuery.proxy( onSuccess, that )
 		};
 
+		if ( this.currentModalEl ) {
+			this.currentModalEl.find( '.modal-header' ).prepend( this.makeLoadingAnim() );
+		}
+
 		jQuery.ajax( url, opts );
 
 	},
@@ -183,16 +199,46 @@ var LEETPCStore = {
 
 	},
 
+	onClickPrevStep: function( ev ) {
+
+		var that = this;
+		var data = {
+			action: 'get_checkout_step',
+			step: parseInt( jQuery( ev.target ).parents( '.checkout-modal' ).find( 'input[name=current_step]' ).val() ) - 1,
+			submitted: {}
+		};
+
+		jQuery( jQuery( ev.target ).parents( '.checkout-modal' ).find( ':input' ).serializeArray() ).each( function( i, m ) {
+			data.submitted[m.name] = m.value;
+		} );
+
+		this.adminAjax( data, this.openCheckoutForm );
+
+	},
+
 	openCheckoutForm: function( r ) {
 
 		this.closeModal();
 
 		this.currentModalEl = jQuery( r );
 
-		this.currentModalEl.find( 'button.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
-		this.currentModalEl.find( 'button.next-step' ).bind( 'click', jQuery.proxy( this.onClickNextStep, this ) );
+		this.currentModalEl.find( '.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
+		this.currentModalEl.find( '.previous-step' ).bind( 'click', jQuery.proxy( this.onClickPrevStep, this ) );
+		this.currentModalEl.find( '.next-step' ).bind( 'click', jQuery.proxy( this.onClickNextStep, this ) );
+		this.currentModalEl.find( 'input[name=acct-registered]' ).bind( 'change', jQuery.proxy( this.onClickRegisteredToggle, this ) );
 
-		jQuery( 'body' ).css( 'overflow-y', 'hidden' ).append( this.currentModalEl );
+		jQuery( 'body' ).css( 'overflow', 'hidden' ).append( this.currentModalEl );
+
+	},
+
+	onClickRegisteredToggle: function( ev ) {
+
+		if ( this.currentModalEl.find( 'input[name=acct-registered]:checked' ).val() == '1' ) {
+			this.currentModalEl.find( 'div.row.acct-password' ).removeClass( 'hidden' );
+		}
+		else {
+			this.currentModalEl.find( 'div.row.acct-password' ).addClass( 'hidden' );
+		}
 
 	},
 
@@ -213,12 +259,12 @@ var LEETPCStore = {
 
 		this.currentModalEl = jQuery( r );
 
-		this.currentModalEl.find( 'button.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
-		this.currentModalEl.find( 'button.add-to-cart' ).bind( 'click', jQuery.proxy( this.onClickAddToCart, this ) );
+		this.currentModalEl.find( '.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
+		this.currentModalEl.find( '.add-to-cart' ).bind( 'click', jQuery.proxy( this.onClickAddToCart, this ) );
 		this.currentModalEl.find( 'input[type=radio]' ).bind( 'click', jQuery.proxy( this.onClickCustomizeOption, this ) );
 		this.currentModalEl.find( '.change-selection' ).bind( 'click', jQuery.proxy( this.onClickChangeSelection, this ) );
 
-		jQuery( 'body' ).css( 'overflow-y', 'hidden' ).append( this.currentModalEl );
+		jQuery( 'body' ).css( 'overflow', 'hidden' ).append( this.currentModalEl );
 
 		this.refreshCustomize();
 
@@ -279,9 +325,10 @@ var LEETPCStore = {
 
 	},
 
-	closeModal: function() {
+	closeModal: function( e ) {
+		if ( e ) { e.preventDefault(); }
 		if ( this.currentModalEl ) {
-			jQuery( 'body' ).css( 'overflow-y', 'auto' );
+			jQuery( 'body' ).css( 'overflow', 'auto' );
 			this.currentModalEl.remove();
 			this.currentModalEl = null;
 		}
@@ -292,6 +339,11 @@ var LEETPCStore = {
 		newString += n < 1 ? 'No' : n;
 		newString += n == 0 || n > 1 ? ' items' : ' item';
 		jQuery( '.cart span' ).html( newString );
+	},
+
+	makeLoadingAnim: function() {
+		var loadingAnimEl = jQuery( '<img class="loading-anim" src="/wp-content/plugins/leetpcstore/img/ajax-loader.gif" />' );
+		return loadingAnimEl;
 	}
 
 };

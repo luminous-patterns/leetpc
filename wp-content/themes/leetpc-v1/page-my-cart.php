@@ -38,20 +38,29 @@
 
 						<tr class="line-item line-item-<?php echo $k; ?>" data-line-item-id="<?php echo $k; ?>">
 							<td class="qty-col"><input type="text" size="2" value="1" /></td>
-							<td class="description-col">
+							<td class="description-col" colspan="2">
 								<!-- <?php echo get_the_post_thumbnail( $product->post->ID, 'medium', array( 'class' => 'product-thumbnail' ) ); ?> -->
 								<h3><a href="<?php echo get_permalink( $product->post->ID ); ?>"><?php echo $product->post->post_title; ?></a></h3>
 								<div class="actions">
-									<a href="#">Details</a> |
+									<a href="#" class="toggle-details">Details</a> |
 									<a href="#" class="remove-line-item">Remove</a>
 								</div>
-								<!--<ul><?php foreach( $item['component_ids'] as $cid ) :
-									$c = get_post( str_replace( 'component-', '', $cid ) );
-									?>
-									<li><?php echo $c->post_title; ?></li>
-								<?php endforeach; ?></ul>-->
+								<div class="details hidden">
+									<ul><?php foreach( $item['component_ids'] as $cid ) :
+										$c = get_post( str_replace( 'component-', '', $cid ) );
+										?>
+										<li>
+											<?php echo $c->post_title; ?>
+											<?php if ( $product->comPriceDiffs[$c->ID] != '0' ) : ?><span class="price-diff">
+												<?php echo $product->comPriceDiffs[$c->ID] > 0 ? '+' : '-'; ?>
+												&dollar;<?php echo abs( $product->comPriceDiffs[$c->ID] ); ?>
+											</span><?php endif; ?>
+										</li>
+									<?php endforeach; ?></ul>
+								</div>
+								<div class="price">&dollar;<?php echo $product->calcPrice( $item['component_ids'] ); ?></div>
 							</td>
-							<td class="price-col">&dollar;<?php echo $product->calcPrice( $item['component_ids'] ); ?></td>
+							<!-- <td class="price-col">&dollar;<?php echo $product->calcPrice( $item['component_ids'] ); ?></td> -->
 						</tr>
 
 					<?php endforeach; ?>
