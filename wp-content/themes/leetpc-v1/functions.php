@@ -142,42 +142,6 @@ function customize_product_form( $product_id ) {
     include( 'form-customize.php' );
 }
 
-function process_checkout_data( $reload = false ) {
-
-    $data = $reload ? array() : $_SESSION['checkout_data'];
-
-    foreach ( $_POST['submitted'] as $k => $v ) {
-
-        $c = explode( '-', $k );
-        $x = count( $c );
-
-        switch ( $x ) {
-
-            case 3:
-                $data[$c[0]][$c[1]][$c[2]] = $v;
-                break;
-
-            case 2:
-                $data[$c[0]][$c[1]] = $v;
-                break;
-
-            case 1:
-                $data[$c[0]] = $v;
-                break;
-
-        }
-
-    }
-
-    $_SESSION['checkout_data'] = $data;
-
-}
-
-function checkout_step( $step ) {
-    process_checkout_data( $step < 2 );
-    include( 'checkout.php' );
-}
-
 // HTML5 Blank navigation
 function html5blank_nav()
 {

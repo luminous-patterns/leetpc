@@ -162,8 +162,42 @@ class leetPcStore {
 		exit;
 	}
 
-	public function getCheckoutStep() {
+	public function processCheckoutData( $reload = false ) {
 
+	    $data = $reload ? array() : $_SESSION['checkout_data'];
+
+	    foreach ( $_POST['submitted'] as $k => $v ) {
+
+	        $c = explode( '-', $k );
+	        $x = count( $c );
+
+	        switch ( $x ) {
+
+	            case 3:
+	                $data[$c[0]][$c[1]][$c[2]] = $v;
+	                break;
+
+	            case 2:
+	                $data[$c[0]][$c[1]] = $v;
+	                break;
+
+	            case 1:
+	                $data[$c[0]] = $v;
+	                break;
+
+	        }
+
+	    }
+
+	    $_SESSION['checkout_data'] = $data;
+
+	}
+
+	public function checkoutStep( $step ) {
+	    include( get_template_directory() . DIRECTORY_SEPARATOR . 'checkout.php' );
+	}
+
+	public function getCheckoutStep() {
 
 		$step = $_POST['step'];
 
@@ -185,7 +219,9 @@ class leetPcStore {
 
 		}
 
-		checkout_step( $step );
+	    $this->processCheckoutData( $step < 2 );
+
+		$this->checkoutStep( $step );
 
 		exit;
 

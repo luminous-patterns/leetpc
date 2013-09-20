@@ -427,6 +427,7 @@ button.secondary, .button.secondary {
 	font-family: oxygen;
 	font-size: 1.5em;
 	line-height: 1;
+	display: inline-block;
 }
 .page.my-cart table td.description-col {
     font-size: 0.9em;
@@ -452,6 +453,8 @@ button.secondary, .button.secondary {
 }
 .page.my-cart table .actions {
     font-size: 0.9em;
+    display: inline-block;
+    margin-left: 10px;
 }
 .page.my-cart .details {
     background-color: #f5f5f5;
@@ -482,6 +485,8 @@ button.secondary, .button.secondary {
 }
 .modal-wrapper .modal {
 	background-color: #111;
+	border-top: 1px solid #222;
+	border-bottom: 1px solid #050505;
 	width: 600px;
 	margin: 40px auto;
 	border-radius: 2px;
@@ -515,6 +520,7 @@ button.secondary, .button.secondary {
 .modal .modal-body .row {
     border-bottom: 1px solid #ddd;
     padding: 15px;
+    background-color: #fff;
 }
 .modal .modal-footer {
     padding: 15px;
@@ -808,9 +814,7 @@ h2 {
 
 	.modal.customize-form .component-list h4, .modal .modal-body .row label {
 		display: block;
-	
-		margin-bottom: 15px;
-}
+	}
 
 	.modal .modal-body input.wide {
 	    width: 100%;
@@ -830,6 +834,7 @@ h2 {
 	.modal-wrapper .modal {
 		position: fixed;
 		border-radius: 0;
+		border: none;
 		margin: 0;
 		width: auto;
 		bottom: 0;
@@ -854,7 +859,7 @@ h2 {
 	}
 
 	.modal-wrapper .modal .modal-body {
-	    background-color: #fff;
+	    background-color: #f5f5f5;
 	    top: 58px;
 	    bottom: 70px;
 	    overflow-y: scroll;
