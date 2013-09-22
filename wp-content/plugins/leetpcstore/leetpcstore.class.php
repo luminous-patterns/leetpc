@@ -114,6 +114,8 @@ class leetPcStore {
 		add_action( 'wp_ajax_get_checkout_step',                   array( &$this, 'getCheckoutStep' ) );
 		add_action( 'wp_ajax_nopriv_get_checkout_step',            array( &$this, 'getCheckoutStep' ) );
 
+		add_action( 'after_setup_theme',                           array( &$this, 'afterSetupTheme' ) );
+
 		/*
 
 		add_action( 'init',                                        array( &$this, 'init' ) );
@@ -130,6 +132,10 @@ class leetPcStore {
 		header( 'Content-type: application/json' );
 		echo json_encode( $x );
 		exit;
+	}
+
+	public function afterSetupTheme() {
+
 	}
 
 	// public function createInvoice( $params ) {
@@ -193,12 +199,13 @@ class leetPcStore {
 
 	}
 
-	public function checkoutStep( $step ) {
+	public function checkoutStep( $step, $data ) {
 	    include( get_template_directory() . DIRECTORY_SEPARATOR . 'checkout.php' );
 	}
 
 	public function getCheckoutStep() {
 
+		$error = array();
 		$step = $_POST['step'];
 
 		switch ( $step ) {
@@ -208,20 +215,49 @@ class leetPcStore {
 				break;
 
 			case '2':
-				if ( $_POST['submitted']['acct-registered'] ) {
-					$user = get_user_by( 'email', $_POST['submitted']['acct-email'] );
-					$valid_password = wp_check_password( $_POST['submitted']['acct-password'], $user->data->user_pass, $user->ID );
-					if ( !$user || !$valid_password ) {
-					   $step = 1;
+
+				$login = $_POST['submitted']['acct-registered'];
+				$user = get_user_by( 'email', $_POST['submitted']['acct-email'] );
+				$valid_password = !$login ? false : wp_check_password( $_POST['submitted']['acct-password'], $user->data->user_pass, $user->ID );
+
+				if ( $login ) {
+
+					if ( $user ) {
+
+						if ( !$valid_password ) {
+							// Wrong password
+							$error['message'] = 'Invalid username or password';
+							$error['fields'] = 'acct-email,acct-password';
+							break;
+						}
+
+						// Valid user, save ID
+						$_SESSION['checkout_data']['user_id'] = $user->ID;
+						break;
+
 					}
+
+					// No such user
+					$error['message'] = 'User does not exist';
+					$error['fields'] = 'acct-email';
+					break;
+
 				}
+
+				if ( $user ) {
+
+					// User exists but no login was sent
+					$error['message'] = 'You have an account with us already';
+
+				}
+
 				break;
 
 		}
 
 	    $this->processCheckoutData( $step < 2 );
 
-		$this->checkoutStep( $step );
+		$this->checkoutStep( count( $error ) > 0 ? $step - 1 : $step, array( 'error' => $error ) );
 
 		exit;
 

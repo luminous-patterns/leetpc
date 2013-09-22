@@ -38,7 +38,6 @@ var LEETPCStore = {
 		}
 
 		if ( this.pageType == 'my-cart' ) {
-			this.postID = jQuery( 'article.product' ).attr( 'id' ).split( '-' )[1];
 			jQuery( 'article.product button.customize' ).bind( 'click', jQuery.proxy( this.customizeProduct, this ) );
 		}
 
@@ -226,6 +225,14 @@ var LEETPCStore = {
 		this.currentModalEl.find( '.previous-step' ).bind( 'click', jQuery.proxy( this.onClickPrevStep, this ) );
 		this.currentModalEl.find( '.next-step' ).bind( 'click', jQuery.proxy( this.onClickNextStep, this ) );
 		this.currentModalEl.find( 'input[name=acct-registered]' ).bind( 'change', jQuery.proxy( this.onClickRegisteredToggle, this ) );
+
+		// if ( this.currentModalEl.find( '.error-details' ).length > 0 ) {
+		// 	var errorFields = this.currentModalEl.find( '.error-details .fields' ).attr( 'value' ).split( ',' );
+		// 	console.log(errorFields);
+		// 	if ( errorFields.length ) for ( var i = 0; i < errorFields.length; i++ ) {
+		// 		this.currentModalEl.find( '.checkout-field.' + errorFields[i] ).addClass( 'error' );
+		// 	}
+		// }
 
 		jQuery( 'body' ).css( 'overflow', 'hidden' ).append( this.currentModalEl );
 

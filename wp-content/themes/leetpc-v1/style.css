@@ -228,6 +228,7 @@ button, .button {
     padding: 0 15px;
     text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
     vertical-align: top;
+    white-space: nowrap;
 }
 button:hover, .button:hover {
 	color: #fff;
@@ -482,6 +483,7 @@ button.secondary, .button.secondary {
 	right: 0;
 	bottom: 0;
 	background: rgba(0,0,0,0.7);
+	overflow-y: scroll;
 }
 .modal-wrapper .modal {
 	background-color: #111;
@@ -493,9 +495,6 @@ button.secondary, .button.secondary {
 	padding: 1px;
 	box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 	position: relative;
-}
-.modal.checkout-modal {
-    width: 500px;
 }
 .modal .modal-header h3 {
     padding: 0 15px;
@@ -528,6 +527,7 @@ button.secondary, .button.secondary {
 }
 .modal .modal-footer button {
     margin-left: 10px;
+    border-color: #000;
 }
 .modal .modal-footer button.previous-step {
 	float: left;
@@ -555,6 +555,8 @@ button.secondary, .button.secondary {
     line-height: 1em;
     margin-bottom: 10px;
     font-size: 1em;
+    width: auto;
+    white-space: nowrap;
 }
 .modal .modal-body .row .options label input {
     vertical-align: top;
@@ -566,6 +568,16 @@ button.secondary, .button.secondary {
 .modal .modal-body .row .options label:last-of-type {
     margin-bottom: 0;
 }
+.modal .modal-footer button.secondary, .modal .modal-footer .button.secondary {
+	background: linear-gradient(to bottom, rgba(60,60,60,1) 0%,rgba(50,50,50,1) 48%,rgba(30,30,30,1) 49%,rgba(20,20,20,1) 100%);
+	color: #999;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
+	border-top: 1px solid #000;
+	border-right: 1px solid #090909;
+	border-bottom: 1px solid #040404;
+	border-left: 1px solid #000;
+	box-shadow: inset 1px 1px 0 rgba(255,255,255,0.15);
+}
 input[type="text"], input[type="password"] {
     line-height: 23px;
     padding: 0 5px;
@@ -573,6 +585,9 @@ input[type="text"], input[type="password"] {
     border: 1px solid #ccc;
     box-shadow: inset 1px 1px 3px rgba(0,0,0,0.07);
     font-size: 0.9em;
+}
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #5AF;
 }
 /* customize form */
 .page .modal.customize-form .sub-total {
@@ -635,6 +650,20 @@ input[type="text"], input[type="password"] {
     padding: 0 6px;
     font-size: 0.9em;
     margin-top: -2px;
+}
+/* checkout form */
+.modal.checkout-modal {
+    width: 500px;
+}
+.modal.checkout-modal .modal-body h4 {
+    border-bottom: 1px solid #ddd;
+    background-color: #eee;
+    color: #666;
+    font-family: oxygen;
+    font-size: 0.8em;
+    line-height: 2.5em;
+    margin: 0;
+    padding: 0 15px;
 }
 
 /*------------------------------------*\
@@ -830,6 +859,10 @@ h2 {
 /*	.wrapper, .single-product .wrapper {
 		padding: 30px;
 	}*/
+
+	.modal-wrapper {
+		overflow-y: hidden;
+	}
 
 	.modal-wrapper .modal {
 		position: fixed;
