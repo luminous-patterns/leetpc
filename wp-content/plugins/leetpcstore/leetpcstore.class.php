@@ -170,7 +170,7 @@ class leetPcStore {
 
 	public function processCheckoutData( $reload = false ) {
 
-	    $data = $reload ? array() : $_SESSION['checkout_data'];
+	    $data = $reload ? array( 'cart' => get_cart() ) : $_SESSION['checkout_data'];
 
 	    foreach ( $_POST['submitted'] as $k => $v ) {
 
@@ -216,9 +216,9 @@ class leetPcStore {
 
 			case '2':
 
-				$login = $_POST['submitted']['acct-registered'];
-				$user = get_user_by( 'email', $_POST['submitted']['acct-email'] );
-				$valid_password = !$login ? false : wp_check_password( $_POST['submitted']['acct-password'], $user->data->user_pass, $user->ID );
+				$login = $_POST['submitted']['user-registered'];
+				$user = get_user_by( 'email', $_POST['submitted']['user-email'] );
+				$valid_password = !$login ? false : wp_check_password( $_POST['submitted']['user-password'], $user->data->user_pass, $user->ID );
 
 				if ( $login ) {
 
@@ -227,7 +227,7 @@ class leetPcStore {
 						if ( !$valid_password ) {
 							// Wrong password
 							$error['message'] = 'Invalid username or password';
-							$error['fields'] = 'acct-email,acct-password';
+							$error['fields'] = 'user-email,user-password';
 							break;
 						}
 
@@ -239,7 +239,7 @@ class leetPcStore {
 
 					// No such user
 					$error['message'] = 'User does not exist';
-					$error['fields'] = 'acct-email';
+					$error['fields'] = 'user-email';
 					break;
 
 				}

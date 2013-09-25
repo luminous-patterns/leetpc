@@ -13,51 +13,6 @@
 			<h3>Checkout</h3>
 		</div>
 
-<!-- 		<div class="modal-body">
-			<p>
-				<strong>Sub-total</strong>
-				<br /><?php echo $cart['sub_total']; ?>
-			</p>
-			<p>
-				<strong>Items</strong>
-				<br /><?php foreach( $cart['items'] as $k => $item ) { echo $item['qty'] . 'x Product ID: ' . $item['product_id'] . ' // Component IDs: ' . implode( ', ', $item['component_ids'] ); }; ?>
-			</p>
-		</div> -->
-
-<!-- 		<div class="modal-body">
-
-			<div>
-				<label>First name</label>
-				<input type="text" name="" />
-			</div>
-
-			<div>
-				<label>Last name</label>
-				<input type="text" name="" />
-			</div>
-
-			<div>
-				<label>Email address</label>
-				<input type="text" name="" />
-			</div>
-
-			<div>
-				<label>Email address</label>
-				<input type="text" name="" />
-			</div>
-
-			<div>
-				<label>Email address</label>
-				<input type="text" name="" />
-			</div>
-
-			<div>
-				<label>Email address</label>
-				<input type="text" name="" />
-			</div>
-
-		</div> -->
-
 		<div class="modal-body">
 
 		<?php if ( count( $data['error'] ) > 0 ) : ?>
@@ -73,22 +28,22 @@
 
 			<h4>Account details</h4>
 
-			<div class="row checkout-field acct-email">
+			<div class="row checkout-field user-email">
 				<label>Email address</label>
-				<input type="text" name="acct-email" value="<?php echo $_SESSION['checkout_data']['acct']['email']; ?>" class="wide" />
+				<input type="text" name="user-email" value="<?php echo $_SESSION['checkout_data']['user']['email']; ?>" class="wide" />
 			</div>
 
-			<div class="row checkout-field acct-registered">
+			<div class="row checkout-field user-registered">
 				<label>I am a ...</label>
 				<div class="options">
-					<label><input type="radio" name="acct-registered" value="0" <?php if ( !$_SESSION['checkout_data']['acct']['registered'] ) : ?>checked="checked"<?php endif; ?> /> New customer</label>
-					<label><input type="radio" name="acct-registered" value="1" <?php if ( $_SESSION['checkout_data']['acct']['registered'] ) : ?>checked="checked"<?php endif; ?> /> Returning customer</label>
+					<label><input type="radio" name="user-registered" value="0" <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> New customer</label>
+					<label><input type="radio" name="user-registered" value="1" <?php if ( $_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> Returning customer</label>
 				</div>
 			</div>
 
-			<div class="row checkout-field acct-password <?php if ( !$_SESSION['checkout_data']['acct']['registered'] ) : ?>hidden<?php endif; ?>">
+			<div class="row checkout-field user-password <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>hidden<?php endif; ?>">
 				<label>Password</label>
-				<input type="password" name="acct-password" class="wide" />
+				<input type="password" name="user-password" class="wide" />
 			</div>
 
 		<?php elseif ( $step == '2' ) : ?>
@@ -143,17 +98,24 @@
 				</select>
 			</div>
 
+		<?php elseif ( $step == '3' ) : ?>
+
 			<h4>Delivery details</h4>
 
-			<div class="row checkout-field acct-registered">
-				<label>Deliver to</label>
+			<div class="row checkout-field delivery-method">
+				<label>Delivery method</label>
 				<div class="options">
-					<label><input type="radio" name="delivery-use_billing" value="0" <?php if ( !$_SESSION['checkout_data']['delivery']['use_billing'] ) : ?>checked="checked"<?php endif; ?> /> Use same as billing / account</label>
-					<label><input type="radio" name="delivery-use_billing" value="1" <?php if ( $_SESSION['checkout_data']['delivery']['use_billing'] ) : ?>checked="checked"<?php endif; ?> /> Different address...</label>
+					FREE courier delivery to anywhere in Australia (order now for delivery before )
 				</div>
 			</div>
 
-		<?php elseif ( $step == '3' ) : ?>
+			<div class="row checkout-field delivery-use_different_addr">
+				<label>Deliver to</label>
+				<div class="options">
+					<label><input type="radio" name="delivery-use_different_addr" value="0" <?php if ( !$_SESSION['checkout_data']['delivery']['use_different_addr'] ) : ?>checked="checked"<?php endif; ?> /> Same as billing address</label>
+					<label><input type="radio" name="delivery-use_different_addr" value="1" <?php if ( $_SESSION['checkout_data']['delivery']['use_different_addr'] ) : ?>checked="checked"<?php endif; ?> /> Different address...</label>
+				</div>
+			</div>
 
 			<!-- <h4>Order summary</h4>
 
@@ -174,6 +136,8 @@
 					<?php echo $_SESSION['checkout_data']['acct']['postcode']; ?>
 				</div>
 			</div> -->
+
+		<?php elseif ( $step == '4' ) : ?>
 
 			<h4>Payment details</h4>
 
@@ -221,6 +185,10 @@
 			</div>
 
 			<?php $next_step_btn_text = 'Pay &amp; Finalise'; ?>
+
+		<?php elseif ( $step == '5' ) : ?>
+
+			<pre style="font-size: 0.8em;"><?php var_export( $_SESSION['checkout_data'] ); ?></pre>
 
 		<?php endif; ?>
 

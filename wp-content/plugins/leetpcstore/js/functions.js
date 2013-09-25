@@ -224,7 +224,7 @@ var LEETPCStore = {
 		this.currentModalEl.find( '.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
 		this.currentModalEl.find( '.previous-step' ).bind( 'click', jQuery.proxy( this.onClickPrevStep, this ) );
 		this.currentModalEl.find( '.next-step' ).bind( 'click', jQuery.proxy( this.onClickNextStep, this ) );
-		this.currentModalEl.find( 'input[name=acct-registered]' ).bind( 'change', jQuery.proxy( this.onClickRegisteredToggle, this ) );
+		this.currentModalEl.find( 'input[name=user-registered]' ).bind( 'change', jQuery.proxy( this.onClickRegisteredToggle, this ) );
 
 		// if ( this.currentModalEl.find( '.error-details' ).length > 0 ) {
 		// 	var errorFields = this.currentModalEl.find( '.error-details .fields' ).attr( 'value' ).split( ',' );
@@ -240,11 +240,11 @@ var LEETPCStore = {
 
 	onClickRegisteredToggle: function( ev ) {
 
-		if ( this.currentModalEl.find( 'input[name=acct-registered]:checked' ).val() == '1' ) {
-			this.currentModalEl.find( 'div.row.acct-password' ).removeClass( 'hidden' );
+		if ( this.currentModalEl.find( 'input[name=user-registered]:checked' ).val() == '1' ) {
+			this.currentModalEl.find( 'div.row.user-password' ).removeClass( 'hidden' );
 		}
 		else {
-			this.currentModalEl.find( 'div.row.acct-password' ).addClass( 'hidden' );
+			this.currentModalEl.find( 'div.row.user-password' ).addClass( 'hidden' );
 		}
 
 	},
