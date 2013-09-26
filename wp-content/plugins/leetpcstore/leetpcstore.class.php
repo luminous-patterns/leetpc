@@ -199,26 +199,28 @@ class leetPcStore {
 
 	}
 
-	public function checkoutStep( $step, $data ) {
+	public function showCheckoutStep( $step, $data ) {
 	    include( get_template_directory() . DIRECTORY_SEPARATOR . 'checkout.php' );
 	}
 
 	public function getCheckoutStep() {
 
-		$error = array();
-		$step = $_POST['step'];
+		$p = false;
+		$e = array();
+		$s = $_POST['step'] - 1;
 
-		switch ( $step ) {
+		$password = $_POST['submitted']['user-password'] ? $_POST['submitted']['user-password'] : '';
+		$_POST['submitted']['user-password'] = '******';
 
-			case '1':
+	    $this->processCheckoutData( $s < 1 );
 
-				break;
+		switch ( $s ) {
 
-			case '2':
+			case 1: // Process account info
 
 				$login = $_POST['submitted']['user-registered'];
 				$user = get_user_by( 'email', $_POST['submitted']['user-email'] );
-				$valid_password = !$login ? false : wp_check_password( $_POST['submitted']['user-password'], $user->data->user_pass, $user->ID );
+				$valid_password = !$login ? false : wp_check_password( $password, $user->data->user_pass, $user->ID );
 
 				if ( $login ) {
 
@@ -226,8 +228,8 @@ class leetPcStore {
 
 						if ( !$valid_password ) {
 							// Wrong password
-							$error['message'] = 'Invalid username or password';
-							$error['fields'] = 'user-email,user-password';
+							$e['message'] = 'Invalid username or password';
+							$e['fields'] = 'user-email,user-password';
 							break;
 						}
 
@@ -238,8 +240,8 @@ class leetPcStore {
 					}
 
 					// No such user
-					$error['message'] = 'User does not exist';
-					$error['fields'] = 'user-email';
+					$e['message'] = 'User does not exist';
+					$e['fields'] = 'user-email';
 					break;
 
 				}
@@ -247,19 +249,74 @@ class leetPcStore {
 				if ( $user ) {
 
 					// User exists but no login was sent
-					$error['message'] = 'You have an account with us already';
+					$e['message'] = 'You have an account with us already';
 
 				}
 
 				break;
 
+			case 2: // Process billing info
+
+				break;
+
+			case 3: // Process shipping info
+
+				break;
+
+			case 4: // Process credit card info and create order
+
+				if ( $_SESSION['checkout_data']['cc']['number'] == '51631000000000' ) {
+					// test transaction
+				}
+
+				$p = true;
+
+				break;
+
 		}
 
-	    $this->processCheckoutData( $step < 2 );
+		if ( $p ) {
+			$invoice_id = $this->createInvoice( $_SESSION['checkout_data'] );
+			if ( $invoice_id ) {
+				empty_cart();
+			}
+		}
 
-		$this->checkoutStep( count( $error ) > 0 ? $step - 1 : $step, array( 'error' => $error ) );
+		$this->showCheckoutStep( count( $e ) > 0 ? $s : $s + 1, array( 'error' => $e ) );
 
 		exit;
+
+	}
+
+	private function createInvoice( $data ) {
+
+		$i = array(
+			'comment_status' => 'open',
+			'ping_status'    => 'closed',
+			'post_author'    => 2,
+			'post_status'    => 'pending',
+			'post_title'     => 'NEW INVOICE',
+			'post_type'      => 'invoice'
+			// 'tags_input'     => [ '<tag>, <tag>, <...>' ] //For tags.
+			// 'to_ping'        => [ ? ] //?
+			// 'tax_input'      => [ array( 'taxonomy_name' => array( 'term', 'term2', 'term3' ) ) ] // support for custom taxonomies. 
+		);
+
+		$id = wp_insert_post( $i );
+
+		foreach ( $data as $k => $v ) {
+			add_post_meta( $id, "_{$k}", is_array( $v ) ? json_encode( $v ) : $v, true );
+		}
+
+		$u = array(
+			'ID'         => $id,
+			'post_title' => "INVOICE ID#{$id}",
+			'post_name'  => "invoice-{$id}"
+		);
+
+		wp_update_post( $u );
+
+		return $id; 
 
 	}
 

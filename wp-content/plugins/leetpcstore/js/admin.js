@@ -6,6 +6,7 @@ var LEETPCStoreAdmin = {
 	init: function() {
 
 		this.comInputEl = jQuery( 'input.components-list-input' );
+		this.invoiceMetaEl = jQuery( '#invoice_metabox' );
 
 		jQuery( '#product_metabox .components-list .component' ).on( 'click', jQuery.proxy( this.calculatePrices, this ) );
 		jQuery( '#product_metabox .components-list .group .title' ).on( 'click', this.toggleGroup );
@@ -14,9 +15,34 @@ var LEETPCStoreAdmin = {
 			this.importComponents();
 		}
 
+		if ( this.invoiceMetaEl.length > 0 ) {
+			this.processInvoiceMeta();
+		}
+
 		this.finishedLoading();
 
 		jQuery( '#product_metabox .components-list .group .title' ).trigger( 'click' );
+
+	},
+
+	processInvoiceMeta: function() {
+
+		this.invoiceMetaEl.find( '.form-table td' ).each( function() {
+
+			var obj = jQuery.parseJSON( jQuery( this ).html().trim() );
+
+			var rLoop = function( i ) {
+				var o = '';
+				jQuery.each( i, function( key, value ) {
+					v = typeof value == 'object' ? rLoop( value ) : value;
+					o = o + '<div class="group"><h4>' + key + '</h4><div class="value">' + v + '</div></div>';
+				} );
+				return o;
+			};
+
+			jQuery( this ).html( rLoop( obj ) );
+
+		} ); 
 
 	},
 

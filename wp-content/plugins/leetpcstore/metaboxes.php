@@ -294,3 +294,98 @@
 		<?php
 
 	}
+
+	/*
+
+
+
+
+
+
+
+
+
+
+	*/
+
+	add_action( 'add_meta_boxes',      'invoice_add_meta' );
+	add_action( 'save_post',           'invoice_save_meta' );
+	
+	function invoice_add_meta() {
+		
+		add_meta_box(
+			'invoice_metabox',
+			'Invoice Meta',
+			'invoice_metabox',
+			'invoice',
+			'normal',
+			'high'
+		);
+		
+	}
+	
+	function invoice_save_meta( $post_id ) {
+		
+		if ( !key_exists( 'invoice_meta', $_POST ) 
+			|| ( !wp_verify_nonce( $_POST['invoice_meta'], 'invoice_meta_nonce' ) ) 
+			|| ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) 
+			|| ( key_exists( 'post_type', $_POST ) && 'invoice' != $_POST['post_type'] ) 
+			|| ( key_exists( 'post_type', $_POST ) && 'invoice' == $_POST['post_type'] && !current_user_can( 'edit_page', $post_id ) ) )
+			return $post_id;
+
+		return $post_id;
+
+	}
+
+	function invoice_metabox() {
+		
+		// $current = array();
+		$custom = get_post_custom();
+
+		$keys = array(
+			'_cart'        => 'Order Items',
+			'_user'        => 'User',
+			'_acct'        => 'Account',
+			'_delivery'    => 'Delivery',
+			'_cc'          => 'Credit Card'
+		);
+		
+		// $d = array(
+			
+		// 	'price'               => '0.00',
+		// 	'cost'                => '0.00',
+
+		// 	'long_name'           => '',
+		// 	'model_number'        => '',
+		// 	'manufacturer_link'   => '',
+		// 	'wholesale_link'      => ''
+			
+		// );
+		
+		// foreach ( $d as $k => $v ) {
+		// 	$key = $k;
+		// 	$current[$k] = ( key_exists( $key, $custom ) ) ? $custom[$key][0] : $d[$k];
+		// }
+
+		// wp_nonce_field( 'component_meta_nonce', 'component_meta' );
+
+		?>
+
+		<table class="form-table">
+
+		<?php foreach ( $keys as $k => $label ) : ?>
+
+			<tr valign="top">
+				<th scope="row"><label for="<?php echo $k; ?>"><?php echo $label; ?></label></th>
+				<td>
+					<?php echo $custom[$k][0]; ?>
+				</td>
+			</tr>
+
+		<?php endforeach; ?>
+
+		</table>
+
+		<?php
+
+	}

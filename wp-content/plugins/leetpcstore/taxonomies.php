@@ -232,4 +232,44 @@ function leetpcstore_taxonomy_init() {
 		)
 	);
 
+	register_post_status( 'pending', array(
+		'label'          => 'Pending',
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'    => _n_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>' ),
+	) );
+
+	register_post_status( 'processing', array(
+		'label'          => 'Processing',
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'    => _n_noop( 'Processing <span class="count">(%s)</span>', 'Processing <span class="count">(%s)</span>' ),
+	) );
+
+	register_post_status( 'building', array(
+		'label'          => 'Building',
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'    => _n_noop( 'Building <span class="count">(%s)</span>', 'Building <span class="count">(%s)</span>' ),
+	) );
+
+	register_post_status( 'in-transit', array(
+		'label'          => 'In Transit',
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'    => _n_noop( 'In Transit <span class="count">(%s)</span>', 'In Transit <span class="count">(%s)</span>' ),
+	) );
+
+	// Add service order post type
+
+	// Add 
+
 }

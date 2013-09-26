@@ -86,3 +86,28 @@
     bottom: 0;
     right: 0;
 }
+#invoice_metabox .form-table td h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    line-height: 1em;
+    color: rgba(0,0,0,0.5);
+    display: inline-block;
+    width: 100px;
+    vertical-align: top;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-right: 20px;
+}
+#invoice_metabox .form-table td .group {
+    margin: 0;
+    background-color: rgba(0,0,0,0.05);
+    padding: 10px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-bottom-width: 0;
+}
+#invoice_metabox .form-table td .value {
+    display: inline-block;
+}
+#invoice_metabox .form-table td .group:last-of-type {
+    border-bottom-width: 1px;
+}
