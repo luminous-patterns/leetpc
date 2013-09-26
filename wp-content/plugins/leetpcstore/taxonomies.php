@@ -232,13 +232,13 @@ function leetpcstore_taxonomy_init() {
 		)
 	);
 
-	register_post_status( 'pending', array(
-		'label'          => 'Pending',
+	register_post_status( 'waiting', array(
+		'label'          => 'Waiting',
 		'public'                    => true,
 		'exclude_from_search'       => false,
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
-		'label_count'    => _n_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>' ),
+		'label_count'    => _n_noop( 'Waiting <span class="count">(%s)</span>', 'Waiting <span class="count">(%s)</span>' ),
 	) );
 
 	register_post_status( 'processing', array(

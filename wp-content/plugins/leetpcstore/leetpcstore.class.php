@@ -294,7 +294,7 @@ class leetPcStore {
 			'comment_status' => 'open',
 			'ping_status'    => 'closed',
 			'post_author'    => 2,
-			'post_status'    => 'pending',
+			'post_status'    => 'waiting',
 			'post_title'     => 'NEW INVOICE',
 			'post_type'      => 'invoice'
 			// 'tags_input'     => [ '<tag>, <tag>, <...>' ] //For tags.
