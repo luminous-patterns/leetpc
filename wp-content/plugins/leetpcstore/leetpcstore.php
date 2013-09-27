@@ -19,6 +19,7 @@ require_once( 'taxonomies.php' );
 require_once( 'metaboxes.php' );
 
 require_once( 'product.class.php' );
+require_once( 'invoice.class.php' );
 
 /**
  * Include the main library

@@ -68,6 +68,7 @@ class leetPcStore {
 	private $_path;
 
 	private $_productsCache = array();
+	private $_invoicesCache = array();
 
 	/**
 	 * Constructor
@@ -161,6 +162,13 @@ class leetPcStore {
 			$this->_productsCache[$id] = new lpcProduct( $id );
 		}
 		return $this->_productsCache[$id];
+	}
+
+	public function &getInvoice( $id ) {
+		if ( !array_key_exists( $id, $this->_invoicesCache ) ) {
+			$this->_invoicesCache[$id] = new lpcInvoice( $id );
+		}
+		return $this->_invoicesCache[$id];
 	}
 
 	public function getCustomizeForm() {

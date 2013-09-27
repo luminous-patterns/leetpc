@@ -42,6 +42,10 @@ function &get_product( $product_id ) {
 	return $GLOBALS['leetpc']->getProduct( $product_id );
 }
 
+function &get_invoice( $invoice_id ) {
+	return $GLOBALS['leetpc']->getInvoice( $invoice_id );
+}
+
 function get_cart() {
 	init_cart();
 	return $_SESSION['shopping_cart'];
