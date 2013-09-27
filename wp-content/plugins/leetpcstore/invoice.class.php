@@ -40,7 +40,7 @@ class lpcInvoice {
 	}
 
 	public function getLineItems() {
-		return $this->cart['items'];
+		return json_decode( $this->meta['_line_items'][0], true );
 	}
 
 	public function getStatus() {

@@ -284,10 +284,62 @@ class leetPcStore {
 		}
 
 		if ( $p ) {
+			
+			$e = array();
+
+			foreach ( $_SESSION['checkout_data']['cart']['items'] as $lid => $l ) {
+
+				$x = array(
+					'qty'              => $l['qty'],
+					'product_id'       => $l['product_id'],
+					'product_title'    => get_the_title( $l['product_id'] ),
+					'single_price'     => $l['price'],
+					'total_price'      => $l['price'] * $l['qty'],
+					'components'       => array()
+				);
+
+				foreach ( $l['component_ids'] as $cid ) {
+
+					$def = preg_match( '/\*$/', $cid );
+					$cid = $def ? substr( $cid, 10, -1 ) : substr( $cid, 10 );
+
+					$c = get_post( $cid );
+
+					$terms = get_the_terms( $c->ID, 'component_group' );
+					$terms_keys = array_keys( $terms );
+					list( $type, $sub_type ) = explode( '-', $terms[$terms_keys[0]]->slug );
+
+					$components[$type][] = $c;
+
+					if ( $def ) {
+						$defaults[$type] = $c;
+						$default_ids[] = 'component-' . $c->ID;
+					}
+
+					$attrs = get_post_custom( $c->ID );
+
+					$x['components'][] = array(
+						'id'       => $c->ID,
+						'title'    => $c->post_title,
+						'type'     => $type,
+						'price'    => $attrs['price'][0],
+						'model'    => $attrs['model_number'][0]
+					);
+
+				}
+
+				$e[] = $x;
+
+			}
+
+			$_SESSION['checkout_data']['line_items'] = $e;
+
 			$invoice_id = $this->createInvoice( $_SESSION['checkout_data'] );
+
 			if ( $invoice_id ) {
 				empty_cart();
 			}
+
 		}
 
 		$this->showCheckoutStep( count( $e ) > 0 ? $s : $s + 1, array( 'error' => $e ) );

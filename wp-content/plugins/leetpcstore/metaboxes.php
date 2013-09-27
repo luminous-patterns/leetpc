@@ -347,7 +347,8 @@
 			'_user'        => 'User',
 			'_acct'        => 'Account',
 			'_delivery'    => 'Delivery',
-			'_cc'          => 'Credit Card'
+			'_cc'          => 'Credit Card',
+			'_line_items'  => 'Line Items'
 		);
 		
 		// $d = array(
