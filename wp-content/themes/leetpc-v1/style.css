@@ -243,6 +243,103 @@ button.secondary, .button.secondary {
     border-left: 1px solid #ccc;
 }
 
+table.line-items {
+    margin-top: 30px;
+    width: 100%;
+}
+table.line-items th {
+    text-align: left;
+    background-color: #eee;
+    padding: 5px 15px;
+    background: linear-gradient(to bottom, rgba(240,240,240,1) 0%,rgba(210,210,210,1) 100%);
+    font-family: oxygen;
+    line-height: 28px;
+    /* border-top: 1px solid #dfdfdf; */
+    border-bottom: 1px solid #aaa;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+    font-size: 0.9em;
+    color: #888;
+}
+table.line-items .removing td {
+    opacity: 0.3;
+}
+table.line-items .qty-col {
+    width: 13%;
+}
+table.line-items th.qty-col {
+    border-left: 1px solid #ddd;
+}
+table.line-items .price {
+    font-size: 1.3em;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    line-height: 1em;
+    font-family: roboto;
+}
+table.line-items .price-col {
+    width: 20%;
+    text-align: right;
+}
+table.line-items th.price-col {
+    border-right: 1px solid #bbb;
+}
+table.line-items td {
+    border-bottom: 1px solid #eee;
+    font-family: roboto;
+    padding: 15px;
+    position: relative;
+    vertical-align: top;
+}
+table.line-items td.qty-col input {
+    width: 100%;
+}
+table.line-items td h3 {
+    margin: 0 0 10px;
+    font-family: oxygen;
+    font-size: 1.5em;
+    line-height: 1;
+    display: inline-block;
+}
+table.line-items td.description-col {
+    font-size: 0.9em;
+}
+table.line-items td h3 a {
+    color: #555;
+}
+table.line-items .actions {
+    font-size: 0.9em;
+    display: inline-block;
+    margin-left: 10px;
+}
+table.line-items .line-item.sub-item td {
+    font-size: 0.7em;
+    background-color: #f5f5f5;
+}
+table.line-items .line-item.sub-item td.qty-col {
+    background-color: #eee;
+}
+table.line-items .line-item.sub-item:nth-of-type(odd) td {
+
+}
+table.line-items .line-item.sub-item td .model {
+    margin-top: 0px;
+    font-size: 1.4em;
+    color: #999;
+}
+table.line-items .line-item.sub-item td h3 {
+    margin-bottom: 0;
+}
+table.line-items .line-item.sub-item td h3 strong {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    text-decoration: underline;
+    color: #666;
+    font-weight: normal;
+}
+
 /*------------------------------------*\
     PAGES
 \*------------------------------------*/
@@ -285,6 +382,31 @@ button.secondary, .button.secondary {
     color: #999;
     font-size: 3em;
     font-weight: bold;
+}
+.product-sampler .mini-products {
+    background-color: #222;
+    border-bottom: 4px solid #ddd;
+    overflow: hidden;
+}
+.product-sampler .mini-products h2 {
+    margin: 0;
+    font-weight: bold;
+}
+.product-sampler .mini-products .mini-featured-product {
+    display: inline-block;
+    /* width: 225px; */
+    padding: 10px 22px 10px;
+    cursor: pointer;
+    /* height: 204px; */
+    text-align: center;
+    font-size: 0.7em;
+    /* font-weight: bold; */
+    margin-top: 15px;
+    border-radius: 2px 2px 0 0;
+}
+.product-sampler .mini-products .mini-featured-product.active {
+    background: linear-gradient(to bottom, rgba(245,245,245,1) 0%,rgba(235,235,235,1) 48%,rgba(225,225,225,1) 49%,rgba(215,215,215,1) 100%);
+    box-shadow: 1px 1px 20px rgba(0,0,0,0.9);
 }
 /* single product */
 .single-product .wrapper {
@@ -371,71 +493,9 @@ button.secondary, .button.secondary {
     text-align: right;
     font-size: 0.85em;
 }
-.page.my-cart table {
-    margin-top: 30px;
-    width: 100%;
-}
-.page.my-cart table th {
-    text-align: left;
-    background-color: #eee;
-    padding: 5px 15px;
-    background: linear-gradient(to bottom, rgba(240,240,240,1) 0%,rgba(210,210,210,1) 100%);
-    font-family: oxygen;
-    line-height: 28px;
-    /* border-top: 1px solid #dfdfdf; */
-    border-bottom: 1px solid #aaa;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-    text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
-    font-size: 0.9em;
-    color: #888;
-}
-.page.my-cart table .removing td {
-    opacity: 0.3;
-}
-.page.my-cart table .qty-col {
-    width: 13%;
-}
-.page.my-cart table th.qty-col {
-    border-left: 1px solid #ddd;
-}
-.page.my-cart table .price {
-    font-size: 1.3em;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    line-height: 1em;
-    font-family: roboto;
-}
-.page.my-cart table .price-col {
-    width: 20%;
-    text-align: right;
-}
-.page.my-cart table th.price-col {
-    border-right: 1px solid #bbb;
-}
-.page.my-cart table td {
-    border-bottom: 1px solid #eee;
-    font-family: roboto;
-    padding: 15px;
-    position: relative;
-    vertical-align: top;
-}
-.page.my-cart table td.qty-col input {
-    width: 100%;
-}
-.page.my-cart table td h3 {
-    margin: 0 0 10px;
-    font-family: oxygen;
-    font-size: 1.5em;
-    line-height: 1;
-    display: inline-block;
-}
-.page.my-cart table td.description-col {
-    font-size: 0.9em;
-}
 .page.my-cart .sub-total {
     text-align: right;
-     margin-top: 30px; 
+    margin-top: 30px; 
     margin-right: 15px;
 }
 .page.my-cart .sub-total h3 {
@@ -444,18 +504,10 @@ button.secondary, .button.secondary {
     margin: 0;
     font-weight: normal;
 }
-.page.my-cart table td h3 a {
-    color: #555;
-}
 .page.my-cart .sub-total .amount {
     font-family: roboto;
     font-size: 1.8em;
     color: #222;
-}
-.page.my-cart table .actions {
-    font-size: 0.9em;
-    display: inline-block;
-    margin-left: 10px;
 }
 .page.my-cart .details {
     background-color: #f5f5f5;

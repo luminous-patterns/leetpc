@@ -53,7 +53,7 @@
 				<button class="customize">Customize &amp; Order</button>
 			</div>
 			
-			<div class="product-type"><?php $cat = get_terms( 'product_type' ); echo $cat[1]->name; ?> PC</div>
+			<div class="product-type"><?php $cat = wp_get_post_terms( get_the_ID(), 'product_type' ); echo $cat[0]->name; ?> PC</div>
 
 			<div class="editor-content">
 

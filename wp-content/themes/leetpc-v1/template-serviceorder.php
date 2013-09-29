@@ -1,4 +1,4 @@
-<?php /* Template Name: Invoice */
+<?php /* Template Name: Service Order */
 
 	if ( !$i = get_invoice( $_GET['invoice_id'] ) ) {
 
@@ -15,7 +15,7 @@
 	<!-- section -->
 	<section role="main">
 	
-		<h1>TAX INVOICE</h1>
+		<h1>SERVICE ORDER</h1>
 
 		<div class="section-group secondary">
 
@@ -76,6 +76,19 @@
 							<div class="price">&dollar;<?php echo number_format( $l['total_price'], 2 ); ?></div>
 						</td>
 					</tr>
+
+				<?php foreach ( $l['components'] as $c ) : ?>
+
+					<tr class="line-item sub-item">
+						<td class="qty-col">&nbsp;</td>
+						<td class="description-col" colspan="3">
+							<h3><strong><?php echo strtoupper( $c['type'] ); ?></strong> <?php echo $c['title']; ?></h3>
+							<div class="model"><?php echo $c['model']; ?></div>
+							<div class="price">&dollar;<?php echo number_format( $c['price'], 2 ); ?></div>
+						</td>
+					</tr>
+
+				<?php endforeach; ?>
 
 				<?php endforeach; ?>
 					

@@ -4,13 +4,29 @@
 
 			<?php
 
-			$products = get_products();
-
-			$p = $products[0];
+			$products = get_products( array( 'posts_per_page' => 4 ) );
 
 			?>
 
-			<div class="featured-product">
+			<div class="mini-products">
+
+				<?php $count = 0; ?>
+				<?php foreach ( $products as $p ) : ?>
+
+				<div class="mini-featured-product <?php $count++; if ( $count == 2 ) echo 'active'; ?>">
+
+					<h2><?php $cat = wp_get_post_terms( $p->post->ID, 'product_type' ); echo $cat[0]->name; ?></h2>
+
+				</div>
+
+				<?php endforeach; ?>
+
+			</div>
+
+			<?php $count = 0; ?>
+			<?php foreach ( $products as $p ) : ?>
+
+			<div class="featured-product <?php $count++; if ( $count != 2 ) echo 'hidden'; ?>">
 
 				<h1><a href="<?php echo get_permalink( $p->post->ID ); ?>"><?php echo $p->post->post_title; ?></a></h1>
 
@@ -31,13 +47,7 @@
 
 			</div>
 
-			<div class="controls">
-
-				<div class="control-item">
-
-				</div>
-
-			</div>
+			<?php endforeach; ?>
 
 		</div>
 	

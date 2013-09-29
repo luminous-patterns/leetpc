@@ -4,6 +4,18 @@
 
 	$next_step_btn_text = 'Continue';
 
+	function lpc_field_error( $field ) {
+
+		return '';
+
+	}
+
+	function lpc_field_error_class( $field ) {
+
+		return '';
+
+	}
+
 ?>
 <div class="modal-wrapper">
 
@@ -31,6 +43,7 @@
 			<div class="row checkout-field user-email">
 				<label>Email address</label>
 				<input type="text" name="user-email" value="<?php echo $_SESSION['checkout_data']['user']['email']; ?>" class="wide" />
+				<?php echo lpc_field_error( 'user-email' ); ?>
 			</div>
 
 			<div class="row checkout-field user-registered">
@@ -39,64 +52,90 @@
 					<label><input type="radio" name="user-registered" value="0" <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> New customer</label>
 					<label><input type="radio" name="user-registered" value="1" <?php if ( $_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> Returning customer</label>
 				</div>
+				<?php echo lpc_field_error( 'user-registered' ); ?>
 			</div>
 
 			<div class="row checkout-field user-password <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>hidden<?php endif; ?>">
 				<label>Password</label>
 				<input type="password" name="user-password" class="wide" />
+				<?php echo lpc_field_error( 'user-password' ); ?>
 			</div>
 
 		<?php elseif ( $step == '2' ) : ?>
 
 			<h4>Billing details</h4>
 
-			<div class="row checkout-field acct-firstname">
-				<label>First name</label>
-				<input type="text" name="acct-firstname" value="<?php echo $_SESSION['checkout_data']['acct']['firstname']; ?>" class="wide" />
-			</div>
+			<?php 
 
-			<div class="row checkout-field acct-lastname">
-				<label>Last name</label>
-				<input type="text" name="acct-lastname" value="<?php echo $_SESSION['checkout_data']['acct']['lastname']; ?>" class="wide" />
-			</div>
+			$fields = array(
+				'acct-firstname' => array( 
+					'type'      => 'input',
+					'label'     => 'First Name',
+					'value'     => $_SESSION['checkout_data']['acct']['firstname']
+				),
+				'acct-lastname' => array( 
+					'type'      => 'input',
+					'label'     => 'Last Name',
+					'value'     => $_SESSION['checkout_data']['acct']['lastname']
+				),
+				'acct-company' => array( 
+					'type'      => 'input',
+					'label'     => 'Company',
+					'value'     => $_SESSION['checkout_data']['acct']['company']
+				),
+				'acct-phone' => array( 
+					'type'      => 'input',
+					'label'     => 'Phone',
+					'value'     => $_SESSION['checkout_data']['acct']['phone']
+				),
+				'acct-street' => array( 
+					'type'      => 'input',
+					'label'     => 'Street Address',
+					'value'     => $_SESSION['checkout_data']['acct']['street']
+				),
+				'acct-suburb' => array( 
+					'type'      => 'input',
+					'label'     => 'Suburb',
+					'value'     => $_SESSION['checkout_data']['acct']['suburb']
+				),
+				'acct-postcode' => array( 
+					'type'      => 'input',
+					'label'     => 'Postcode',
+					'value'     => $_SESSION['checkout_data']['acct']['postcode']
+				),
+				'acct-state' => array( 
+					'type'      => 'select',
+					'label'     => 'State',
+					'value'     => $_SESSION['checkout_data']['acct']['state'],
+					'options'   => array( 'ACT','NSW','NT','QLD','TAS','VIC','WA' )
+				)
+			);
 
-			<div class="row checkout-field acct-company">
-				<label>Company</label>
-				<input type="text" name="acct-company" value="<?php echo $_SESSION['checkout_data']['acct']['company']; ?>" class="wide" />
-			</div>
+			?>
 
-			<div class="row checkout-field acct-phone">
-				<label>Phone</label>
-				<input type="text" name="acct-phone" value="<?php echo $_SESSION['checkout_data']['acct']['phone']; ?>" class="wide" />
-			</div>
+			<?php foreach ( $fields as $k => $f ) : ?>
 
-			<div class="row checkout-field acct-street">
-				<label>Street Address</label>
-				<input type="text" name="acct-street" value="<?php echo $_SESSION['checkout_data']['acct']['street']; ?>" class="wide" />
-			</div>
+			<div class="row checkout-field <?php echo $k; ?> <?php echo lpc_field_error_class( $k ); ?>">
+				<label><?php echo $f['label']; ?></label>
+				<?php switch ( $f['type'] ) { 
 
-			<div class="row checkout-field acct-suburb">
-				<label>Suburb</label>
-				<input type="text" name="acct-suburb" value="<?php echo $_SESSION['checkout_data']['acct']['suburb']; ?>" class="wide" />
-			</div>
+				case 'input' : ?>
+				<input type="text" name="<?php echo $k; ?>" value="<?php echo $f['value']; ?>" class="wide" />
+					<?php break; ?>
 
-			<div class="row checkout-field acct-postcode">
-				<label>Postcode</label>
-				<input type="text" name="acct-postcode" value="<?php echo $_SESSION['checkout_data']['acct']['postcode']; ?>" />
-			</div>
-
-			<div class="row checkout-field acct-state">
-				<label>State</label>
-				<select name="acct-state" class="wide">
-					<option <?php if ( $_SESSION['checkout_data']['acct']['state'] == 'ACT' ) : ?>selected="selected"<?php endif; ?>>ACT</option>
-					<option <?php if ( $_SESSION['checkout_data']['acct']['state'] == 'NSW' ) : ?>selected="selected"<?php endif; ?>>NSW</option>
-					<option <?php if ( $_SESSION['checkout_data']['acct']['state'] == 'NT' ) : ?>selected="selected"<?php endif; ?>>NT</option>
-					<option <?php if ( $_SESSION['checkout_data']['acct']['state'] == 'QLD' ) : ?>selected="selected"<?php endif; ?>>QLD</option>
-					<option <?php if ( $_SESSION['checkout_data']['acct']['state'] == 'TAS' ) : ?>selected="selected"<?php endif; ?>>TAS</option>
-					<option <?php if ( $_SESSION['checkout_data']['acct']['state'] == 'VIC' ) : ?>selected="selected"<?php endif; ?>>VIC</option>
-					<option <?php if ( $_SESSION['checkout_data']['acct']['state'] == 'WA' ) : ?>selected="selected"<?php endif; ?>>WA</option>
+				<?php case 'select' : ?>
+				<select name="<?php echo $k; ?>" class="wide">
+					<?php foreach ( $f['options'] as $opt ) : ?>
+					<option <?php if ( $f['value'] == $opt ) : ?>selected="selected"<?php endif; ?>><?php echo $opt; ?></option>
+					<?php endforeach; ?>
 				</select>
+					<?php break; ?>
+
+				<?php };
+				echo lpc_field_error( $k ); ?>
 			</div>
+
+			<?php endforeach; ?>
 
 		<?php elseif ( $step == '3' ) : ?>
 
@@ -107,6 +146,7 @@
 				<div class="options">
 					FREE courier delivery to anywhere in Australia (order now for delivery before )
 				</div>
+				<?php echo lpc_field_error( 'delivery-method' ); ?>
 			</div>
 
 			<div class="row checkout-field delivery-use_different_addr">
@@ -115,6 +155,7 @@
 					<label><input type="radio" name="delivery-use_different_addr" value="0" <?php if ( !$_SESSION['checkout_data']['delivery']['use_different_addr'] ) : ?>checked="checked"<?php endif; ?> /> Same as billing address</label>
 					<label><input type="radio" name="delivery-use_different_addr" value="1" <?php if ( $_SESSION['checkout_data']['delivery']['use_different_addr'] ) : ?>checked="checked"<?php endif; ?> /> Different address...</label>
 				</div>
+				<?php echo lpc_field_error( 'delivery-use_different_addr' ); ?>
 			</div>
 
 			<!-- <h4>Order summary</h4>
@@ -151,11 +192,13 @@
 			<div class="row checkout-field cc-name">
 				<label>FULL name on card</label>
 				<input type="text" name="cc-name" class="wide" />
+				<?php echo lpc_field_error( 'cc-name' ); ?>
 			</div>
 
 			<div class="row checkout-field cc-number">
 				<label>Card number</label>
 				<input type="text" name="cc-number" class="wide" />
+				<?php echo lpc_field_error( 'cc-number' ); ?>
 			</div>
 
 			<div class="row checkout-field cc-expiry">
@@ -177,11 +220,13 @@
 				<select name="cc-exp-year"><?php for ( $i = 0; $i < 11; $i++ ) : ?>
 					<option><?php echo date( "Y" ) + $i; ?></option>
 				<?php endfor; ?></select>
+				<?php echo lpc_field_error( 'cc-expiry' ); ?>
 			</div>
 
 			<div class="row checkout-field cc-csc">
 				<label>CSC/CVV</label>
 				<input type="text" name="cc-csc" />
+				<?php echo lpc_field_error( 'cc-csc' ); ?>
 			</div>
 
 			<?php $next_step_btn_text = 'Pay &amp; Finalise'; ?>
