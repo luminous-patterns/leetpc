@@ -392,6 +392,9 @@ table.line-items .line-item.sub-item td h3 strong {
     margin: 0;
     font-weight: bold;
 }
+.product-sampler .mini-products .mini-featured-product.active h2 {
+    color: #333;
+}
 .product-sampler .mini-products .mini-featured-product {
     display: inline-block;
     /* width: 225px; */
@@ -619,6 +622,12 @@ table.line-items .line-item.sub-item td h3 strong {
 }
 .modal .modal-body .row .options label:last-of-type {
     margin-bottom: 0;
+}
+.modal .modal-body .row.field-error input {
+    border-color: #a11;
+}
+.modal .modal-body .row.field-error label {
+    color: #a11;
 }
 .modal .modal-footer button.secondary, .modal .modal-footer .button.secondary {
     background: linear-gradient(to bottom, rgba(60,60,60,1) 0%,rgba(50,50,50,1) 48%,rgba(30,30,30,1) 49%,rgba(20,20,20,1) 100%);

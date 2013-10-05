@@ -4,18 +4,6 @@
 
 	$next_step_btn_text = 'Continue';
 
-	function lpc_field_error( $field ) {
-
-		return '';
-
-	}
-
-	function lpc_field_error_class( $field ) {
-
-		return '';
-
-	}
-
 ?>
 <div class="modal-wrapper">
 
@@ -43,7 +31,6 @@
 			<div class="row checkout-field user-email">
 				<label>Email address</label>
 				<input type="text" name="user-email" value="<?php echo $_SESSION['checkout_data']['user']['email']; ?>" class="wide" />
-				<?php echo lpc_field_error( 'user-email' ); ?>
 			</div>
 
 			<div class="row checkout-field user-registered">
@@ -52,13 +39,11 @@
 					<label><input type="radio" name="user-registered" value="0" <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> New customer</label>
 					<label><input type="radio" name="user-registered" value="1" <?php if ( $_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> Returning customer</label>
 				</div>
-				<?php echo lpc_field_error( 'user-registered' ); ?>
 			</div>
 
 			<div class="row checkout-field user-password <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>hidden<?php endif; ?>">
 				<label>Password</label>
 				<input type="password" name="user-password" class="wide" />
-				<?php echo lpc_field_error( 'user-password' ); ?>
 			</div>
 
 		<?php elseif ( $step == '2' ) : ?>
@@ -115,7 +100,7 @@
 
 			<?php foreach ( $fields as $k => $f ) : ?>
 
-			<div class="row checkout-field <?php echo $k; ?> <?php echo lpc_field_error_class( $k ); ?>">
+			<div class="row checkout-field <?php echo $k; ?>">
 				<label><?php echo $f['label']; ?></label>
 				<?php switch ( $f['type'] ) { 
 
@@ -131,8 +116,7 @@
 				</select>
 					<?php break; ?>
 
-				<?php };
-				echo lpc_field_error( $k ); ?>
+				<?php }; ?>
 			</div>
 
 			<?php endforeach; ?>
@@ -146,7 +130,6 @@
 				<div class="options">
 					FREE courier delivery to anywhere in Australia (order now for delivery before )
 				</div>
-				<?php echo lpc_field_error( 'delivery-method' ); ?>
 			</div>
 
 			<div class="row checkout-field delivery-use_different_addr">
@@ -155,7 +138,6 @@
 					<label><input type="radio" name="delivery-use_different_addr" value="0" <?php if ( !$_SESSION['checkout_data']['delivery']['use_different_addr'] ) : ?>checked="checked"<?php endif; ?> /> Same as billing address</label>
 					<label><input type="radio" name="delivery-use_different_addr" value="1" <?php if ( $_SESSION['checkout_data']['delivery']['use_different_addr'] ) : ?>checked="checked"<?php endif; ?> /> Different address...</label>
 				</div>
-				<?php echo lpc_field_error( 'delivery-use_different_addr' ); ?>
 			</div>
 
 			<!-- <h4>Order summary</h4>
@@ -192,13 +174,11 @@
 			<div class="row checkout-field cc-name">
 				<label>FULL name on card</label>
 				<input type="text" name="cc-name" class="wide" />
-				<?php echo lpc_field_error( 'cc-name' ); ?>
 			</div>
 
 			<div class="row checkout-field cc-number">
 				<label>Card number</label>
 				<input type="text" name="cc-number" class="wide" />
-				<?php echo lpc_field_error( 'cc-number' ); ?>
 			</div>
 
 			<div class="row checkout-field cc-expiry">
@@ -220,13 +200,11 @@
 				<select name="cc-exp-year"><?php for ( $i = 0; $i < 11; $i++ ) : ?>
 					<option><?php echo date( "Y" ) + $i; ?></option>
 				<?php endfor; ?></select>
-				<?php echo lpc_field_error( 'cc-expiry' ); ?>
 			</div>
 
 			<div class="row checkout-field cc-csc">
 				<label>CSC/CVV</label>
 				<input type="text" name="cc-csc" />
-				<?php echo lpc_field_error( 'cc-csc' ); ?>
 			</div>
 
 			<?php $next_step_btn_text = 'Pay &amp; Finalise'; ?>

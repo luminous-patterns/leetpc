@@ -14,9 +14,7 @@
 				<?php foreach ( $products as $p ) : ?>
 
 				<div class="mini-featured-product <?php $count++; if ( $count == 2 ) echo 'active'; ?>">
-
-					<h2><?php $cat = wp_get_post_terms( $p->post->ID, 'product_type' ); echo $cat[0]->name; ?></h2>
-
+					<h2><?php $cat = wp_get_post_terms( $p->post->ID, 'product_type' ); echo $cat[0]->name; ?> PCs</h2>
 				</div>
 
 				<?php endforeach; ?>

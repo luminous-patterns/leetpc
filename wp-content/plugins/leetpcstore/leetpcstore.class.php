@@ -214,7 +214,7 @@ class leetPcStore {
 	public function getCheckoutStep() {
 
 		$p = false;
-		$e = array();
+		$e = array( 'message' => null, 'fields' => array() );
 		$s = $_POST['step'] - 1;
 
 		$password = $_POST['submitted']['user-password'] ? $_POST['submitted']['user-password'] : '';
@@ -237,7 +237,8 @@ class leetPcStore {
 						if ( !$valid_password ) {
 							// Wrong password
 							$e['message'] = 'Invalid username or password';
-							$e['fields'] = 'user-email,user-password';
+							$e['fields'][] = array( 'name' => 'user-email', 'message' => null );
+							$e['fields'][] = array( 'name' => 'user-password', 'message' => null );
 							break;
 						}
 
@@ -249,7 +250,7 @@ class leetPcStore {
 
 					// No such user
 					$e['message'] = 'User does not exist';
-					$e['fields'] = 'user-email';
+					$e['fields'][] = array( 'name' => 'user-email', 'message' => 'No user with that email' );
 					break;
 
 				}
@@ -285,7 +286,7 @@ class leetPcStore {
 
 		if ( $p ) {
 			
-			$e = array();
+			$y = array();
 
 			foreach ( $_SESSION['checkout_data']['cart']['items'] as $lid => $l ) {
 
@@ -328,11 +329,11 @@ class leetPcStore {
 
 				}
 
-				$e[] = $x;
+				$y[] = $x;
 
 			}
 
-			$_SESSION['checkout_data']['line_items'] = $e;
+			$_SESSION['checkout_data']['line_items'] = $y;
 
 			$invoice_id = $this->createInvoice( $_SESSION['checkout_data'] );
 
@@ -342,7 +343,14 @@ class leetPcStore {
 
 		}
 
-		$this->showCheckoutStep( count( $e ) > 0 ? $s : $s + 1, array( 'error' => $e ) );
+		if ( $e['message'] !== null ) {
+			header( 'HTTP/1.1 400 Bad Request' );
+			header( 'Content-type: application/json' );
+			echo json_encode( $e );
+			exit;
+		}
+
+		$this->showCheckoutStep( $s + 1, array( 'error' => $e ) );
 
 		exit;
 

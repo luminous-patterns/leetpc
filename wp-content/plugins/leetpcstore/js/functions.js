@@ -43,6 +43,16 @@ var LEETPCStore = {
 
 	},
 
+	error: function( message ) {
+
+
+
+	},
+
+	closeError: function() {
+
+	},
+
 	toggleDetailsEl: function( ev ) {
 		ev.preventDefault();
 		jQuery( ev.target ).parents( '.line-item' ).find( '.details' ).toggleClass( 'hidden' );
@@ -139,6 +149,20 @@ var LEETPCStore = {
 
 	},
 
+	onError: function( xhr ) {
+		var data = xhr.responseJSON;
+		var fields = data.fields;
+		this.currentModalEl.find( '.modal-header .loading-anim' ).remove();
+		for ( var i = 0; i < fields.length; i++ ) {
+			if ( i == 1 ) {
+				this.currentModalEl.find( '.' + fields[i].name + ' input' ).focus();
+			}
+			this.currentModalEl.find( '.' + fields[i].name ).addClass( 'field-error' );
+		}
+		console.log(data);
+		alert(data.message);
+	},
+
 	adminAjax: function( data, onSuccess ) {
 
 		var that = this;
@@ -146,7 +170,8 @@ var LEETPCStore = {
 		var opts = { 
 			method: 'post',
 			data: data, 
-			success: jQuery.proxy( onSuccess, that )
+			success: jQuery.proxy( onSuccess, that ),
+			error: jQuery.proxy( that.onError, that )
 		};
 
 		if ( this.currentModalEl ) {
