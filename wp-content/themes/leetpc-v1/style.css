@@ -629,6 +629,13 @@ table.line-items .line-item.sub-item td h3 strong {
 .modal .modal-body .row.field-error label {
     color: #a11;
 }
+.modal .modal-body .row.field-error .error-message {
+    margin-left: 155px;
+    color: #b11;
+    width: 300px;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
 .modal .modal-footer button.secondary, .modal .modal-footer .button.secondary {
     background: linear-gradient(to bottom, rgba(60,60,60,1) 0%,rgba(50,50,50,1) 48%,rgba(30,30,30,1) 49%,rgba(20,20,20,1) 100%);
     color: #999;

@@ -139,24 +139,6 @@ class leetPcStore {
 
 	}
 
-	// public function createInvoice( $params ) {
-
-	// 	// create invoice
-	// 	$post_id = wp_insert_post( array(
-	// 		'post_author'    => [ <user ID> ] //The user ID number of the author.
-	// 		'post_content'   => [ <the text of the post> ] //The full text of the post.
-	// 		'post_name'      => [ <the name> ] // The name (slug) for your post
-	// 		'post_status'    => 'publish' //Set the status of the new post.
-	// 		'post_title'     => [ <the title> ] //The title of your post.
-	// 		'post_type'      => 'invoice',
-	// 	) );
-
-	// 	// add line items
-
-	// 	// return invoice id
-
-	// }
-
 	public function &getProduct( $id ) {
 		if ( !array_key_exists( $id, $this->_productsCache ) ) {
 			$this->_productsCache[$id] = new lpcProduct( $id );
@@ -217,137 +199,172 @@ class leetPcStore {
 		$e = array( 'message' => null, 'fields' => array() );
 		$s = $_POST['step'] - 1;
 
-		$password = $_POST['submitted']['user-password'] ? $_POST['submitted']['user-password'] : '';
+		$submitted = $_POST['submitted'];
+
+		$password = $submitted['user-password'] ? $submitted['user-password'] : '';
 		$_POST['submitted']['user-password'] = '******';
 
 	    $this->processCheckoutData( $s < 1 );
 
-		switch ( $s ) {
+		if ( $_POST['direction'] != -1 ) {
 
-			case 1: // Process account info
+		    $required_fields = array();
 
-				$login = $_POST['submitted']['user-registered'];
-				$user = get_user_by( 'email', $_POST['submitted']['user-email'] );
-				$valid_password = !$login ? false : wp_check_password( $password, $user->data->user_pass, $user->ID );
+			switch ( $s ) {
 
-				if ( $login ) {
+				case 1: // Process account info
 
-					if ( $user ) {
+					if ( filter_var( $submitted['user-email'], FILTER_VALIDATE_EMAIL ) === false ) {
+						$e['message'] = 'Invalid email address format';
+						$e['fields'][] = array( 'name' => 'user-email', 'message' => 'Invalid email address format' );
+						break;
+					}
 
-						if ( !$valid_password ) {
-							// Wrong password
-							$e['message'] = 'Invalid username or password';
-							$e['fields'][] = array( 'name' => 'user-email', 'message' => null );
-							$e['fields'][] = array( 'name' => 'user-password', 'message' => null );
+					$login = $submitted['user-registered'];
+					$user = get_user_by( 'email', $submitted['user-email'] );
+					$valid_password = !$login ? false : wp_check_password( $password, $user->data->user_pass, $user->ID );
+
+					if ( $login ) {
+
+						if ( $user ) {
+
+							if ( !$valid_password ) {
+								// Wrong password
+								$e['message'] = 'Incorrect password';
+								$e['fields'][] = array( 'name' => 'user-password', 'message' => 'Incorrect password' );
+								break;
+							}
+
+							// Valid user, save ID
+							$_SESSION['checkout_data']['user_id'] = $user->ID;
 							break;
+
 						}
 
-						// Valid user, save ID
-						$_SESSION['checkout_data']['user_id'] = $user->ID;
+						// No such user
+						$e['message'] = 'User does not exist';
+						$e['fields'][] = array( 'name' => 'user-email', 'message' => 'User does not exist' );
 						break;
 
 					}
 
-					// No such user
-					$e['message'] = 'User does not exist';
-					$e['fields'][] = array( 'name' => 'user-email', 'message' => 'No user with that email' );
-					break;
+					if ( $user ) {
 
-				}
+						// User exists but no login was sent
+						$e['message'] = 'You have an account with us already';
+						$e['fields'][] = array( 'name' => 'user-email', 'message' => 'Email address already registered' );
 
-				if ( $user ) {
-
-					// User exists but no login was sent
-					$e['message'] = 'You have an account with us already';
-
-				}
-
-				break;
-
-			case 2: // Process billing info
-
-				break;
-
-			case 3: // Process shipping info
-
-				break;
-
-			case 4: // Process credit card info and create order
-
-				if ( $_SESSION['checkout_data']['cc']['number'] == '51631000000000' ) {
-					// test transaction
-				}
-
-				$p = true;
-
-				break;
-
-		}
-
-		if ( $p ) {
-			
-			$y = array();
-
-			foreach ( $_SESSION['checkout_data']['cart']['items'] as $lid => $l ) {
-
-				$x = array(
-					'qty'              => $l['qty'],
-					'product_id'       => $l['product_id'],
-					'product_title'    => get_the_title( $l['product_id'] ),
-					'single_price'     => $l['price'],
-					'total_price'      => $l['price'] * $l['qty'],
-					'components'       => array()
-				);
-
-				foreach ( $l['component_ids'] as $cid ) {
-
-					$def = preg_match( '/\*$/', $cid );
-					$cid = $def ? substr( $cid, 10, -1 ) : substr( $cid, 10 );
-
-					$c = get_post( $cid );
-
-					$terms = get_the_terms( $c->ID, 'component_group' );
-					$terms_keys = array_keys( $terms );
-					list( $type, $sub_type ) = explode( '-', $terms[$terms_keys[0]]->slug );
-
-					$components[$type][] = $c;
-
-					if ( $def ) {
-						$defaults[$type] = $c;
-						$default_ids[] = 'component-' . $c->ID;
 					}
 
-					$attrs = get_post_custom( $c->ID );
+					break;
 
-					$x['components'][] = array(
-						'id'       => $c->ID,
-						'title'    => $c->post_title,
-						'type'     => $type,
-						'price'    => $attrs['price'][0],
-						'model'    => $attrs['model_number'][0]
+				case 2: // Process billing info
+
+					$required_fields = array( 'acct-firstname', 'acct-lastname', 'acct-phone', 'acct-street', 'acct-suburb', 'acct-postcode', 'acct-state' );
+
+					break;
+
+				case 3: // Process shipping info
+
+					break;
+
+				case 4: // Process credit card info and create order
+
+					if ( $_SESSION['checkout_data']['payment']['method'] == 'cc' ) { // Process credit card
+
+						$required_fields = array( 'cc-name', 'cc-number', 'cc-exp-month', 'cc-exp-year', 'cc-csc' );
+
+						if ( $_SESSION['checkout_data']['cc']['number'] == '51631000000000' ) { // test transaction
+							$_SESSION['checkout_data']['payment']['status'] == 'success';
+						}
+
+					}
+					elseif ( $_SESSION['checkout_data']['payment']['method'] == 'bank' ) { // Process bank deposit
+						unset( $_SESSION['checkout_data']['cc'] );
+						$_SESSION['checkout_data']['payment']['status'] == 'pending';
+					}
+
+					$p = true;
+
+					break;
+
+			}
+
+			foreach ( $required_fields as $field ) {
+
+				if ( !array_key_exists( $field, $submitted ) || !$submitted[$field] ) {
+					$e['message'] = 'Please enter a value for all required fields';
+					$e['fields'][] = array( 'name' => $field, 'message' => 'Required field cannot be left empty' );
+				}
+
+			}
+
+			if ( $p ) {
+				
+				$y = array();
+
+				foreach ( $_SESSION['checkout_data']['cart']['items'] as $lid => $l ) {
+
+					$x = array(
+						'qty'              => $l['qty'],
+						'product_id'       => $l['product_id'],
+						'product_title'    => get_the_title( $l['product_id'] ),
+						'single_price'     => $l['price'],
+						'total_price'      => $l['price'] * $l['qty'],
+						'components'       => array()
 					);
+
+					foreach ( $l['component_ids'] as $cid ) {
+
+						$def = preg_match( '/\*$/', $cid );
+						$cid = $def ? substr( $cid, 10, -1 ) : substr( $cid, 10 );
+
+						$c = get_post( $cid );
+
+						$terms = get_the_terms( $c->ID, 'component_group' );
+						$terms_keys = array_keys( $terms );
+						list( $type, $sub_type ) = explode( '-', $terms[$terms_keys[0]]->slug );
+
+						$components[$type][] = $c;
+
+						if ( $def ) {
+							$defaults[$type] = $c;
+							$default_ids[] = 'component-' . $c->ID;
+						}
+
+						$attrs = get_post_custom( $c->ID );
+
+						$x['components'][] = array(
+							'id'       => $c->ID,
+							'title'    => $c->post_title,
+							'type'     => $type,
+							'price'    => $attrs['price'][0],
+							'model'    => $attrs['model_number'][0]
+						);
+
+					}
+
+					$y[] = $x;
 
 				}
 
-				$y[] = $x;
+				$_SESSION['checkout_data']['line_items'] = $y;
+
+				$invoice_id = $this->createInvoice( $_SESSION['checkout_data'] );
+
+				if ( $invoice_id ) {
+					empty_cart();
+				}
 
 			}
 
-			$_SESSION['checkout_data']['line_items'] = $y;
-
-			$invoice_id = $this->createInvoice( $_SESSION['checkout_data'] );
-
-			if ( $invoice_id ) {
-				empty_cart();
+			if ( $e['message'] !== null ) {
+				header( 'HTTP/1.1 400 Bad Request' );
+				header( 'Content-type: application/json' );
+				echo json_encode( $e );
+				exit;
 			}
 
-		}
-
-		if ( $e['message'] !== null ) {
-			header( 'HTTP/1.1 400 Bad Request' );
-			header( 'Content-type: application/json' );
-			echo json_encode( $e );
-			exit;
 		}
 
 		$this->showCheckoutStep( $s + 1, array( 'error' => $e ) );

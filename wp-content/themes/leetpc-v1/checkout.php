@@ -4,6 +4,8 @@
 
 	$next_step_btn_text = 'Continue';
 
+	$can_go_back = true;
+
 ?>
 <div class="modal-wrapper">
 
@@ -14,15 +16,6 @@
 		</div>
 
 		<div class="modal-body">
-
-		<?php if ( count( $data['error'] ) > 0 ) : ?>
-
-			<div class="error-details">
-				<?php echo $data['error']['message']; ?>
-				<input class="fields" type="hidden" value="<?php echo $data['error']['fields']; ?>" />
-			</div>
-
-		<?php endif; ?>
 
 		<?php if ( $step == '1' ) : ?>
 
@@ -92,7 +85,8 @@
 					'type'      => 'select',
 					'label'     => 'State',
 					'value'     => $_SESSION['checkout_data']['acct']['state'],
-					'options'   => array( 'ACT','NSW','NT','QLD','TAS','VIC','WA' )
+					'options'   => array( 'Victoria','ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' ),
+					'disabled'  => array( 'ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' )
 				)
 			);
 
@@ -111,7 +105,7 @@
 				<?php case 'select' : ?>
 				<select name="<?php echo $k; ?>" class="wide">
 					<?php foreach ( $f['options'] as $opt ) : ?>
-					<option <?php if ( $f['value'] == $opt ) : ?>selected="selected"<?php endif; ?>><?php echo $opt; ?></option>
+					<option <?php if ( $f['value'] == $opt ) : ?>selected="selected"<?php endif; ?> <?php if ( in_array( $opt, $f['disabled'] ) ) : ?>disabled="disabled"<?php endif; ?>><?php echo $opt; ?></option>
 					<?php endforeach; ?>
 				</select>
 					<?php break; ?>
@@ -121,6 +115,13 @@
 
 			<?php endforeach; ?>
 
+			<div class="row checkout-field acct-country">
+				<label>Country</label>
+				<div class="options">
+					Australia
+				</div>
+			</div>
+
 		<?php elseif ( $step == '3' ) : ?>
 
 			<h4>Delivery details</h4>
@@ -128,7 +129,7 @@
 			<div class="row checkout-field delivery-method">
 				<label>Delivery method</label>
 				<div class="options">
-					FREE courier delivery to anywhere in Australia (order now for delivery before )
+					<label><input type="radio" name="delivery-method" value="free" checked="checked" /> FREE delivery to anywhere in Victoria</label>
 				</div>
 			</div>
 
@@ -140,78 +141,198 @@
 				</div>
 			</div>
 
-			<!-- <h4>Order summary</h4>
+			<div class="delivery-address <?php if ( !$_SESSION['checkout_data']['delivery']['use_different_addr'] ) echo 'hidden'; ?>">
 
-			<div class="row checkout-field acct-address">
-				<label>Deliver To</label>
-				<div class="options">
-					<?php echo $_SESSION['checkout_data']['acct']['firstname']; ?> 
-					<?php echo $_SESSION['checkout_data']['acct']['lastname']; ?>
-					<?php if ( $_SESSION['checkout_data']['acct']['company'] ) : ?>
-						<br />
-						<?php echo $_SESSION['checkout_data']['acct']['company']; ?>
-					<?php endif; ?>
-					<br /><br />
-					<?php echo $_SESSION['checkout_data']['acct']['street']; ?>
-					<br />
-					<?php echo $_SESSION['checkout_data']['acct']['suburb']; ?>,
-					<?php echo $_SESSION['checkout_data']['acct']['state']; ?>
-					<?php echo $_SESSION['checkout_data']['acct']['postcode']; ?>
+				<h4>Delivery address</h4>
+
+				<?php 
+
+				$fields = array(
+					'delivery-firstname' => array( 
+						'type'      => 'input',
+						'label'     => 'First Name',
+						'value'     => $_SESSION['checkout_data']['delivery']['firstname']
+					),
+					'delivery-lastname' => array( 
+						'type'      => 'input',
+						'label'     => 'Last Name',
+						'value'     => $_SESSION['checkout_data']['delivery']['lastname']
+					),
+					'delivery-company' => array( 
+						'type'      => 'input',
+						'label'     => 'Company',
+						'value'     => $_SESSION['checkout_data']['delivery']['company']
+					),
+					'delivery-street' => array( 
+						'type'      => 'input',
+						'label'     => 'Street Address',
+						'value'     => $_SESSION['checkout_data']['delivery']['street']
+					),
+					'delivery-suburb' => array( 
+						'type'      => 'input',
+						'label'     => 'Suburb',
+						'value'     => $_SESSION['checkout_data']['delivery']['suburb']
+					),
+					'delivery-postcode' => array( 
+						'type'      => 'input',
+						'label'     => 'Postcode',
+						'value'     => $_SESSION['checkout_data']['delivery']['postcode']
+					),
+					'delivery-state' => array( 
+						'type'      => 'select',
+						'label'     => 'State',
+						'value'     => $_SESSION['checkout_data']['delivery']['state'],
+						'options'   => array( 'Victoria','ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' ),
+						'disabled'  => array( 'ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' )
+					)
+				);
+
+				?>
+
+				<?php foreach ( $fields as $k => $f ) : ?>
+
+				<div class="row checkout-field <?php echo $k; ?>">
+					<label><?php echo $f['label']; ?></label>
+					<?php switch ( $f['type'] ) { 
+
+					case 'input' : ?>
+					<input type="text" name="<?php echo $k; ?>" value="<?php echo $f['value']; ?>" class="wide" />
+						<?php break; ?>
+
+					<?php case 'select' : ?>
+					<select name="<?php echo $k; ?>" class="wide">
+						<?php foreach ( $f['options'] as $opt ) : ?>
+						<option <?php if ( $f['value'] == $opt ) : ?>selected="selected"<?php endif; ?> <?php if ( in_array( $opt, $f['disabled'] ) ) : ?>disabled="disabled"<?php endif; ?>><?php echo $opt; ?></option>
+						<?php endforeach; ?>
+					</select>
+						<?php break; ?>
+
+					<?php }; ?>
 				</div>
-			</div> -->
+
+				<?php endforeach; ?>
+
+				<div class="row checkout-field delivery-country">
+					<label>Country</label>
+					<div class="options">
+						Australia
+					</div>
+				</div>
+
+			</div>
 
 		<?php elseif ( $step == '4' ) : ?>
 
 			<h4>Payment details</h4>
 
-			<div class="row checkout-field total-amount">
-				<label>Payment amount</label>
+			<div class="row checkout-field payment-method">
+				<label>Payment method</label>
 				<div class="options">
-					&dollar; <?php echo number_format( get_cart_total(), 2 ); ?>
+					<label><input type="radio" name="payment-method" value="cc" checked="checked" /> VISA / MasterCard</label>
+					<label><input type="radio" name="payment-method" value="bank" /> Bank deposit</label>
 				</div>
 			</div>
 
-			<div class="row checkout-field cc-name">
-				<label>FULL name on card</label>
-				<input type="text" name="cc-name" class="wide" />
+			<div class="row checkout-field total-amount">
+				<label>Payment amount</label>
+				<div class="options">
+					&dollar;<?php echo number_format( get_cart_total(), 2 ); ?>
+				</div>
 			</div>
 
-			<div class="row checkout-field cc-number">
-				<label>Card number</label>
-				<input type="text" name="cc-number" class="wide" />
+			<div class="payment-section payment-method-cc">
+
+				<h4>Credit card details</h4>
+
+				<div class="row checkout-field cc-name">
+					<label>FULL name on card</label>
+					<input type="text" name="cc-name" class="wide" />
+				</div>
+
+				<div class="row checkout-field cc-number">
+					<label>Card number</label>
+					<input type="text" name="cc-number" class="wide" />
+				</div>
+
+				<div class="row checkout-field cc-expiry">
+					<label>Expiry</label>
+					<select name="cc-exp-month">
+						<option value="01">1 - January</option>
+						<option value="02">2 - February</option>
+						<option value="03">3 - March</option>
+						<option value="04">4 - April</option>
+						<option value="05">5 - May</option>
+						<option value="06">6 - June</option>
+						<option value="07">7 - July</option>
+						<option value="08">8 - August</option>
+						<option value="09">9 - September</option>
+						<option value="10">10 - October</option>
+						<option value="11">11 - November</option>
+						<option value="12">12 - December</option>
+					</select>
+					<select name="cc-exp-year"><?php for ( $i = 0; $i < 11; $i++ ) : ?>
+						<option><?php echo date( "Y" ) + $i; ?></option>
+					<?php endfor; ?></select>
+				</div>
+
+				<div class="row checkout-field cc-csc">
+					<label>CSC/CVV</label>
+					<input type="text" name="cc-csc" />
+				</div>
+
 			</div>
 
-			<div class="row checkout-field cc-expiry">
-				<label>Expiry</label>
-				<select name="cc-exp-month">
-					<option value="01">1 - January</option>
-					<option value="02">2 - February</option>
-					<option value="03">3 - March</option>
-					<option value="04">4 - April</option>
-					<option value="05">5 - May</option>
-					<option value="06">6 - June</option>
-					<option value="07">7 - July</option>
-					<option value="08">8 - August</option>
-					<option value="09">9 - September</option>
-					<option value="10">10 - October</option>
-					<option value="11">11 - November</option>
-					<option value="12">12 - December</option>
-				</select>
-				<select name="cc-exp-year"><?php for ( $i = 0; $i < 11; $i++ ) : ?>
-					<option><?php echo date( "Y" ) + $i; ?></option>
-				<?php endfor; ?></select>
-			</div>
+			<div class="payment-section payment-method-bank hidden">
 
-			<div class="row checkout-field cc-csc">
-				<label>CSC/CVV</label>
-				<input type="text" name="cc-csc" />
+				<h4>Bank deposit instructions</h4>
+
+				<div class="row checkout-field">
+					<label>Bank name</label>
+					<div class="options">
+						Westpac
+					</div>
+				</div>
+
+				<div class="row checkout-field">
+					<label>Account name</label>
+					<div class="options">
+						INTEGRATED WEB SERVICES
+					</div>
+				</div>
+
+				<div class="row checkout-field">
+					<label>BSB</label>
+					<div class="options">
+						033-349
+					</div>
+				</div>
+
+				<div class="row checkout-field">
+					<label>Account #</label>
+					<div class="options">
+						383009
+					</div>
+				</div>
+
+				<div class="row checkout-field">
+					<div class="options">
+						<strong>IMPORTANT!</strong> Remember to use your invoice number as the description for the payment.  Otherwise there may be delays in matching your order to your payment.
+						<br /><br />A copy of these deposit details, including your invoice number, will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).
+						<br /><br />Please click 'Pay &amp; Finalise' to place your order.
+					</div>
+				</div>
+
 			</div>
 
 			<?php $next_step_btn_text = 'Pay &amp; Finalise'; ?>
 
 		<?php elseif ( $step == '5' ) : ?>
 
+			<?php $can_go_back = false; ?>
+
 			<pre style="font-size: 0.8em;"><?php var_export( $_SESSION['checkout_data'] ); ?></pre>
+
+
 
 		<?php endif; ?>
 
@@ -220,7 +341,7 @@
 		<div class="modal-footer">
 			<input type="hidden" name="current_step" value="<?php echo intval( $step ); ?>" />
 			<a href="#" class="close-modal">Cancel</a>
-			<?php if ( $step != '1' ) : ?><button class="secondary previous-step">&#9664;</button><?php endif; ?>
+			<?php if ( $step != '1' && $can_go_back ) : ?><button class="secondary previous-step">&#9664;</button><?php endif; ?>
 			<button class="next-step"><?php echo $next_step_btn_text; ?></button>
 		</div>
 
