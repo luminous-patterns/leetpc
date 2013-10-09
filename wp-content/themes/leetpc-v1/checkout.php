@@ -21,17 +21,17 @@
 
 			<h4>Account details</h4>
 
-			<div class="row checkout-field user-email">
-				<label>Email address</label>
-				<input type="text" name="user-email" value="<?php echo $_SESSION['checkout_data']['user']['email']; ?>" class="wide" />
-			</div>
-
 			<div class="row checkout-field user-registered">
 				<label>I am a ...</label>
 				<div class="options">
 					<label><input type="radio" name="user-registered" value="0" <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> New customer</label>
 					<label><input type="radio" name="user-registered" value="1" <?php if ( $_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> Returning customer</label>
 				</div>
+			</div>
+
+			<div class="row checkout-field user-email">
+				<label>Email address</label>
+				<input type="text" name="user-email" value="<?php echo $_SESSION['checkout_data']['user']['email']; ?>" class="wide" />
 			</div>
 
 			<div class="row checkout-field user-password <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>hidden<?php endif; ?>">

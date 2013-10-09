@@ -107,9 +107,16 @@
 				<button class="checkout">Checkout &amp; Finalize Order</button>
 			</div>
 
-			<h2>Postage estimator</h2>
+			<h2>Delivery information</h2>
 
-			<p>blah</p>
+			<p>We are currently only accepting customers from <strong>Victoria, Australia.</strong>  Delivery to any valid business or residential address in the state of Victoria is free.</p>
+
+			<h3>Expected delivery times</h3>
+
+			<ul>
+				<li>&lt; 40km from Melbourne - 1 to 4 working days</li>
+				<li>40km+ from Melbourne - 3 to 7 working days</li>
+			</ul>
 			
 		</article>
 		<!-- /article -->

@@ -87,8 +87,8 @@ var LEETPCStoreAdmin = {
 		var selectedComponents = this.getSelectedComponents();
 
 		this.comInputEl.val( selectedComponents.toString() );
-		jQuery( 'input.internal-cost' ).val( this.getTotalFor( selectedComponents, true ) + '.00' );
-		jQuery( 'input.calculated-price' ).val( this.getTotalFor( selectedComponents, false ) + '.00' );
+		jQuery( 'input.internal-cost' ).val( this.getTotalFor( selectedComponents, true ) );
+		jQuery( 'input.calculated-price' ).val( this.getTotalFor( selectedComponents, false ) );
 
 		jQuery( '#product_metabox .components-list' ).find( 'li.group > div.title' ).each( function() {
 
@@ -151,13 +151,17 @@ var LEETPCStoreAdmin = {
 			if ( def && costEl ) {
 
 				var cost = costEl.text().replace( /\$/g, '' ).split( ' / ' );
-				total += parseFloat( cost[returnMin?0:cost.length-1] );
+				total += parseFloat( cost[0] );
 
 			}
 
 		}
 
-		return total;
+		if ( !returnMin ) {
+			total += Math.max( total * .1, 100 ) + 100;
+		}
+
+		return Number( total ).toFixed( 2 );
 
 	}
 
