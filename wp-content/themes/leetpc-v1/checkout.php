@@ -41,6 +41,8 @@
 
 		<?php elseif ( $step == '2' ) : ?>
 
+			<?php $can_go_back = false; ?>
+
 			<h4>Billing details</h4>
 
 			<?php 
@@ -316,7 +318,7 @@
 
 				<div class="row checkout-field">
 					<div class="options">
-						<strong>IMPORTANT!</strong> Remember to use your invoice number as the description for the payment.  Otherwise there may be delays in matching your order to your payment.
+						<span class="important"><strong>IMPORTANT!</strong> Remember to use your invoice number as the description for the payment.  Otherwise there may be delays in matching your order to your payment.</span>
 						<br /><br />A copy of these deposit details, including your invoice number, will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).
 						<br /><br />Please click 'Pay &amp; Finalise' to place your order.
 					</div>

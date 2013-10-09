@@ -64,13 +64,36 @@
 						</tr>
 
 					<?php endforeach; ?>
+
+					<?php if ( $cart['promo']['code'] ) : ?>
+
+						<?php
+							$discount = $cart['promo']['type'] == '%' ? number_format( $cart['promo']['amount'] ) . '&#37;' : '&dollar;' . number_format( $cart['promo']['amount'] );
+							$discount_amount = $cart['promo']['type'] == '%' ? number_format( $cart['sub_total'] * ( $cart['promo']['amount'] / 100 ) ) : number_format( $cart['promo']['amount'] );
+						?>
+
+						<tr class="line-item discount-item">
+							<td class="description-col" colspan="3">
+								<div class="discount"><?php echo $discount; ?> Discount</div>
+								<div class="details">code: <?php echo $cart['promo']['code']; ?></div>
+								<div class="price">-&dollar;<?php echo $discount_amount; ?></div>
+							</td>
+							<!-- <td class="price-col">&dollar;<?php echo $product->calcPrice( $item['component_ids'] ); ?></td> -->
+						</tr>
+
+					<?php endif; ?>
 					
 				</tbody>
 
 			</table>
 
 			<div class="promo-code">
-				<a href="#">Add promo code / voucher</a>
+				<a href="#" class="promo-entry-toggle">Add discount or promo code</a>
+				<div class="promo-entry hidden">
+					<h4>Enter code</h4>
+					<input type="text" name="promo-code" value="" />
+					<button class="small apply-promo-code">Apply</button>
+				</div>
 			</div>
 
 			<div class="sub-total">

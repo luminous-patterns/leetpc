@@ -46,6 +46,10 @@ function &get_invoice( $invoice_id ) {
 	return $GLOBALS['leetpc']->getInvoice( $invoice_id );
 }
 
+function &get_coupon( $coupon_id ) {
+	return $GLOBALS['leetpc']->getCoupon( $coupon_id );
+}
+
 function get_cart() {
 	init_cart();
 	return $_SESSION['shopping_cart'];
@@ -94,15 +98,47 @@ function empty_cart() {
 	return true;
 }
 
+function apply_coupon( $coupon ) {
+	init_cart();
+	$_SESSION['shopping_cart']['promo'] = array(
+		'code'           => $coupon->get( 'code' ),
+		'type'           => $coupon->get( 'discount_type' ),
+		'amount'         => $coupon->get( 'discount_amount' )
+	);
+	return true;
+}
+
+function clear_coupon() {
+	init_cart();
+	$_SESSION['shopping_cart']['promo'] = array(
+		'code'           => null,
+		'type'           => null,
+		'amount'         => null
+	);
+	return true;
+}
+
 function init_cart( $empty_cart = false ) {
 
 	if ( !array_key_exists( 'shopping_cart', $_SESSION ) || $empty_cart ) {
 
 		$_SESSION['shopping_cart'] = array(
-			'sub_total'     => 0.00,
-			'created'       => time(),
+
 			'items'         => array(),
-			'items_count'   => 0
+			'items_count'   => 0,
+			'items_total'   => 0.00,
+
+			'promo'         => array(
+				'code'      => null,
+				'type'      => null,
+				'amount'    => null
+			),
+
+			'sub_total'     => 0.00,
+			'total'         => 0.00,
+
+			'created'       => time()
+
 		);
 
 		return true;
@@ -121,16 +157,29 @@ function init_cart( $empty_cart = false ) {
 
 function calc_cart_totals() {
 
-	$_SESSION['shopping_cart']['sub_total'] = 0.00;
+	$_SESSION['shopping_cart']['items_total'] = 0.00;
 	$_SESSION['shopping_cart']['items_count'] = 0;
+	$_SESSION['shopping_cart']['sub_total'] = 0.00;
+	$_SESSION['shopping_cart']['total'] = 0.00;
 
 	foreach ( $_SESSION['shopping_cart']['items'] as $k => $item ) {
 
 		$_SESSION['shopping_cart']['items'][$k]['price'] = calc_product_price( $item['product_id'], $item['component_ids'] );
-		$_SESSION['shopping_cart']['sub_total'] += calc_product_price( $item['product_id'], $item['component_ids'] ) * $item['qty'];
+		$_SESSION['shopping_cart']['items_total'] += calc_product_price( $item['product_id'], $item['component_ids'] ) * $item['qty'];
 		$_SESSION['shopping_cart']['items_count'] += $item['qty'];
 
 	}
+
+	$_SESSION['shopping_cart']['sub_total'] = $_SESSION['shopping_cart']['items_total'];
+
+	if ( $_SESSION['shopping_cart']['promo']['code'] ) {
+
+		$discount_amount = $_SESSION['shopping_cart']['promo']['type'] == '%' ? $_SESSION['shopping_cart']['sub_total'] * ( $_SESSION['shopping_cart']['promo']['amount'] / 100 ) : $_SESSION['shopping_cart']['promo']['amount'];
+		$_SESSION['shopping_cart']['sub_total'] = max( 0, $_SESSION['shopping_cart']['sub_total'] - $discount_amount );
+
+	}
+
+	$_SESSION['shopping_cart']['total'] = $_SESSION['shopping_cart']['sub_total'];
 
 }
 

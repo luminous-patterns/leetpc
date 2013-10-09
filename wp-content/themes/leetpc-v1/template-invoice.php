@@ -78,6 +78,24 @@
 					</tr>
 
 				<?php endforeach; ?>
+
+				<?php if ( $i->hasPromo() ) : ?>
+
+					<?php
+						$promo = $i->getPromo();
+						$discount = $promo['type'] == '%' ? number_format( $promo['amount'] ) . '&#37;' : '&dollar;' . number_format( $promo['amount'] );
+						$discount_amount = $promo['type'] == '%' ? number_format( $i->getItemsTotal() * ( $promo['amount'] / 100 ), 2 ) : number_format( $promo['amount'], 2 );
+					?>
+
+					<tr class="line-item discount-item">
+						<td class="description-col" colspan="3">
+							<div class="discount"><?php echo $discount; ?> Discount</div>
+							<div class="details">code: <?php echo $promo['code']; ?></div>
+							<div class="price">-&dollar;<?php echo $discount_amount; ?></div>
+						</td>
+					</tr>
+
+				<?php endif; ?>
 					
 				</tbody>
 

@@ -18,6 +18,7 @@ require_once( 'functions.php' );
 require_once( 'taxonomies.php' );
 require_once( 'metaboxes.php' );
 
+require_once( 'coupon.class.php' );
 require_once( 'product.class.php' );
 require_once( 'invoice.class.php' );
 

@@ -67,6 +67,7 @@ class leetPcStore {
 	 */
 	private $_path;
 
+	private $_couponsCache = array();
 	private $_productsCache = array();
 	private $_invoicesCache = array();
 
@@ -115,6 +116,9 @@ class leetPcStore {
 		add_action( 'wp_ajax_get_checkout_step',                   array( &$this, 'getCheckoutStep' ) );
 		add_action( 'wp_ajax_nopriv_get_checkout_step',            array( &$this, 'getCheckoutStep' ) );
 
+		add_action( 'wp_ajax_apply_coupon_code',                   array( &$this, 'applyCouponCode' ) );
+		add_action( 'wp_ajax_nopriv_apply_coupon_code',            array( &$this, 'applyCouponCode' ) );
+
 		add_action( 'after_setup_theme',                           array( &$this, 'afterSetupTheme' ) );
 
 		/*
@@ -129,13 +133,29 @@ class leetPcStore {
 
 	}
 
-	private function echoJsonExit( $x ) {
-		header( 'Content-type: application/json' );
-		echo json_encode( $x );
-		exit;
+	public function afterSetupTheme() {
+
 	}
 
-	public function afterSetupTheme() {
+	public function applyCouponCode() {
+
+		$code = strtoupper( $_POST['coupon_code'] );
+
+		$d = array(
+			'post_type' => 'coupon',
+			'meta_key' => 'code',
+			'meta_value' => $code
+		);
+
+		$c = get_posts( $d );
+
+		if ( count( $c ) < 1 ) {
+			$this->returnAjaxError( array( 'message' => 'Invalid discount code' ) );
+		}
+
+		apply_coupon( $this->getCoupon( $c[0]->ID ) );
+
+		$this->exitWithJSON( array( 'cart' => get_cart() ) );
 
 	}
 
@@ -151,6 +171,13 @@ class leetPcStore {
 			$this->_invoicesCache[$id] = new lpcInvoice( $id );
 		}
 		return $this->_invoicesCache[$id];
+	}
+
+	public function &getCoupon( $id ) {
+		if ( !array_key_exists( $id, $this->_couponsCache ) ) {
+			$this->_couponsCache[$id] = new lpcCoupon( $id );
+		}
+		return $this->_couponsCache[$id];
 	}
 
 	public function getCustomizeForm() {
@@ -199,12 +226,21 @@ class leetPcStore {
 		$e = array( 'message' => null, 'fields' => array() );
 		$s = $_POST['step'] - 1;
 
+		$skip_process_account = false;
+		if ( is_user_logged_in() ) {
+			$current_user = wp_get_current_user();
+			if ( $s == 0 ) {
+				$s = 1;
+				$skip_process_account = true;
+			}
+		}
+
 		$submitted = $_POST['submitted'];
 
 		$password = $submitted['user-password'] ? $submitted['user-password'] : '';
 		$_POST['submitted']['user-password'] = '******';
 
-	    $this->processCheckoutData( $s < 1 );
+	    $this->processCheckoutData( $s < 1 || ( $s == 1 && $skip_process_account ) );
 
 		if ( $_POST['direction'] != -1 ) {
 
@@ -213,6 +249,16 @@ class leetPcStore {
 			switch ( $s ) {
 
 				case 1: // Process account info
+
+					if ( $skip_process_account ) {
+						$_SESSION['checkout_data']['user_id'] = $current_user->ID;
+						$_SESSION['checkout_data']['user'] = array(
+							'id'            => $current_user->ID,
+							'email'         => $current_user->user_email,
+							'registered'    => '1'
+						);
+						break;
+					}
 
 					if ( filter_var( $submitted['user-email'], FILTER_VALIDATE_EMAIL ) === false ) {
 						$e['message'] = 'Invalid email address format';
@@ -237,6 +283,7 @@ class leetPcStore {
 
 							// Valid user, save ID
 							$_SESSION['checkout_data']['user_id'] = $user->ID;
+							$_SESSION['checkout_data']['user']['id'] = $user->ID;
 							break;
 
 						}
@@ -358,11 +405,8 @@ class leetPcStore {
 
 			}
 
-			if ( $e['message'] !== null ) {
-				header( 'HTTP/1.1 400 Bad Request' );
-				header( 'Content-type: application/json' );
-				echo json_encode( $e );
-				exit;
+			if ( $this->isError( $e ) ) {
+				$this->returnAjaxError( $e );
 			}
 
 		}
@@ -407,18 +451,18 @@ class leetPcStore {
 
 	public function emptyCart() {
 		empty_cart();
-		$this->echoJsonExit( array( 'code' => 200, 'cart' => get_cart() ) );
+		$this->exitWithJSON( array( 'cart' => get_cart() ) );
 	}
 
 	public function removeProductFromCart() {
 		remove_line_item( $_POST['line_item_id'] );
-		$this->echoJsonExit( array( 'code' => 200, 'cart' => get_cart() ) );
+		$this->exitWithJSON( array( 'cart' => get_cart() ) );
 	}
 
 	public function addProductToCart() {
 
 		if ( !array_key_exists( 'product_id', $_POST ) ) {
-			$this->echoJsonExit( array( 'code' => 400, 'message' => 'Product ID not specified' ) );
+			$this->returnAjaxError( array( 'message' => 'Product ID not specified' ) );
 		}
 
 		$product_id = $_POST['product_id'];
@@ -426,7 +470,31 @@ class leetPcStore {
 
 		add_product_to_cart( $product_id, $component_ids );
 
-		$this->echoJsonExit( array( 'code' => 200, 'cart' => get_cart() ) );
+		$this->exitWithJSON( array( 'cart' => get_cart() ) );
+
+	}
+
+	private function isError( $e ) {
+		return $e['message'] !== null;
+	}
+
+	private function returnAjaxError( $e ) {
+		return $this->exitWithJSON( array( 'error' => $e ), 400 );
+	}
+
+	private function exitWithJSON( $array, $code = 200 ) {
+
+		switch ( $code ) {
+
+			case 400:
+				header( 'HTTP/1.1 400 Bad Request' );
+				break;
+
+		}
+		
+		header( 'Content-type: application/json' );
+		echo json_encode( $array );
+		exit;
 
 	}
 

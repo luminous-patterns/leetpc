@@ -38,7 +38,15 @@ var LEETPCStore = {
 		}
 
 		if ( this.pageType == 'my-cart' ) {
-			jQuery( 'article.product button.customize' ).bind( 'click', jQuery.proxy( this.customizeProduct, this ) );
+
+			this.couponEntryEl = jQuery( '.promo-code .promo-entry' );
+			this.couponEntryToggleEl = jQuery( '.promo-code .promo-entry-toggle' );
+			this.couponEntryInputEl = this.couponEntryEl.find( 'input[name=promo-code]' );
+			this.couponEntryApplyEl = this.couponEntryEl.find( 'button.apply-promo-code' );
+
+			this.couponEntryToggleEl.bind( 'click', jQuery.proxy( this.toggleCouponEntryEl, this ) );
+			this.couponEntryApplyEl.bind( 'click', jQuery.proxy( this.applyCouponCode, this ) );
+
 		}
 
 	},
@@ -51,6 +59,36 @@ var LEETPCStore = {
 
 	closeError: function() {
 
+	},
+
+	applyCouponCode: function() {
+
+		if ( !this.couponEntryInputEl.val() ) {
+			this.couponEntryInputEl.focus();
+			return;
+		}
+
+		var data = { 
+			action: 'apply_coupon_code', 
+			coupon_code: this.couponEntryInputEl.val() 
+		};
+
+		this.adminAjax( data, this.refreshCart, this.onApplyCouponCodeError );
+
+	},
+
+	onApplyCouponCodeError: function( xhr ) {
+		var data = xhr.responseJSON.error;
+		alert( data.message );
+		this.couponEntryInputEl.focus();
+	},
+
+	toggleCouponEntryEl: function() {
+		this.couponEntryEl.toggleClass( 'hidden' );
+		this.couponEntryToggleEl.toggleClass( 'hidden' );
+		if ( !this.couponEntryEl.hasClass( 'hidden' ) ) {
+			this.couponEntryInputEl.attr( 'value', '' ).focus();
+		}
 	},
 
 	toggleDetailsEl: function( ev ) {
@@ -76,6 +114,9 @@ var LEETPCStore = {
 
 		if ( this.pageType != 'my-cart' ) {
 			window.location = '/my-cart/';
+		}
+		else {
+			window.location.reload();
 		}
 
 	},
@@ -149,14 +190,14 @@ var LEETPCStore = {
 
 	},
 
-	onError: function( xhr ) {
-		var data = xhr.responseJSON;
+	onCheckoutError: function( xhr ) {
+		var data = xhr.responseJSON.error;
 		var fields = data.fields;
 		this.currentModalEl.find( '.modal-header .loading-anim' ).remove();
 		this.currentModalEl.find( '.field-error div.error-message' ).remove();
 		this.currentModalEl.find( '.field-error' ).removeClass( 'field-error' );
 		for ( var i = 0; i < fields.length; i++ ) {
-			if ( i == 1 ) {
+			if ( i == 0 ) {
 				this.currentModalEl.find( '.' + fields[i].name + ' input' ).focus();
 			}
 			if ( fields[i].message ) {
@@ -171,12 +212,13 @@ var LEETPCStore = {
 	adminAjax: function( data, onSuccess ) {
 
 		var that = this;
+		var onError = arguments.length > 2 ? arguments[2] : this.onCheckoutError;
 		var url = '/wp-admin/admin-ajax.php';
 		var opts = { 
 			method: 'post',
 			data: data, 
 			success: jQuery.proxy( onSuccess, that ),
-			error: jQuery.proxy( that.onError, that )
+			error: jQuery.proxy( onError, that )
 		};
 
 		if ( this.currentModalEl ) {

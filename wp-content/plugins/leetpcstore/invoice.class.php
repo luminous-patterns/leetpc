@@ -31,8 +31,20 @@ class lpcInvoice {
 		return json_decode( $this->get( '_cart' ), true );
 	}
 
+	public function getItemsTotal() {
+		return $this->cart['items_total'];
+	}
+
 	public function getTotal() {
-		return $this->cart['sub_total'];
+		return $this->cart['total'];
+	}
+
+	public function hasPromo() {
+		return $this->cart['promo']['code'] !== null;
+	}
+
+	public function getPromo() {
+		return $this->cart['promo'];
 	}
 
 	public function getDate() {
