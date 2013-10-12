@@ -7,6 +7,9 @@ class lpcProduct {
 		$this->post = get_post( $product_id );
 		$this->meta = get_post_custom( $product_id );
 
+		$this->types = wp_get_post_terms( $product_id, 'product_type' );
+		$this->type = $this->types[0];
+
 		$this->initComponents();
 
 	}
@@ -71,9 +74,29 @@ class lpcProduct {
 		return print_component_options( $type, $this->components, $this->comDefaults, $this->comAttrs );
 	}
 
-	public function calcPrice( $component_ids ) {
+	public function getPrice() {
+		return $this->meta['price'][0];
+	}
 
-		$sub_total = $this->meta['price'][0];
+	public function getCost( $component_ids = null ) {
+
+		$cost = 0.00;
+
+		if ( $component_ids === null ) {
+			$component_ids = $this->comDefaultIDs;
+		}
+
+		foreach ( $component_ids as $i ) {
+			$cost += $this->comAttrs[preg_replace( '/^component-/', '', $i )]['cost'][0];
+		}
+
+		return $cost;
+
+	}
+
+	public function calcPrice( $component_ids = null ) {
+
+		$sub_total = $this->getPrice();
 
 		foreach ( $component_ids as $i ) {
 			$sub_total += $this->comPriceDiffs[preg_replace( '/^component-/', '', $i )];

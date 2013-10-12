@@ -39,10 +39,10 @@
 						<tr class="line-item line-item-<?php echo $k; ?>" data-line-item-id="<?php echo $k; ?>">
 							<td class="qty-col"><input type="text" size="2" value="1" /></td>
 							<td class="description-col" colspan="2">
-								<!-- <?php echo get_the_post_thumbnail( $product->post->ID, 'medium', array( 'class' => 'product-thumbnail' ) ); ?> -->
+								<?php echo get_the_post_thumbnail( $product->post->ID, 'thumbnail', array( 'class' => 'product-thumbnail' ) ); ?>
 								<h3><a href="<?php echo get_permalink( $product->post->ID ); ?>"><?php echo $product->post->post_title; ?></a></h3>
 								<div class="actions">
-									<a href="#" class="toggle-details">Details</a> |
+									<a href="#" class="toggle-details">View details</a> |
 									<a href="#" class="remove-line-item">Remove</a>
 								</div>
 								<div class="details hidden">
@@ -60,7 +60,6 @@
 								</div>
 								<div class="price">&dollar;<?php echo $product->calcPrice( $item['component_ids'] ); ?></div>
 							</td>
-							<!-- <td class="price-col">&dollar;<?php echo $product->calcPrice( $item['component_ids'] ); ?></td> -->
 						</tr>
 
 					<?php endforeach; ?>
@@ -69,16 +68,15 @@
 
 						<?php
 							$discount = $cart['promo']['type'] == '%' ? number_format( $cart['promo']['amount'] ) . '&#37;' : '&dollar;' . number_format( $cart['promo']['amount'] );
-							$discount_amount = $cart['promo']['type'] == '%' ? number_format( $cart['sub_total'] * ( $cart['promo']['amount'] / 100 ) ) : number_format( $cart['promo']['amount'] );
+							$discount_amount = $cart['promo']['type'] == '%' ? number_format( $cart['sub_total'] * ( $cart['promo']['amount'] / 100 ), 2 ) : number_format( $cart['promo']['amount'] );
 						?>
 
 						<tr class="line-item discount-item">
 							<td class="description-col" colspan="3">
 								<div class="discount"><?php echo $discount; ?> Discount</div>
 								<div class="details">code: <?php echo $cart['promo']['code']; ?></div>
-								<div class="price">-&dollar;<?php echo $discount_amount; ?></div>
+								<div class="price">-&dollar;<?php echo number_format( $cart['discount_total'], 2 ); ?></div>
 							</td>
-							<!-- <td class="price-col">&dollar;<?php echo $product->calcPrice( $item['component_ids'] ); ?></td> -->
 						</tr>
 
 					<?php endif; ?>

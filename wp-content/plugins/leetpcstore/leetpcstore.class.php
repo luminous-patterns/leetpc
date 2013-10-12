@@ -1,4 +1,5 @@
 <?php
+require_once( 'pin.php' );
 /**
  * LEETPC Store Main Class
  * 
@@ -187,7 +188,7 @@ class leetPcStore {
 
 	public function processCheckoutData( $reload = false ) {
 
-	    $data = $reload ? array( 'cart' => get_cart() ) : $_SESSION['checkout_data'];
+	    $data = $reload ? array( 'cart' => get_cart(), 'order_id' => substr( uniqid(), -8 ) ) : $_SESSION['checkout_data'];
 
 	    foreach ( $_POST['submitted'] as $k => $v ) {
 
@@ -225,6 +226,8 @@ class leetPcStore {
 		$p = false;
 		$e = array( 'message' => null, 'fields' => array() );
 		$s = $_POST['step'] - 1;
+
+		$payment_complete = false;
 
 		$skip_process_account = false;
 		if ( is_user_logged_in() ) {
@@ -303,6 +306,11 @@ class leetPcStore {
 
 					}
 
+					if ( strtolower( $submitted['user-email'] ) != strtolower( $submitted['user-conf_email'] ) ) {
+						$e['message'] = 'Email address does not match';
+						$e['fields'][] = array( 'name' => 'user-conf_email', 'message' => 'Email address does not match' );
+					}
+
 					break;
 
 				case 2: // Process billing info
@@ -322,16 +330,63 @@ class leetPcStore {
 						$required_fields = array( 'cc-name', 'cc-number', 'cc-exp-month', 'cc-exp-year', 'cc-csc' );
 
 						if ( $_SESSION['checkout_data']['cc']['number'] == '51631000000000' ) { // test transaction
-							$_SESSION['checkout_data']['payment']['status'] == 'success';
+							$_SESSION['checkout_data']['payment']['status'] = 'success';
+							$p = true;
+						}
+
+						$this->pin = new Pin();
+
+						try {
+
+							$gateway_response = $this->pin->postCharge( array(
+								
+								'email'         => $_SESSION['checkout_data']['user']['email'],
+								'description'   => 'PC order ' . $_SESSION['checkout_data']['order_id'],
+								'amount'        => intval( $_SESSION['checkout_data']['cart']['total'] * 100 ),
+								'ip_address'    => $_SERVER['REMOTE_ADDR'],
+								'currency'      => 'AUD',
+
+								'card[number]'             => preg_replace( '/\s+/', '', $_SESSION['checkout_data']['cc']['number'] ),
+								'card[expiry_month]'       => $_SESSION['checkout_data']['cc']['exp']['month'],
+								'card[expiry_year]'        => $_SESSION['checkout_data']['cc']['exp']['year'],
+								'card[cvc]'                => $_SESSION['checkout_data']['cc']['csc'],
+								'card[name]'               => $_SESSION['checkout_data']['cc']['name'],
+								'card[address_line1]'      => $_SESSION['checkout_data']['acct']['street'],
+								'card[address_city]'       => $_SESSION['checkout_data']['acct']['suburb'],
+								'card[address_postcode]'   => $_SESSION['checkout_data']['acct']['postcode'],
+								'card[address_state]'      => 'VIC',
+								'card[address_country]'    => 'Australia'
+
+							) );
+
+							$_SESSION['checkout_data']['cc']['number'] = substr( $_SESSION['checkout_data']['cc']['number'], 0, 4 ) . '-####-####-'  . substr( $_SESSION['checkout_data']['cc']['number'], -4 );
+							unset( $_SESSION['checkout_data']['cc']['csc'] );
+
+							if ( $gateway_response->success ) {
+								$_SESSION['checkout_data']['payment']['status'] = 'success';
+								$_SESSION['checkout_data']['payment']['gateway'] = 'pin.net.au';
+								$_SESSION['checkout_data']['payment']['token'] = $gateway_response->token;
+								$_SESSION['checkout_data']['payment']['message'] = $gateway_response->status_message;
+								$_SESSION['checkout_data']['payment']['amount'] = $gateway_response->amount / 100;
+								$_SESSION['checkout_data']['payment']['ipaddress'] = $gateway_response->ip_address;
+								$_SESSION['checkout_data']['payment']['date'] = $gateway_response->created_at;
+								$p = true;
+							}
+
+						}
+						catch ( PIN_Exception $exception ) {
+							$e['message'] = $exception->getDescription();
+							$e['fields'][] = array( 'name' => 'cc-number', 'message' => $exception->getDescription(), 'extra' => $exception->getErrors() );
 						}
 
 					}
 					elseif ( $_SESSION['checkout_data']['payment']['method'] == 'bank' ) { // Process bank deposit
 						unset( $_SESSION['checkout_data']['cc'] );
-						$_SESSION['checkout_data']['payment']['status'] == 'pending';
+						$_SESSION['checkout_data']['payment']['status'] = 'pending';
+						$p = true;
 					}
 
-					$p = true;
+					
 
 					break;
 

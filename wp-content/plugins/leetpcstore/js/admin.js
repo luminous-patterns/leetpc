@@ -105,7 +105,8 @@ var LEETPCStoreAdmin = {
 				var comName = components[i];
 				var def = comName.substr( -1 ) == '*';
 
-				comName = jQuery( '.components-list li.' + comName.replace( '*', '' ) ).clone().find( 'label .cost' ).empty().parent().parent().text().trim();
+				// comName = jQuery( '.components-list li.' + comName.replace( '*', '' ) ).clone().find( 'label .cost' ).empty().parent().parent().text().trim();
+				comName = jQuery( '.components-list li.' + comName.replace( '*', '' ) ).attr( 'data-component-title' );
 
 				if ( def ) valuesEl.prepend( jQuery( '<strong>' + comName + '</strong>' ) );
 				else valuesEl.append( comName + ( i < components.length - 1 ? ', ' : '' ) );

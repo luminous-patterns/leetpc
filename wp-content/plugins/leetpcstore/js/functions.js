@@ -28,13 +28,21 @@ var LEETPCStore = {
 			this.pageType = 'single-product';
 		}
 
+		if ( this.bodyClasses.indexOf( 'post-type-archive-product' ) > -1 ) {
+			this.pageType = 'product-list';
+		}
+
 		if ( this.bodyClasses.indexOf( 'my-cart' ) > -1 ) {
 			this.pageType = 'my-cart';
 		}
 
 		if ( this.pageType == 'single-product' ) {
 			this.postID = jQuery( 'article.product' ).attr( 'id' ).split( '-' )[1];
-			jQuery( 'article.product button.customize' ).bind( 'click', jQuery.proxy( this.customizeProduct, this ) );
+			jQuery( 'article.product button.customize' ).bind( 'click', jQuery.proxy( this.customizeCurrentProduct, this ) );
+		}
+
+		if ( this.pageType == 'product-list' ) {
+			jQuery( 'article.product button.customize' ).bind( 'click', jQuery.proxy( this.customizeCurrentProduct, this ) );
 		}
 
 		if ( this.pageType == 'my-cart' ) {
@@ -333,18 +341,34 @@ var LEETPCStore = {
 	onClickRegisteredToggle: function( ev ) {
 
 		if ( this.currentModalEl.find( 'input[name=user-registered]:checked' ).val() == '1' ) {
+			this.currentModalEl.find( 'div.row.user-conf_email' ).addClass( 'hidden' );
 			this.currentModalEl.find( 'div.row.user-password' ).removeClass( 'hidden' );
 		}
 		else {
 			this.currentModalEl.find( 'div.row.user-password' ).addClass( 'hidden' );
+			this.currentModalEl.find( 'div.row.user-conf_email' ).removeClass( 'hidden' );
 		}
 
 	},
 
-	customizeProduct: function() {
+	customizeCurrentProduct: function( e ) {
 
-		var that = this;
-		var product_id = this.postID;
+		switch ( this.pageType ) {
+
+			case 'single-product':
+				this.customizeProduct( this.postID );
+				break;
+
+			case 'product-list':
+				this.customizeProduct( jQuery( e.target ).parents( 'article' ).attr( 'id' ).replace( 'post-', '' ) );
+				break;
+
+		}
+
+	},
+
+	customizeProduct: function( product_id ) {
+
 		var data = { 
 			action: 'get_customize_form',
 			product_id: product_id 

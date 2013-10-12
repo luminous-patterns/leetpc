@@ -124,20 +124,21 @@ function init_cart( $empty_cart = false ) {
 
 		$_SESSION['shopping_cart'] = array(
 
-			'items'         => array(),
-			'items_count'   => 0,
-			'items_total'   => 0.00,
+			'items'             => array(),
+			'items_count'       => 0,
+			'items_total'       => 0.00,
 
-			'promo'         => array(
-				'code'      => null,
-				'type'      => null,
-				'amount'    => null
+			'promo'             => array(
+				'code'          => null,
+				'type'          => null,
+				'amount'        => null
 			),
 
-			'sub_total'     => 0.00,
-			'total'         => 0.00,
+			'discount_total'    => 0.00,
+			'sub_total'         => 0.00,
+			'total'             => 0.00,
 
-			'created'       => time()
+			'created'           => time()
 
 		);
 
@@ -157,29 +158,36 @@ function init_cart( $empty_cart = false ) {
 
 function calc_cart_totals() {
 
-	$_SESSION['shopping_cart']['items_total'] = 0.00;
-	$_SESSION['shopping_cart']['items_count'] = 0;
-	$_SESSION['shopping_cart']['sub_total'] = 0.00;
-	$_SESSION['shopping_cart']['total'] = 0.00;
+	$items_count = 0;
+	$items_total = 0.00;
+	$discount_total = 0.00;
+	$sub_total = 0.00;
+	$total = 0.00;
+
+	$promo = $_SESSION['shopping_cart']['promo'];
 
 	foreach ( $_SESSION['shopping_cart']['items'] as $k => $item ) {
 
 		$_SESSION['shopping_cart']['items'][$k]['price'] = calc_product_price( $item['product_id'], $item['component_ids'] );
-		$_SESSION['shopping_cart']['items_total'] += calc_product_price( $item['product_id'], $item['component_ids'] ) * $item['qty'];
-		$_SESSION['shopping_cart']['items_count'] += $item['qty'];
+		$items_total += calc_product_price( $item['product_id'], $item['component_ids'] ) * $item['qty'];
+		$items_count += $item['qty'];
 
 	}
 
-	$_SESSION['shopping_cart']['sub_total'] = $_SESSION['shopping_cart']['items_total'];
+	$sub_total = $items_total;
 
-	if ( $_SESSION['shopping_cart']['promo']['code'] ) {
-
-		$discount_amount = $_SESSION['shopping_cart']['promo']['type'] == '%' ? $_SESSION['shopping_cart']['sub_total'] * ( $_SESSION['shopping_cart']['promo']['amount'] / 100 ) : $_SESSION['shopping_cart']['promo']['amount'];
-		$_SESSION['shopping_cart']['sub_total'] = max( 0, $_SESSION['shopping_cart']['sub_total'] - $discount_amount );
-
+	if ( $promo['code'] ) {
+		$discount_total = $promo['type'] == '%' ? $items_total * ( $promo['amount'] / 100 ) : $promo['amount'];
+		$sub_total = max( 0, $sub_total - $discount_total );
 	}
 
-	$_SESSION['shopping_cart']['total'] = $_SESSION['shopping_cart']['sub_total'];
+	$total = $sub_total;
+
+	$_SESSION['shopping_cart']['items_count'] = $items_count;
+	$_SESSION['shopping_cart']['items_total'] = $items_total;
+	$_SESSION['shopping_cart']['discount_total'] = $discount_total;
+	$_SESSION['shopping_cart']['sub_total'] = $sub_total;
+	$_SESSION['shopping_cart']['total'] = $total;
 
 }
 

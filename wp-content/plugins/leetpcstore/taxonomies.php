@@ -1,5 +1,110 @@
 <?php
 
+add_filter( 'manage_component_posts_columns',            'leetpcstore_component_columns_filter' );
+add_action( 'manage_component_posts_custom_column',     'leetpcstore_component_columns_action', 10, 2 );
+
+function leetpcstore_component_columns_filter( $columns ) {
+
+	$new_columns = array(
+		'type'        => 'Type',
+		'long_name'   => 'Long name',
+		'cost'        => '$ Cost',
+		'price'       => '$ Price'
+	);
+
+	unset( $columns['date'], $columns['comments'] );
+
+    return array_merge( $columns, $new_columns );
+
+}
+
+function leetpcstore_component_columns_action( $column, $post_id ) {
+
+	$meta = get_post_custom( $post_id );
+
+	$types = wp_get_post_terms( $post_id, 'component_group' );
+	$type = $types[0];
+
+    switch ( $column ) {
+
+    	case 'type':
+    		echo $type->name;
+    		break;
+
+    	case 'long_name':
+    		echo $meta['long_name'][0];
+    		break;
+
+		case 'cost' :
+		    echo '$' . number_format( $meta['cost'][0], 2 );
+			break;
+
+		case 'price' :
+		    echo '$' . number_format( $meta['price'][0], 2 );
+		    break;
+
+    }
+
+}
+
+add_filter( 'manage_product_posts_columns',           'leetpcstore_product_columns_filter' );
+add_action( 'manage_product_posts_custom_column',     'leetpcstore_product_columns_action', 10, 2 );
+
+function leetpcstore_product_columns_filter( $columns ) {
+
+	$title_column = $columns['title'];
+
+	unset( $columns['title'], $columns['date'], $columns['comments'] );
+
+	$new_columns = array(
+		'type'        => 'Type',
+		'title'       => $title_column,
+		'components'  => 'Components',
+		'cost'        => '$ Cost',
+		'price'       => '$ Price',
+		'margin'      => '$ Margin'
+	);
+
+    return array_merge( $columns, $new_columns );
+
+}
+
+function leetpcstore_product_columns_action( $column, $post_id ) {
+
+	$p = get_product( $post_id );
+
+    switch ( $column ) {
+
+    	case 'type':
+    		echo $p->type->name;
+    		break;
+
+    	case 'components':
+			$com_lines = array(); 
+			foreach( $p->comDefaults as $type => $c ) { 
+				if ( $type == 'case' ) continue;
+				$com_lines[] = '<strong>' . strtoupper( $type ) . ':</strong> <a href="' . get_edit_post_link( $post_id, '' ) . '" title="Edit component">' . $c->post_title . '</a>';
+			}
+			echo implode( ' / ', $com_lines );
+    		break;
+
+		case 'cost' :
+		    echo '$' . number_format( $p->getCost(), 2 );
+			break;
+
+		case 'price' :
+		    echo '$' . number_format( $p->getPrice(), 2 );
+		    break;
+
+		case 'margin' :
+			$margin = $p->getPrice() - $p->getCost();
+		    echo '$' . number_format( $margin, 2 ) . ' (' . number_format( $margin / $p->getPrice() * 100 ) . '%)';
+		    break;
+
+    }
+
+}
+
 add_action( 'init', 'leetpcstore_taxonomy_init' );
 
 function leetpcstore_taxonomy_init() {

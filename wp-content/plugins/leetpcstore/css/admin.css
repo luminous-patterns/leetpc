@@ -111,3 +111,12 @@
 #invoice_metabox .form-table td .group:last-of-type {
     border-bottom-width: 1px;
 }
+.manage-column.column-cost, .manage-column.column-price {
+    width: 90px;
+}
+.manage-column.column-margin {
+    width: 110px;
+}
+.manage-column.column-type {
+    width: 150px;
+}

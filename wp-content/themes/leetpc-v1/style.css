@@ -132,7 +132,7 @@ span.important {
     background: linear-gradient(to bottom, rgba(100,100,100,1) 0%,rgba(41,41,41,1) 100%);
     line-height: 38px;
     border-radius: 2px 2px 0 0;
-    border-bottom: 1px solid #00;
+    border-bottom: 1px solid #000;
     font-size: 0.8em;
     height: 41px;
     border-left: 1px solid rgba(255,255,255,0.2);
@@ -274,6 +274,7 @@ table.line-items .removing td {
 }
 table.line-items .qty-col {
     width: 13%;
+    text-align: center;
 }
 table.line-items th.qty-col {
     border-left: 1px solid #ddd;
@@ -302,13 +303,21 @@ table.line-items td {
 }
 table.line-items td.qty-col input {
     width: 100%;
+    text-align: center;
 }
 table.line-items td h3 {
-    margin: 0 0 10px;
+    margin: 0 0 6px;
     font-family: oxygen;
     font-size: 1.5em;
     line-height: 1;
     display: inline-block;
+    white-space: nowrap;
+}
+table.line-items td.description-col .product-thumbnail {
+    width: 40px;
+    border: 2px solid #ddd;
+    float: left;
+    margin-right: 10px;
 }
 table.line-items td.description-col {
     font-size: 0.9em;
@@ -318,7 +327,7 @@ table.line-items td h3 a {
 }
 table.line-items .actions {
     font-size: 0.9em;
-    display: inline-block;
+    display: block;
     margin-left: 10px;
 }
 table.line-items .line-item.sub-item td {
@@ -786,7 +795,6 @@ input[type="text"]:focus, input[type="password"]:focus {
 .invoice .section h2 {
     margin: 0;
     line-height: 1em;
-    font-size: 0.9em;
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -800,6 +808,61 @@ input[type="text"]:focus, input[type="password"]:focus {
 .invoice .section.total .amount {
     font-size: 2em;
     font-weight: normal;
+}
+/* compact products */
+.product-list {
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    margin-top: 30px;
+}
+.product.compact {
+    position: relative;
+    padding: 30px 30px 30px 180px;
+}
+.product.compact:nth-of-type(even) {
+    background-color: #f5f5f5;
+}
+.product.compact h2 {
+    line-height: 1em;
+    font-weight: bold;
+    margin: 0;
+}
+.product.compact .wp-post-image {
+    margin-right: 30px;
+    position: absolute;
+    left: 30px;
+    border: 2px solid #bbb;
+}
+.product.compact .product-price {
+    font-size: 0.8em;
+}
+.product.compact .product-type {
+    color: #999;
+    font-family: oxygen;
+    font-size: 0.9em;
+    margin-top: 0.4em;
+}
+.product.compact .components {
+    font-size: 0.85em;
+    margin-top: 10px;
+    font-family: roboto;
+}
+.product.compact .components strong {
+    color: #999;
+    font-size: 0.9em;
+    font-weight: normal;
+}
+.product.compact .actions {
+    margin-top: 30px;
+    line-height: 25px;
+}
+.product.compact .actions a {
+    font-size: 0.9em;
+    margin-right: 15px;
+    font-family: roboto;
+}
+.product.compact .actions button {
+    margin-right: 15px;
 }
 
 /*------------------------------------*\
@@ -881,6 +944,9 @@ h2 {
         position: absolute;
         top: 20px;
         right: 20px;
+    }
+
+    .single-product .product-price {
         left: 20px;
     }
 
@@ -956,15 +1022,16 @@ h2 {
 
     .header .toggle-nav {
         background: url('img/menu.svg');
+        background-color: #fff;
+        background-position: 20px 15px;
+        background-repeat: no-repeat;
+        background-size: 32px;
         display: block;
         position: absolute;
         top: 0;
         right: 0;
-        background-size: 32px;
         width: 71px;
         bottom: 0;
-        background-repeat: no-repeat;
-        background-position: 20px 15px;
         height: 61px;
         opacity: 0.5;
     }
@@ -985,6 +1052,10 @@ h2 {
         width: 100%;
     }
 
+    .modal .modal-body .row.field-error .error-message {
+        margin-left: 0;
+    }
+
     .modal.customize-form .component-list .component div.component-options {
         display: block;
     }
@@ -993,6 +1064,26 @@ h2 {
         display: block;
         margin-top: 7px;
     }
+
+    .product-list {
+        margin-top: 20px;
+    }
+    .product.compact {
+        padding: 20px;
+    }
+    .product.compact h2 {
+        font-size: 1.3em;
+    }
+    .product.compact .wp-post-image {
+        border: 2px solid #bbb;
+        float: left;
+        margin-right: 20px;
+        max-width: 50px;
+        position: relative;
+    
+        left: auto;
+        margin-bottom: 20px;
+}
 
 }
 @media only screen and (max-width:768px) {

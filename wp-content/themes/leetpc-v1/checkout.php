@@ -34,6 +34,11 @@
 				<input type="text" name="user-email" value="<?php echo $_SESSION['checkout_data']['user']['email']; ?>" class="wide" />
 			</div>
 
+			<div class="row checkout-field user-conf_email <?php if ( $_SESSION['checkout_data']['user']['registered'] ) : ?>hidden<?php endif; ?>">
+				<label>Confirm email address</label>
+				<input type="text" name="user-conf_email" value="<?php echo $_SESSION['checkout_data']['user']['conf_email']; ?>" class="wide" />
+			</div>
+
 			<div class="row checkout-field user-password <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>hidden<?php endif; ?>">
 				<label>Password</label>
 				<input type="password" name="user-password" class="wide" />

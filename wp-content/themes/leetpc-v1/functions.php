@@ -98,12 +98,12 @@ function print_component_options( $type, $components, $defaults, $attrs ) {
 
     foreach ( $components[$type] as $c ) : 
 
-        $def_price = $attrs[$d->ID]['price'][0];
-        $price = $attrs[$c->ID]['price'][0];
+        $def_price = intval( $attrs[$d->ID]['price'][0] );
+        $price = intval( $attrs[$c->ID]['price'][0] );
 
         $cs[] = array( 
             'c' => $c,
-            'price_diff' => number_format( $price - $def_price )
+            'price_diff' => $price - $def_price
         );
 
     endforeach;
@@ -125,7 +125,9 @@ function print_component_options( $type, $components, $defaults, $attrs ) {
                 <label>
                     <input type="radio" name="<?php echo $type; ?>" value="component-<?php echo $c->ID; ?>" data-price-diff="<?php echo $price_diff; ?>" <?php echo $checked; ?> />
                     <?php echo $c->post_title; ?>
-                    <span class="price-diff"><?php if ( $price_diff ) echo ( $price_diff > 0 ? '+' : '-' ) . '&dollar;' . number_format( abs( $price_diff ), 2 ); ?></span>
+                <?php if ( $price_diff ) : ?>
+                    <span class="price-diff"><?php echo ( $price_diff > 0 ? '+' : '-' ) . '&dollar;' . number_format( abs( $price_diff ), 2 ); ?></span>
+                <?php endif; ?>
                 </label>
             </div>
 
