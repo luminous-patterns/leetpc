@@ -26,11 +26,19 @@
 
 			<div class="featured-product <?php $count++; if ( $count != 2 ) echo 'hidden'; ?>">
 
-				<h1><a href="<?php echo get_permalink( $p->post->ID ); ?>"><?php echo $p->post->post_title; ?></a></h1>
+				<h2><a href="<?php echo get_permalink( $p->post->ID ); ?>"><?php echo $p->post->post_title; ?></a></h2>
 
-				<ul><?php foreach( $p->comDefaults as $type => $c ) : ?>
-					<li><?php echo $c->post_title; ?></li>
-				<?php endforeach; ?></ul>
+				<div class="components"><?php 
+
+					$com_lines = array(); 
+					foreach( $p->comDefaults as $type => $c ) { 
+						if ( $type == 'case' ) continue;
+						$com_lines[] = '<strong>' . strtoupper( $type ) . '</strong> ' . $c->post_title; 
+					}
+
+					echo implode( '<br />', $com_lines );
+
+				?></div>
 
 				<?php echo get_the_post_thumbnail( $p->post->ID, 'large' ); ?>
 

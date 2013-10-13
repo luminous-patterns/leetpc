@@ -14,41 +14,47 @@
 	
 	<!-- section -->
 	<section role="main">
-	
-		<h1>TAX INVOICE</h1>
 
-		<div class="section-group secondary">
+		<div class="invoice-top">
 
-			<div class="section date">
-				<h2>Date</h2>
-				<div class="invoiced">
-					<?php echo $i->getDate(); ?>
+			<img src="<?php echo get_template_directory_uri(); ?>/img/logo.png" alt="LEETPC" class="logo">
+		
+			<h1>TAX INVOICE</h1>
+
+			<div class="section-group secondary">
+
+				<div class="section date">
+					<h2>Invoice Date</h2>
+					<div class="invoiced">
+						<?php echo $i->getDate(); ?>
+					</div>
+				</div>
+
+				<div class="section total">
+					<h2>Total Amount</h2>
+					<div class="amount">
+						&dollar;<?php echo number_format( $i->getTotal(), 2 ); ?>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="section business-info">
+				CALLAN MILNE
+				<br />ABN 62 842 988 455
+				<br />4 Holyrood Drive
+				<br />Vermont VIC 3133
+			</div>
+
+			<div class="section bill-to">
+				<h2>Invoice To</h2>
+				<div class="address">
+					<?php echo $acct['firstname'] . ' ' . $acct['lastname']; ?>
+					<br /><?php echo $acct['street']; ?>
+					<br /><?php echo $acct['suburb']; ?> <?php echo $acct['state']; ?> <?php echo $acct['postcode']; ?>
 				</div>
 			</div>
 
-			<div class="section total">
-				<h2>Total</h2>
-				<div class="amount">
-					&dollar;<?php echo number_format( $i->getTotal(), 2 ); ?>
-				</div>
-			</div>
-
-		</div>
-
-		<div class="section business-info">
-			LEETPC PTY LTD
-			<br />ABN 62 842 988 455
-			<br />4 Holyrood Drive
-			<br />Vermont VIC 3133
-		</div>
-
-		<div class="section bill-to">
-			<h2>Customer</h2>
-			<div class="address">
-				<?php echo $acct['firstname'] . ' ' . $acct['lastname']; ?>
-				<br /><?php echo $acct['street']; ?>
-				<br /><?php echo $acct['suburb']; ?> <?php echo $acct['state']; ?> <?php echo $acct['postcode']; ?>
-			</div>
 		</div>
 
 		<div class="section line-items">
@@ -100,6 +106,16 @@
 
 			</table>
 
+		</div>
+
+		<div class="section deliver-to">
+			<h2>Deliver To</h2>
+			<div class="address">
+				<?php $delivery = $i->getDeliveryAddress(); ?>
+				<?php echo $delivery['firstname'] . ' ' . $delivery['lastname']; ?>
+				<br /><?php echo $delivery['street']; ?>
+				<br /><?php echo $delivery['suburb']; ?> <?php echo $delivery['state']; ?> <?php echo $delivery['postcode']; ?>
+			</div>
 		</div>
 	
 	</section>

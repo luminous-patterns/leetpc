@@ -67,13 +67,6 @@ if ( get_post_type() == 'product' ) :
 						</div>
 					</div>
 
-					<div class="component component-motherboard">
-						<h4>Motherboard</h4>
-						<div class="component-options">
-							<?php print_component_options( 'motherboard', $components, $defaults, $attrs ); ?>
-						</div>
-					</div>
-
 					<div class="component component-ram">
 						<h4>Memory (RAM)</h4>
 						<div class="component-options">
@@ -88,12 +81,14 @@ if ( get_post_type() == 'product' ) :
 						</div>
 					</div>
 
+				<?php if ( component_has_value( 'videocard', $components ) ) : ?>
 					<div class="component component-videocard">
 						<h4>Video (GFX)</h4>
 						<div class="component-options">
 							<?php print_component_options( 'videocard', $components, $defaults, $attrs ); ?>
 						</div>
 					</div>
+				<?php endif; ?>
 
 					<div class="component component-optical">
 						<h4>Optical</h4>
@@ -102,24 +97,10 @@ if ( get_post_type() == 'product' ) :
 						</div>
 					</div>
 
-					<div class="component component-sound">
-						<h4>Sound</h4>
-						<div class="component-options">
-							**** Realtek® ALC892 8-Channel HD Audio
-						</div>
-					</div>
-
 					<div class="component component-os">
 						<h4>Operating System</h4>
 						<div class="component-options">
 							<?php print_component_options( 'os', $components, $defaults, $attrs ); ?>
-						</div>
-					</div>
-
-					<div class="component component-case">
-						<h4>Case</h4>
-						<div class="component-options">
-							<?php print_component_options( 'case', $components, $defaults, $attrs ); ?>
 						</div>
 					</div>
 

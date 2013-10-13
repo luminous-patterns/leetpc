@@ -21,7 +21,6 @@ var LEETPCStore = {
 		jQuery( 'button.checkout' ).bind( 'click', jQuery.proxy( this.checkout, this ) );
 
 		jQuery( '.toggle-nav' ).bind( 'click', jQuery.proxy( this.toggleNav, this ) );
-		jQuery( '.remove-line-item' ).bind( 'click', jQuery.proxy( this.removeLineItem, this ) );
 		jQuery( '.toggle-details' ).bind( 'click', jQuery.proxy( this.toggleDetailsEl, this ) );
 
 		if ( this.bodyClasses.indexOf( 'single-product' ) > -1 ) {
@@ -52,8 +51,13 @@ var LEETPCStore = {
 			this.couponEntryInputEl = this.couponEntryEl.find( 'input[name=promo-code]' );
 			this.couponEntryApplyEl = this.couponEntryEl.find( 'button.apply-promo-code' );
 
+			this.lineItemEls = jQuery( 'table.line-items .line-item' );
+
 			this.couponEntryToggleEl.bind( 'click', jQuery.proxy( this.toggleCouponEntryEl, this ) );
 			this.couponEntryApplyEl.bind( 'click', jQuery.proxy( this.applyCouponCode, this ) );
+			
+			this.lineItemEls.find( '.remove-line-item' ).bind( 'click', jQuery.proxy( this.removeLineItem, this ) );
+			this.lineItemEls.find( '.item-qty' ).bind( 'change', jQuery.proxy( this.updateLineItemQty, this ) );
 
 		}
 
@@ -91,7 +95,10 @@ var LEETPCStore = {
 		this.couponEntryInputEl.focus();
 	},
 
-	toggleCouponEntryEl: function() {
+	toggleCouponEntryEl: function( ev ) {
+		if ( jQuery( ev.target ).has( 'href' ) ) {
+			ev.preventDefault();
+		}
 		this.couponEntryEl.toggleClass( 'hidden' );
 		this.couponEntryToggleEl.toggleClass( 'hidden' );
 		if ( !this.couponEntryEl.hasClass( 'hidden' ) ) {
@@ -139,6 +146,13 @@ var LEETPCStore = {
 		var lineItemEl = jQuery( ev.target ).parents( '.line-item' );
 		lineItemEl.addClass( 'removing' );
 		this.adminAjax( { action: 'remove_from_cart', line_item_id: lineItemEl.attr( 'data-line-item-id' ) }, this.refreshPage );
+	},
+
+	updateLineItemQty: function( ev ) {
+		ev.preventDefault();
+		var that = this;
+		var lineItemEl = jQuery( ev.target ).parents( '.line-item' );
+		this.adminAjax( { action: 'update_line_item_qty', line_item_id: lineItemEl.attr( 'data-line-item-id' ), qty: parseInt( lineItemEl.find( 'select.item-qty' ).val() ) }, this.refreshPage );
 	},
 
 	emptyCart: function() {

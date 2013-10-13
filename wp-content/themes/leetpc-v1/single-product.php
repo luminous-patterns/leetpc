@@ -61,7 +61,7 @@
 
 			</div>
 
-			<h2>Default specifications</h2>
+			<h2>What's inside</h2>
 
 			<div class="product-config">
 

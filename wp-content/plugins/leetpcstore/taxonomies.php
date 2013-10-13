@@ -1,12 +1,17 @@
 <?php
 
-add_filter( 'manage_component_posts_columns',            'leetpcstore_component_columns_filter' );
+add_filter( 'manage_component_posts_columns',           'leetpcstore_component_columns_filter' );
 add_action( 'manage_component_posts_custom_column',     'leetpcstore_component_columns_action', 10, 2 );
 
 function leetpcstore_component_columns_filter( $columns ) {
 
+	$title_column = $columns['title'];
+
+	unset( $columns['title'], $columns['date'], $columns['comments'] );
+
 	$new_columns = array(
 		'type'        => 'Type',
+		'title'       => $title_column,
 		'long_name'   => 'Long name',
 		'cost'        => '$ Cost',
 		'price'       => '$ Price'
@@ -28,7 +33,7 @@ function leetpcstore_component_columns_action( $column, $post_id ) {
     switch ( $column ) {
 
     	case 'type':
-    		echo $type->name;
+    		echo '<a href="edit.php?post_type=component&component_group=' . $type->slug . '">' . $type->name . '</a>';
     		break;
 
     	case 'long_name':
@@ -105,6 +110,95 @@ function leetpcstore_product_columns_action( $column, $post_id ) {
 
 }
 
+add_filter( 'manage_invoice_posts_columns',           'leetpcstore_invoice_columns_filter' );
+add_action( 'manage_invoice_posts_custom_column',     'leetpcstore_invoice_columns_action', 10, 2 );
+
+function leetpcstore_invoice_columns_filter( $columns ) {
+
+	$title_column = $columns['title'];
+
+	unset( $columns['title'], $columns['date'], $columns['comments'] );
+
+	$new_columns = array(
+		'invoice_number'      => 'ID',
+		'invoice_payment'     => 'Payment',
+		'invoice_status'      => 'Status',
+		'invoice_customer'    => 'Customer',
+		'invoice_deliver_on'  => 'Deliver on',
+		'invoice_items_total' => 'Items',
+		'invoice_discount'    => 'Discount',
+		'invoice_total'       => '$ Total'
+	);
+
+    return array_merge( $columns, $new_columns );
+
+}
+
+function leetpcstore_invoice_columns_action( $column, $post_id ) {
+
+	$i = get_invoice( $post_id );
+
+	$payment = $i->getPaymentDetails();
+	$delivery = $i->getDeliveryDetails();
+	$account = $i->getAccountDetails();
+	$cart = $i->getCart();
+
+    switch ( $column ) {
+
+    	case 'invoice_number':
+    		edit_post_link( $post_id, '', '', $post_id );
+    		break;
+
+    	case 'invoice_customer':
+    		echo $account['firstname'] . ' ' . $account['lastname']
+    			. '<br />' . $account['phone']
+    			. '<br />' . $account['street'] . ', ' . $account['suburb'] . ' ' . $account['postcode'];
+    		break;
+
+    	case 'invoice_payment':
+    		$methods = array(
+    			'cc' => 'Credit card',
+    			'bank' => 'Bank deposit'
+			);
+			$status_colors = array(
+				'success' => '#1b2',
+				'pending' => '#12b'
+			);
+    		echo '<strong style="color: ' . $status_colors[$payment['status']] . '">' . $payment['status'] . '</strong><br />' . $methods[$payment['method']];
+    		break;
+
+    	case 'invoice_status':
+    		echo $i->getStatus();
+    		break;
+
+    	case 'invoice_deliver_on':
+    		echo $delivery['deliver_on'];
+    		break;
+
+    	case 'invoice_items_total':
+		    echo '$' . number_format( $i->getItemsTotal(), 2 )
+		    	. '<br />' . $i->cart['items_count'] . ' Item' . ( $i->cart['items_count'] > 1 ? 's' : '' );
+    		break;
+
+    	case 'invoice_discount':
+    		if ( $cart['discount_total'] > 0.01 ) {
+				$promo = $i->getPromo();
+				$discount = $promo['type'] == '%' ? number_format( $promo['amount'] ) . '&#37;' : '&dollar;' . number_format( $promo['amount'] );
+    			echo '$' . number_format( $cart['discount_total'], 2 ) . '<br />code <em>' . $cart['promo']['code'] . '</em> ' . $discount;
+    		}
+    		else {
+    			echo '$0.00';
+    		}
+    		break;
+
+    	case 'invoice_total':
+		    echo '$' . number_format( $i->getTotal(), 2 );
+    		break;
+
+    }
+
+}
+
 add_action( 'init', 'leetpcstore_taxonomy_init' );
 
 function leetpcstore_taxonomy_init() {
@@ -128,7 +222,8 @@ function leetpcstore_taxonomy_init() {
 			),
 			'show_ui' => true,
 			'query_var' => true,
-			'rewrite' => false,
+			// 'rewrite' => false,
+			'rewrite' => 'products'
 		)
 	);
 
@@ -230,76 +325,76 @@ function leetpcstore_taxonomy_init() {
 	);
 
 	// Carts
-	register_post_type( 'cart',
-		array(
-			'labels' => array(
-				'menu_name' => 'Carts',
-				'all_items' => 'All Carts',
-				'name' => 'Carts',
-				'singular_name' => 'Cart',
-				'add_new' => 'Add Cart',
-				'add_new_item' => 'Add New Cart',
-				'edit' => 'Edit',
-				'edit_item' => 'Edit Cart',
-				'new_item' => 'New Cart',
-				'view' => 'View Cart',
-				'view_item' => 'View Cart',
-				'search_items' => 'Search Carts',
-				'not_found' => 'No Carts found',
-				'not_found_in_trash' => 'No Carts found in trash'
-			),
-			'description' => '',
-			'public' => true,
-			'show_ui' => true,
-			'capability_type' => 'post',
-			'publicly_queryable' => true,
-			'exclude_from_search' => false,
-			'hierarchical' => false,
-			'rewrite' => false,
-			'query_var' => true,
-			'supports' => array( 'title', 'editor', 'comments', 'revisions', 'page-attributes' ),
-			'has_archive' => false,
-			//'has_archive' => 'cart',
-			'show_in_nav_menus' => true,
-			'menu_position' => 25
-		)
-	);
+	// register_post_type( 'cart',
+	// 	array(
+	// 		'labels' => array(
+	// 			'menu_name' => 'Carts',
+	// 			'all_items' => 'All Carts',
+	// 			'name' => 'Carts',
+	// 			'singular_name' => 'Cart',
+	// 			'add_new' => 'Add Cart',
+	// 			'add_new_item' => 'Add New Cart',
+	// 			'edit' => 'Edit',
+	// 			'edit_item' => 'Edit Cart',
+	// 			'new_item' => 'New Cart',
+	// 			'view' => 'View Cart',
+	// 			'view_item' => 'View Cart',
+	// 			'search_items' => 'Search Carts',
+	// 			'not_found' => 'No Carts found',
+	// 			'not_found_in_trash' => 'No Carts found in trash'
+	// 		),
+	// 		'description' => '',
+	// 		'public' => true,
+	// 		'show_ui' => true,
+	// 		'capability_type' => 'post',
+	// 		'publicly_queryable' => true,
+	// 		'exclude_from_search' => false,
+	// 		'hierarchical' => false,
+	// 		'rewrite' => false,
+	// 		'query_var' => true,
+	// 		'supports' => array( 'title', 'editor', 'comments', 'revisions', 'page-attributes' ),
+	// 		'has_archive' => false,
+	// 		//'has_archive' => 'cart',
+	// 		'show_in_nav_menus' => true,
+	// 		'menu_position' => 25
+	// 	)
+	// );
 
 	// Line items
-	register_post_type( 'lineitem',
-		array(
-			'labels' => array(
-				'menu_name' => 'Line items',
-				'all_items' => 'All Line items',
-				'name' => 'Line items',
-				'singular_name' => 'Line item',
-				'add_new' => 'Add Line item',
-				'add_new_item' => 'Add New Line item',
-				'edit' => 'Edit',
-				'edit_item' => 'Edit Line item',
-				'new_item' => 'New Line item',
-				'view' => 'View Line item',
-				'view_item' => 'View Line item',
-				'search_items' => 'Search Line items',
-				'not_found' => 'No Line items found',
-				'not_found_in_trash' => 'No Line items found in trash',
-				'parent' => 'Parent Line item'
-			),
-			'description' => '',
-			'public' => true,
-			'show_ui' => true,
-			'capability_type' => 'post',
-			'publicly_queryable' => true,
-			'exclude_from_search' => false,
-			'hierarchical' => true,
-			'rewrite' => false,
-			'query_var' => true,
-			'supports' => array( 'title', 'editor', 'comments' ),
-			'has_archive' => false,
-			'show_in_nav_menus' => true,
-			'menu_position' => 25
-		)
-	);
+	// register_post_type( 'lineitem',
+	// 	array(
+	// 		'labels' => array(
+	// 			'menu_name' => 'Line items',
+	// 			'all_items' => 'All Line items',
+	// 			'name' => 'Line items',
+	// 			'singular_name' => 'Line item',
+	// 			'add_new' => 'Add Line item',
+	// 			'add_new_item' => 'Add New Line item',
+	// 			'edit' => 'Edit',
+	// 			'edit_item' => 'Edit Line item',
+	// 			'new_item' => 'New Line item',
+	// 			'view' => 'View Line item',
+	// 			'view_item' => 'View Line item',
+	// 			'search_items' => 'Search Line items',
+	// 			'not_found' => 'No Line items found',
+	// 			'not_found_in_trash' => 'No Line items found in trash',
+	// 			'parent' => 'Parent Line item'
+	// 		),
+	// 		'description' => '',
+	// 		'public' => true,
+	// 		'show_ui' => true,
+	// 		'capability_type' => 'post',
+	// 		'publicly_queryable' => true,
+	// 		'exclude_from_search' => false,
+	// 		'hierarchical' => true,
+	// 		'rewrite' => false,
+	// 		'query_var' => true,
+	// 		'supports' => array( 'title', 'editor', 'comments' ),
+	// 		'has_archive' => false,
+	// 		'show_in_nav_menus' => true,
+	// 		'menu_position' => 25
+	// 	)
+	// );
 
 	// Invoices
 	register_post_type( 'invoice',
@@ -357,7 +452,7 @@ function leetpcstore_taxonomy_init() {
 				'not_found_in_trash' => 'No Coupons found in trash'
 			),
 			'description' => '',
-			'public' => true,
+			'public' => false,
 			'show_ui' => true,
 			'capability_type' => 'post',
 			'publicly_queryable' => true,

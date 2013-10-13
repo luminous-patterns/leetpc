@@ -111,12 +111,22 @@
 #invoice_metabox .form-table td .group:last-of-type {
     border-bottom-width: 1px;
 }
-.manage-column.column-cost, .manage-column.column-price {
-    width: 90px;
+.manage-column.column-cost, .manage-column.column-price, .manage-column.column-invoice_items_total, 
+.manage-column.column-invoice_discount, .manage-column.column-invoice_total {
+    width: 80px;
 }
 .manage-column.column-margin {
     width: 110px;
 }
 .manage-column.column-type {
     width: 150px;
+}
+.manage-column.column-invoice_number {
+    width: 60px;
+}
+.manage-column.column-invoice_payment, .manage-column.column-invoice_deliver_on {
+    width: 110px;
+}
+.manage-column.column-invoice_status {
+    width: 80px;
 }

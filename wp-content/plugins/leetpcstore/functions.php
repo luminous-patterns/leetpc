@@ -199,6 +199,26 @@ function remove_line_item( $line_item_key ) {
 		unset( $_SESSION['shopping_cart']['items'][$line_item_key] );
 	}
 
+	calc_cart_totals();
+
+	return true;
+
+}
+
+function set_line_item_qty( $line_item_key, $qty ) {
+
+	init_cart();
+
+	if ( $qty == 0 ) {
+		return remove_line_item( $line_item_key );
+	}
+
+	if ( array_key_exists( $line_item_key, $_SESSION['shopping_cart']['items'] ) ) {
+		$_SESSION['shopping_cart']['items'][$line_item_key]['qty'] = $qty;
+	}
+
+	calc_cart_totals();
+
 	return true;
 
 }

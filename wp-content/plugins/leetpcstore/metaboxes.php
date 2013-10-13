@@ -124,6 +124,7 @@
 												<?php echo $meta['long_name'][0] ? $meta['long_name'][0] : $c->post_title; ?>
 												<span class="cost">&dollar;<?php echo number_format( $meta['cost'][0] ) . ( $meta['cost'][0] < $meta['price'][0] ? ' <strong>/ $' . number_format( $meta['price'][0] ) . '</strong>' : '' ); ?></span>
 											</label>
+											<a href="<?php echo $meta['manufacturer_link'][0] ? $meta['manufacturer_link'][0] : $meta['wholesale_link'][0]; ?>" target="_blank">link</a>
 										</li>
 
 									<?php endforeach;

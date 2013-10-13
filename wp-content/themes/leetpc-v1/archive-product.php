@@ -1,9 +1,22 @@
 <?php get_header(); ?>
+
+	<?php 
+
+	$type = $_GET['product_type'] ? $_GET['product_type'] : 'all-products';
+	$type_titles = array(
+		'all-products' => 'All Products',
+		'home-and-student' => 'Home &amp; Student PCs',
+		'professional' => 'Professional PCs',
+		'enterprise' => 'Enterprise PCs',
+		'gaming-and-multimedia' => 'Gaming &amp; Multimedia PCs'
+	);
+
+	?>
 	
 	<!-- section -->
 	<section role="main">
 	
-		<h1>Products</h1>
+		<h1><?php echo $type_titles[$type]; ?></h1>
 
 		<div class="product-list">
 		
@@ -30,13 +43,15 @@
 
 				<div class="components"><?php 
 
+					$types = array( 'cpu', 'ram', 'videocard', 'hdd', 'wifi', 'optical', 'os' );
 					$com_lines = array(); 
-					foreach( $p->comDefaults as $type => $c ) { 
-						if ( $type == 'case' ) continue;
-						$com_lines[] = $c->post_title . ' <strong>' . strtoupper( $type ) . '</strong>'; 
+					foreach( $types as $type ) {
+						if ( !array_key_exists( $type, $p->comDefaults ) ) continue;
+						$c = $p->comDefaults[$type];
+						$com_lines[] = '<strong>' . strtoupper( $type ) . '</strong> ' . $c->post_title; 
 					}
 
-					echo implode( ', ', $com_lines );
+					echo implode( '<br />', $com_lines );
 
 				?></div>
 
@@ -73,5 +88,26 @@
 	
 	</section>
 	<!-- /section -->
+
+	<!-- sidebar -->
+	<aside class="sidebar" role="complementary">
+	    		
+		<div class="sidebar-widget product-type-filter">
+			<ul>
+				<li class="<?php if ( !$_GET['product_type'] ) echo 'current'; ?>"><a href="/products/">All Products</a></li>
+				<li class="<?php if ( $_GET['product_type'] == 'home-and-student' ) echo 'current'; ?>"><a href="/products/?product_type=home-and-student">Home &amp; Student PCs</a></li>
+				<li class="<?php if ( $_GET['product_type'] == 'professional' ) echo 'current'; ?>"><a href="/products/?product_type=professional">Professional PCs</a></li>
+				<li class="<?php if ( $_GET['product_type'] == 'enterprise' ) echo 'current'; ?>"><a href="/products/?product_type=enterprise">Enterprise PCs</a></li>
+				<li class="<?php if ( $_GET['product_type'] == 'gaming-and-multimedia' ) echo 'current'; ?>"><a href="/products/?product_type=gaming-and-multimedia">Gaming &amp; Multimedia PCs</a></li>
+			</ul>
+		</div>
+	    		
+		<div class="sidebar-widget">
+			<h3>FREE Delivery</h3>
+			<p>Customers in <strong>Victoria, Australia</strong> receive free delivery.</p>
+		</div>
+			
+	</aside>
+	<!-- /sidebar -->
 
 <?php get_footer(); ?>

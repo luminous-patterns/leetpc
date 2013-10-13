@@ -105,6 +105,9 @@ class leetPcStore {
 		add_action( 'wp_ajax_add_to_cart',                         array( &$this, 'addProductToCart' ) );
 		add_action( 'wp_ajax_nopriv_add_to_cart',                  array( &$this, 'addProductToCart' ) );
 
+		add_action( 'wp_ajax_update_line_item_qty',                array( &$this, 'updateCartItemQty' ) );
+		add_action( 'wp_ajax_nopriv_update_line_item_qty',         array( &$this, 'updateCartItemQty' ) );
+
 		add_action( 'wp_ajax_remove_from_cart',                    array( &$this, 'removeProductFromCart' ) );
 		add_action( 'wp_ajax_nopriv_remove_from_cart',             array( &$this, 'removeProductFromCart' ) );
 
@@ -321,6 +324,10 @@ class leetPcStore {
 
 				case 3: // Process shipping info
 
+					if ( $submitted['delivery-use_different_addr'] == 1 ) {
+						$required_fields = array( 'delivery-firstname', 'delivery-lastname', 'delivery-phone', 'delivery-street', 'delivery-suburb', 'delivery-postcode', 'delivery-state' );
+					}
+
 					break;
 
 				case 4: // Process credit card info and create order
@@ -404,6 +411,15 @@ class leetPcStore {
 			if ( $p ) {
 				
 				$y = array();
+
+				// Estimate delivery based on 9 days from today (or first business day after) 
+				$deliver_by = new DateTime( null, new DateTimeZone( 'Australia/Melbourne' ) );
+				$deliver_by->add( new DateInterval( 'P9D' ) );
+				if ( $deliver_by->format( 'N' ) > 5 ) {
+					$period = 9 - $deliver_by->format( 'N' );
+					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
+				}
+				$_SESSION['checkout_data']['delivery']['deliver_on'] = $deliver_by->format( 'D jS \o\f M' );
 
 				foreach ( $_SESSION['checkout_data']['cart']['items'] as $lid => $l ) {
 
@@ -524,6 +540,21 @@ class leetPcStore {
 		$component_ids = array_key_exists( 'component_ids', $_POST ) ? explode( ',', $_POST['component_ids'] ) : array();
 
 		add_product_to_cart( $product_id, $component_ids );
+
+		$this->exitWithJSON( array( 'cart' => get_cart() ) );
+
+	}
+
+	public function updateCartItemQty() {
+
+		if ( !array_key_exists( 'line_item_id', $_POST ) ) {
+			$this->returnAjaxError( array( 'message' => 'Line Item ID not specified' ) );
+		}
+
+		$line_item_id = $_POST['line_item_id'];
+		$qty = $_POST['qty'];
+
+		set_line_item_qty( $line_item_id, $qty );
 
 		$this->exitWithJSON( array( 'cart' => get_cart() ) );
 

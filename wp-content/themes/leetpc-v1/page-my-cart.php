@@ -30,6 +30,8 @@
 
 				<tbody>
 
+				<?php if ( count( array_keys( $cart['items'] ) ) > 0 ) : ?>
+
 					<?php foreach( $cart['items'] as $k => $item ) : 
 
 						$product = get_product( $item['product_id'] );
@@ -37,7 +39,19 @@
 						?>
 
 						<tr class="line-item line-item-<?php echo $k; ?>" data-line-item-id="<?php echo $k; ?>">
-							<td class="qty-col"><input type="text" size="2" value="1" /></td>
+							<td class="qty-col">
+								<select class="item-qty"><?php
+
+									for ( $i = 1; $i < 6; $i++ ) {
+
+										$s = $item['qty'] == $i ? 'selected="selected"' : '';
+
+										?><option <?php echo $s; ?>><?php echo $i; ?></option><?php
+
+									}
+
+								?></select>
+							</td>
 							<td class="description-col" colspan="2">
 								<?php echo get_the_post_thumbnail( $product->post->ID, 'thumbnail', array( 'class' => 'product-thumbnail' ) ); ?>
 								<h3><a href="<?php echo get_permalink( $product->post->ID ); ?>"><?php echo $product->post->post_title; ?></a></h3>
@@ -80,10 +94,23 @@
 						</tr>
 
 					<?php endif; ?>
+
+				<?php else : ?>
+
+						<tr class="line-item no-line-items">
+							<td class="description-col" colspan="3">
+								<strong>Your shopping cart is empty</strong>
+								Find things to fill it with on the <a href="/products/">products page</a>.
+							</td>
+						</tr>
+
+				<?php endif; ?>
 					
 				</tbody>
 
 			</table>
+
+		<?php if ( count( array_keys( $cart['items'] ) ) > 0 ) : ?>
 
 			<div class="promo-code">
 				<a href="#" class="promo-entry-toggle">Add discount or promo code</a>
@@ -102,8 +129,13 @@
 			</div>
 
 			<div class="checkout-btn-container">
-				<button class="checkout">Checkout &amp; Finalize Order</button>
+				<button class="checkout">Checkout &amp; Complete Order</button>
+				<div class="icons">
+					<img src="<?php echo get_template_directory_uri(); ?>/img/accepted-cards.png" />
+				</div>
 			</div>
+
+		<?php endif; ?>
 
 			<h2>Delivery information</h2>
 
@@ -120,16 +152,6 @@
 		<!-- /article -->
 		
 	<?php endwhile; ?>
-	
-	<?php else: ?>
-	
-		<!-- article -->
-		<article>
-			
-			<h2><?php _e( 'Sorry, nothing to display.', 'html5blank' ); ?></h2>
-			
-		</article>
-		<!-- /article -->
 	
 	<?php endif; ?>
 	

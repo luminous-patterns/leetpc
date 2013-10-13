@@ -27,6 +27,15 @@ class lpcInvoice {
 		return json_decode( $this->get( '_delivery' ), true );
 	}
 
+	public function getDeliveryAddress() {
+		$delivery = $this->getDeliveryDetails();
+		return $delivery['use_different_addr'] ? $delivery : $this->getAccountDetails();
+	}
+
+	public function getPaymentDetails() {
+		return json_decode( $this->get( '_payment' ), true );
+	}
+
 	public function getCart() {
 		return json_decode( $this->get( '_cart' ), true );
 	}

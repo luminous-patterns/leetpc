@@ -85,7 +85,7 @@ span.important {
     width: 900px;
     margin:0 auto;
     position:relative;
-    background: #fff linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(255,255,255,0.9) 20px,rgba(255,255,255,0) 100%);
+    background: #eee url('img/wrapper-bg-head.png') repeat-x top;
     display: block;
     min-height: 600px;
     padding: 30px 240px 100px 30px;
@@ -172,11 +172,11 @@ span.important {
 .sidebar {
     position: absolute;
     right: 20px;
-    top: 20px;
-    bottom: 0px;
+    top: 80px;
     /* overflow: hidden; */
     width: 200px;
     font-size: 0.85em;
+    font-family: roboto;
 }
 /* footer */
 .footer {
@@ -254,6 +254,7 @@ button.secondary, .button.secondary {
 table.line-items {
     margin-top: 30px;
     width: 100%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 table.line-items th {
     text-align: left;
@@ -263,7 +264,7 @@ table.line-items th {
     font-family: oxygen;
     line-height: 28px;
     /* border-top: 1px solid #dfdfdf; */
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid #bbb;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
     text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
     font-size: 0.9em;
@@ -273,11 +274,11 @@ table.line-items .removing td {
     opacity: 0.3;
 }
 table.line-items .qty-col {
-    width: 13%;
+    width: 70px;
     text-align: center;
 }
 table.line-items th.qty-col {
-    border-left: 1px solid #ddd;
+    border-left: 1px solid #eee;
 }
 table.line-items .price {
     font-size: 1.3em;
@@ -300,6 +301,7 @@ table.line-items td {
     padding: 15px;
     position: relative;
     vertical-align: top;
+    background-color: #fff;
 }
 table.line-items td.qty-col input {
     width: 100%;
@@ -321,6 +323,7 @@ table.line-items td.description-col .product-thumbnail {
 }
 table.line-items td.description-col {
     font-size: 0.9em;
+    border-right: 1px solid #bbb;
 }
 table.line-items td h3 a {
     color: #555;
@@ -358,8 +361,10 @@ table.line-items .line-item.sub-item td h3 strong {
 }
 table.line-items .line-item.discount-item td.description-col {
     background-color: #f5f5f5;
-    border-top: 5px solid #eee;
+    border-top: 2px solid #ccc;
     line-height: 1;
+    border-bottom: none;
+    border-right: 1px solid #bbb;
 }
 table.line-items .line-item.discount-item td.description-col .discount {
     font-size: 1.1em;
@@ -377,6 +382,20 @@ table.line-items .line-item.discount-item .price {
     color: #a71966;
     font-size: 1.1em;
     font-weight: bold;
+}
+table.line-items .line-item.no-line-items td {
+    color: #999;
+    text-align: center;
+    padding: 25px 15px 40px;
+}
+table.line-items .line-item.no-line-items strong {
+    color: #333;
+    font-size: 1.3em;
+    display: block;
+    margin-bottom: 5px;
+}
+table.line-items .line-item .actions a {
+    text-decoration: underline;
 }
 
 /*------------------------------------*\
@@ -449,6 +468,19 @@ table.line-items .line-item.discount-item .price {
 .product-sampler .mini-products .mini-featured-product.active {
     background: linear-gradient(to bottom, rgba(245,245,245,1) 0%,rgba(235,235,235,1) 48%,rgba(225,225,225,1) 49%,rgba(215,215,215,1) 100%);
     box-shadow: 1px 1px 20px rgba(0,0,0,0.9);
+}
+.product-sampler .featured-product .components {
+    width: 430px;
+    font-family: roboto;
+    font-size: 1em;
+}
+.product-sampler .featured-product .components strong {
+    font-size: 0.9em;
+    color: #aaa;
+}
+.product-sampler .featured-product h2 {
+    margin: 0 0 20px;
+    font-weight: bold;
 }
 /* single product */
 .single-product .wrapper {
@@ -526,9 +558,16 @@ table.line-items .line-item.discount-item .price {
     padding-right: 20px;
 }
 /* my cart */
+.page.my-cart .wrapper {
+    padding-right: 30px;
+}
 .page.my-cart .checkout-btn-container {
     margin-top: 30px;
     text-align: right;
+}
+.page.my-cart .checkout-btn-container .icons {
+    display: block;
+    margin-top: 10px;
 }
 .page.my-cart .promo-code {
     margin-top: 15px;
@@ -772,6 +811,7 @@ input[type="text"]:focus, input[type="password"]:focus {
     padding: 0 6px;
     font-size: 0.9em;
     margin-top: -2px;
+    margin-left: 10px;
 }
 /* checkout form */
 .modal.checkout-modal {
@@ -791,16 +831,20 @@ input[type="text"]:focus, input[type="password"]:focus {
 .invoice h1 {
     margin: 0 0 20px;
     text-align: right;
+    line-height: 1;
 }
 .invoice .section h2 {
-    margin: 0;
+    margin: 0 0 10px;
     line-height: 1em;
     text-transform: uppercase;
     font-weight: bold;
+    font-size: 1.1em;
 }
 .invoice .section-group.secondary {
     text-align: right;
-    float: right;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
 }
 .invoice .section {
     margin-bottom: 20px;
@@ -808,19 +852,48 @@ input[type="text"]:focus, input[type="password"]:focus {
 .invoice .section.total .amount {
     font-size: 2em;
     font-weight: normal;
+    line-height: 1;
+}
+.invoice .section.total {
+    margin-bottom: 0;
+}
+.invoice .section.date .invoiced {
+    line-height: 1;
+}
+.invoice .wrapper .logo {
+    float: left;
+    height: 43px;
+    padding: 0;
+    margin: 0;
+}
+.invoice .section.business-info {
+    font-size: 0.85em;
+    color: #999;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+.invoice .invoice-top {
+    position: relative;
 }
 /* compact products */
 .product-list {
-    border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd;
+    /* border-bottom: 1px solid #ddd; */
+    /* border-top: 1px solid #ddd; */
     margin-top: 30px;
+    /* border-left: 1px solid #ddd; */
+    /* border-right: 1px solid #ddd; */
 }
 .product.compact {
     position: relative;
     padding: 30px 30px 30px 180px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    border-right: 1px solid #ddd;
 }
 .product.compact:nth-of-type(even) {
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5; */
+    /* border-top: 5px solid #ddd; */
 }
 .product.compact h2 {
     line-height: 1em;
@@ -831,7 +904,6 @@ input[type="text"]:focus, input[type="password"]:focus {
     margin-right: 30px;
     position: absolute;
     left: 30px;
-    border: 2px solid #bbb;
 }
 .product.compact .product-price {
     font-size: 0.8em;
@@ -860,15 +932,44 @@ input[type="text"]:focus, input[type="password"]:focus {
     font-size: 0.9em;
     margin-right: 15px;
     font-family: roboto;
+    text-decoration: underline;
 }
 .product.compact .actions button {
-    margin-right: 15px;
+    /* margin-right: 15px; */
+    float: right;
 }
 
 /*------------------------------------*\
-    IMAGES
+    WIDGETS
 \*------------------------------------*/
 
+.sidebar-widget.product-type-filter ul {
+    list-style-type: none;
+    padding: 0;
+    line-height: 2em;
+    font-size: 1.1em;
+}
+.sidebar-widget.product-type-filter ul li {
+    border-left: 2px solid #ddd;
+    padding-left: 15px;
+    margin-bottom: 5px;
+}
+.sidebar-widget.product-type-filter ul li a {
+    color: #333;
+}
+.sidebar-widget.product-type-filter ul li.current {
+    border-left: 4px solid #a71966;
+}
+.sidebar-widget.product-type-filter ul li.current a {
+    color: #a71966;
+    font-weight: bold;
+}
+.sidebar-widget h3 {
+    font-family: oxygen;
+}
+.sidebar-widget {
+    margin-bottom: 30px;
+}
 
 
 /*------------------------------------*\
@@ -1323,3 +1424,26 @@ a img.aligncenter {
         orphans:3;
         widows:3;
     }
+    header {
+        display: none;
+    }
+    footer {
+        display: none;
+    }
+
+    .wrapper {
+        padding: 5%;
+        width: auto;
+        margin: 0;
+        max-width: none;
+    }
+
+    .nav {
+        display: none;
+    }
+    table.line-items th {
+        background: #111 !important;
+        color: #fff !important;
+    }
+
+}
