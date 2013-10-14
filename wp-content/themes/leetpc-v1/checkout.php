@@ -343,14 +343,14 @@
 				<p>Thanks <?php echo $_SESSION['checkout_data']['acct']['firstname']; ?>,</p>
 			<?php if ( $_SESSION['checkout_data']['payment']['method'] == 'cc' ) : ?>
 				<p>Credit card payment of <strong>&dollar;<?php echo number_format( $_SESSION['checkout_data']['payment']['amount'], 2 ); ?></strong> for your order (#<?php echo $_SESSION['checkout_data']['invoice_id']; ?>) was approved.</p>
-				<p>A copy of the invoice will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).</p>
+				<p>A copy of your invoice will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).</p>
 			<?php elseif ( $_SESSION['checkout_data']['payment']['method'] == 'bank' ) : ?>
 				<p>Please remember to send payment of <strong>&dollar;<?php echo number_format( $_SESSION['checkout_data']['cart']['total'], 2 ); ?></strong> for your order (#<?php echo $_SESSION['checkout_data']['invoice_id']; ?>) as soon as possible.</p>
 				<p>A copy of your invoice, and our bank deposit details will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).</p>
 			<?php endif;?>
 				<p>The expected delivery date for your order is <strong><?php echo $_SESSION['checkout_data']['delivery']['deliver_on']; ?></strong>.</p>
 				<p>If you have any questions about your order please contact care@leetpc.com.au.</p>
-				<textarea><?php var_export( $_SESSION['checkout_data'] ); ?></textarea>
+				<!--<textarea><?php var_export( $_SESSION['checkout_data'] ); ?></textarea>-->
 			</div>
 
 			<?php $next_step_btn_text = 'Complete'; ?>

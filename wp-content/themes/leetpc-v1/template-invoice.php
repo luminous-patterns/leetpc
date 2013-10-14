@@ -1,10 +1,11 @@
 <?php /* Template Name: Invoice */
 
-	if ( !$i = get_invoice( $_GET['invoice_id'] ) ) {
-
-		die("no invoice");
-
+	if ( !$_GET['invoice_id'] || get_post_type( $_GET['invoice_id'] ) != 'invoice' ) {
+		header( 'location: https://www.leetpc.com.au' );
+		exit;
 	}
+
+	$i = get_invoice( $_GET['invoice_id'] );
 
 	get_header( 'invoice' );
 
@@ -96,7 +97,7 @@
 						<td class="description-col" colspan="3">
 							<div class="discount"><?php echo $discount; ?> Discount</div>
 							<div class="details">code: <?php echo $promo['code']; ?></div>
-							<div class="price">-&dollar;<?php echo number_format( $i->get( 'discount_total' ), 2 ); ?></div>
+							<div class="price">-&dollar;<?php echo number_format( $i->cart['discount_total'], 2 ); ?></div>
 						</td>
 					</tr>
 

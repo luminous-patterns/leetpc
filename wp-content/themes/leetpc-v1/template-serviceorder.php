@@ -1,10 +1,11 @@
 <?php /* Template Name: Service Order */
 
-	if ( !$i = get_invoice( $_GET['invoice_id'] ) ) {
-
-		die("no invoice");
-
+	if ( !$_GET['invoice_id'] || get_post_type( $_GET['invoice_id'] ) != 'invoice' ) {
+		header( 'location: https://www.leetpc.com.au' );
+		exit;
 	}
+
+	$i = get_invoice( $_GET['invoice_id'] );
 
 	get_header( 'invoice' );
 
@@ -33,13 +34,6 @@
 				</div>
 			</div>
 
-		</div>
-
-		<div class="section business-info">
-			LEETPC PTY LTD
-			<br />ABN 62 842 988 455
-			<br />4 Holyrood Drive
-			<br />Vermont VIC 3133
 		</div>
 
 		<div class="section bill-to">

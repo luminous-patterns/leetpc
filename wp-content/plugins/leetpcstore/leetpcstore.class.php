@@ -325,7 +325,7 @@ class leetPcStore {
 				case 3: // Process shipping info
 
 					if ( $submitted['delivery-use_different_addr'] == 1 ) {
-						$required_fields = array( 'delivery-firstname', 'delivery-lastname', 'delivery-phone', 'delivery-street', 'delivery-suburb', 'delivery-postcode', 'delivery-state' );
+						$required_fields = array( 'delivery-firstname', 'delivery-lastname', 'delivery-street', 'delivery-suburb', 'delivery-postcode', 'delivery-state' );
 					}
 
 					break;
@@ -409,8 +409,6 @@ class leetPcStore {
 			}
 
 			if ( $p ) {
-				
-				$y = array();
 
 				// Estimate delivery based on 9 days from today (or first business day after) 
 				$deliver_by = new DateTime( null, new DateTimeZone( 'Australia/Melbourne' ) );
@@ -420,6 +418,8 @@ class leetPcStore {
 					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
 				}
 				$_SESSION['checkout_data']['delivery']['deliver_on'] = $deliver_by->format( 'D jS \o\f M' );
+				
+				$y = array();
 
 				foreach ( $_SESSION['checkout_data']['cart']['items'] as $lid => $l ) {
 
@@ -510,24 +510,22 @@ class leetPcStore {
 				$subject = "Order confirmation";
 				$body = "Thanks $firstname,\n\n"
 					. "Your PC order has been received and your expected delivery date is " . $d['delivery']['deliver_on'] . ".\n\n"
-					. "A copy of your invoice (#$invoice_id) for this order is attached to this email.\n\n"
-					. "You may review your invoice history at any time via the LEETPC customer area:\n"
-					. "https://www.leetpc.com.au/my-account/";
+					. "You can view and print your copy of your invoice (#$invoice_id) via the following link:\n"
+					. "https://www.leetpc.com.au/invoice/?invoice_id=$invoice_id";
+					// . "You may review your invoice history at any time via the LEETPC customer area:\n"
+					// . "https://www.leetpc.com.au/my-account/";
 				break;
 
 			case 'cc-payment':
 				$subject = 'Credit card payment confirmation';
 				$body = "Hi $firstname,\n\n"
 					. "This is a payment receipt for Invoice #$invoice_id generated on " . date( 'd-m-Y' ) . ".\n\n"
-					. "Amount: $" . number_format( $d['payment']['amount'], 2 ) . " AUD\n\n"
+					. "Amount: $" . number_format( $d['cart']['total'], 2 ) . " AUD\n"
 					. "Status: " . $d['payment']['status'] . "\n\n"
-					. "You may review your invoice history at any time via the LEETPC customer area:\n"
-					. "https://www.leetpc.com.au/my-account/";
-				break;
-
-			case 'user-registration':
-				$subject = 'Your new account information';
-
+					. "You can view and print your copy of your invoice (#$invoice_id) via the following link:\n"
+					. "https://www.leetpc.com.au/invoice/?invoice_id=$invoice_id";
+					// . "You may review your invoice history at any time via the LEETPC customer area:\n"
+					// . "https://www.leetpc.com.au/my-account/";
 				break;
 
 			case 'payment-request':
@@ -540,8 +538,10 @@ class leetPcStore {
 					. "Acct #: 383009\n"
 					. "Amount: $" . number_format( $d['payment']['amount'], 2 ) . " AUD\n\n"
 					. "** IMPORTANT ** Please remember to include your invoice number ($invoice_id) as the description for your payment.\n\n"
-					. "You may review your invoice history at any time via the LEETPC customer area:\n"
-					. "https://www.leetpc.com.au/my-account/";
+					. "You can view and print your copy of your invoice (#$invoice_id) via the following link:\n"
+					. "https://www.leetpc.com.au/invoice/?invoice_id=$invoice_id";
+					// . "You may review your invoice history at any time via the LEETPC customer area:\n"
+					// . "https://www.leetpc.com.au/my-account/";
 				break;
 
 		}
@@ -551,6 +551,38 @@ class leetPcStore {
 		return $this->sendEmail( $to, $subject, $body );
 
 	}
+
+	private function sendWelcomeEmail( $user_id, $password ) {
+
+		$subject = 'Your account information';
+		$body = "Hi $firstname,\n\n"
+			. "We have created an account for you.\n\n"
+			. "Username (email): $email\n"
+			. "Password: $password\n\n"
+			. "You may review your invoice history at any time via the LEETPC customer area:\n"
+			. "https://www.leetpc.com.au/my-account/";
+
+		$body .= "\n\nSincerely,\nCustomer care\nLEETPC.com.au";
+
+		return $this->sendEmail( $to, $subject, $body );
+
+	}
+
+	// private function sendServiceOrder( $user_id, $password ) {
+
+	// 	$subject = 'Your account information';
+	// 	$body = "Hi $firstname,\n\n"
+	// 		. "We have created an account for you.\n\n"
+	// 		. "Username (email): $email\n"
+	// 		. "Password: $password\n\n"
+	// 		. "You may review your invoice history at any time via the LEETPC customer area:\n"
+	// 		. "https://www.leetpc.com.au/my-account/";
+
+	// 	$body .= "\n\nSincerely,\nCustomer care\nLEETPC.com.au";
+
+	// 	return $this->sendEmail( $to, $subject, $body );
+
+	// }
 
 	private function sendEmail( $to, $subject, $body, $attach = '' ) {
 		$headers = array(
