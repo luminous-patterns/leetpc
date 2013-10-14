@@ -85,6 +85,8 @@
 		</div>
 		
 		<?php get_template_part('pagination'); ?>
+		
+		<p class="asterisk">* All prices are quoted in Australian Dollars and include GST</p>
 	
 	</section>
 	<!-- /section -->
@@ -94,17 +96,27 @@
 	    		
 		<div class="sidebar-widget product-type-filter">
 			<ul>
-				<li class="<?php if ( !$_GET['product_type'] ) echo 'current'; ?>"><a href="/products/">All Products</a></li>
-				<li class="<?php if ( $_GET['product_type'] == 'home-and-student' ) echo 'current'; ?>"><a href="/products/?product_type=home-and-student">Home &amp; Student PCs</a></li>
-				<li class="<?php if ( $_GET['product_type'] == 'professional' ) echo 'current'; ?>"><a href="/products/?product_type=professional">Professional PCs</a></li>
-				<li class="<?php if ( $_GET['product_type'] == 'enterprise' ) echo 'current'; ?>"><a href="/products/?product_type=enterprise">Enterprise PCs</a></li>
-				<li class="<?php if ( $_GET['product_type'] == 'gaming-and-multimedia' ) echo 'current'; ?>"><a href="/products/?product_type=gaming-and-multimedia">Gaming &amp; Multimedia PCs</a></li>
+				<li class="<?php if ( !$_GET['product_type'] ) echo 'current'; ?>"><a href="/products/">All Products (6)</a></li>
+				<li class="<?php if ( $_GET['product_type'] == 'home-and-student' ) echo 'current'; ?>"><a href="/products/?product_type=home-and-student">Home &amp; Student PCs (2)</a></li>
+				<li class="<?php if ( $_GET['product_type'] == 'professional' ) echo 'current'; ?>"><a href="/products/?product_type=professional">Professional PCs (1)</a></li>
+				<li class="<?php if ( $_GET['product_type'] == 'enterprise' ) echo 'current'; ?>"><a href="/products/?product_type=enterprise">Enterprise PCs (1)</a></li>
+				<li class="<?php if ( $_GET['product_type'] == 'gaming-and-multimedia' ) echo 'current'; ?>"><a href="/products/?product_type=gaming-and-multimedia">Gaming &amp; Multimedia PCs (2)</a></li>
 			</ul>
 		</div>
 	    		
 		<div class="sidebar-widget">
+			<?php
+
+				$deliver_by = new DateTime( null, new DateTimeZone( 'Australia/Melbourne' ) );
+				$deliver_by->add( new DateInterval( 'P9D' ) );
+				if ( $deliver_by->format( 'N' ) > 5 ) {
+					$period = 9 - $deliver_by->format( 'N' );
+					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
+				}
+
+			?>
 			<h3>FREE Delivery</h3>
-			<p>Customers in <strong>Victoria, Australia</strong> receive free delivery.</p>
+			<p>Customers in <strong>Victoria, Australia</strong> receive free delivery on all PC orders.  Order today to receive your new PC by <?php echo $deliver_by->format( 'D jS \o\f M' ); ?>.</p>
 		</div>
 			
 	</aside>

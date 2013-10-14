@@ -469,6 +469,16 @@ class leetPcStore {
 				$_SESSION['checkout_data']['line_items'] = $y;
 
 				$invoice_id = $this->createInvoice( $_SESSION['checkout_data'] );
+				$_SESSION['checkout_data']['invoice_id'] = $invoice_id;
+
+				// Send emails
+				$this->sendEmailFromCheckoutData( 'order-success', $_SESSION['checkout_data'] );
+				if ( $_SESSION['checkout_data']['payment']['method'] == 'cc' ) {
+					$this->sendEmailFromCheckoutData( 'cc-payment', $_SESSION['checkout_data'] );
+				}
+				else {
+					$this->sendEmailFromCheckoutData( 'payment-request', $_SESSION['checkout_data'] );
+				}
 
 				if ( $invoice_id ) {
 					empty_cart();
@@ -486,6 +496,68 @@ class leetPcStore {
 
 		exit;
 
+	}
+
+	private function sendEmailFromCheckoutData( $type, $d ) {
+
+		$to = $d['user']['email'];
+		$invoice_id = $d['invoice_id'];
+		$firstname = $d['acct']['firstname'];
+
+		switch ( $type ) {
+
+			case 'order-success':
+				$subject = "Order confirmation";
+				$body = "Thanks $firstname,\n\n"
+					. "Your PC order has been received and your expected delivery date is " . $d['delivery']['deliver_on'] . ".\n\n"
+					. "A copy of your invoice (#$invoice_id) for this order is attached to this email.\n\n"
+					. "You may review your invoice history at any time via the LEETPC customer area:\n"
+					. "https://www.leetpc.com.au/my-account/";
+				break;
+
+			case 'cc-payment':
+				$subject = 'Credit card payment confirmation';
+				$body = "Hi $firstname,\n\n"
+					. "This is a payment receipt for Invoice #$invoice_id generated on " . date( 'd-m-Y' ) . ".\n\n"
+					. "Amount: $" . number_format( $d['payment']['amount'], 2 ) . " AUD\n\n"
+					. "Status: " . $d['payment']['status'] . "\n\n"
+					. "You may review your invoice history at any time via the LEETPC customer area:\n"
+					. "https://www.leetpc.com.au/my-account/";
+				break;
+
+			case 'user-registration':
+				$subject = 'Your new account information';
+
+				break;
+
+			case 'payment-request':
+				$subject = 'Payment required';
+				$body = "Hi $firstname,\n\n"
+					. "This is an automated reminder that payment is due for Invoice #$invoice_id, generated on " . date( 'd-m-Y' ) . ".  Please make payment as soon as possible using the following account details.\n\n"
+					. "Bank name: WESTPAC\n"
+					. "Account name: INTEGRATED WEB SERVICES\n"
+					. "BSB: 033-349\n"
+					. "Acct #: 383009\n"
+					. "Amount: $" . number_format( $d['payment']['amount'], 2 ) . " AUD\n\n"
+					. "** IMPORTANT ** Please remember to include your invoice number ($invoice_id) as the description for your payment.\n\n"
+					. "You may review your invoice history at any time via the LEETPC customer area:\n"
+					. "https://www.leetpc.com.au/my-account/";
+				break;
+
+		}
+
+		$body .= "\n\nSincerely,\nCustomer care\nLEETPC.com.au";
+
+		return $this->sendEmail( $to, $subject, $body );
+
+	}
+
+	private function sendEmail( $to, $subject, $body, $attach = '' ) {
+		$headers = array(
+			'Bcc: LEETPC Customer Care <care@leetpc.com.au>',
+			'Bcc: Callan Milne <cal@leetpc.com.au>',
+		);
+		return wp_mail( $to, $subject, $body, $headers, $attach );
 	}
 
 	private function createInvoice( $data ) {

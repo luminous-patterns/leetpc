@@ -199,6 +199,12 @@ span.important {
     COMMON ELEMENTS
 \*------------------------------------*/
 
+.asterisk {
+    color: #999;
+    font-family: roboto;
+    font-size: 0.9em;
+    margin-top: 30px;
+}
 .product-price {
     position: absolute;
     top: 30px;
@@ -404,17 +410,25 @@ table.line-items .line-item .actions a {
 
 /* homepage */
 .page-template-template-home-php .wrapper {
-    background: #f5f5f5 linear-gradient(to bottom, #e5e5e5 0%,#f5f5f5 20px);
+    /* background: #f5f5f5 linear-gradient(to bottom, #ddd 0%,#f5f5f5 2px); */
 }
 .product-sampler {
-    width: 900px;
     margin: 0 auto;
+    display: block;
+    background-color: #333;
+    border-bottom: 1px solid #ccc;
+    /* border-right: 1px solid #ddd; */
+    width: 900px;
+    padding: 30px;
 }
 .product-sampler .featured-product {
-    background: #fff linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(255,255,255,0.9) 20px,rgba(255,255,255,0) 100%);
-    padding: 30px 30px 30px 300px;
+    background: #fff;
+    padding: 30px 30px 30px 250px;
     position: relative;
     overflow: hidden;
+    /* margin: 20px; */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
 }
 .product-sampler .featured-product h1 {
     color: #555;
@@ -433,8 +447,8 @@ table.line-items .line-item .actions a {
 }
 .product-sampler .featured-product .wp-post-image {
     position: absolute;
-    top: 30px;
-    right: 630px;
+    top: 20px;
+    right: 610px;
 }
 .product-sampler .product-price .amount {
     color: #999;
@@ -570,7 +584,7 @@ table.line-items .line-item .actions a {
     margin-top: 10px;
 }
 .page.my-cart .promo-code {
-    margin-top: 15px;
+    margin-top: 45px;
     text-align: right;
     font-size: 0.85em;
 }
@@ -681,7 +695,7 @@ table.line-items .line-item .actions a {
     float: left;
     margin-left: 0;
 }
-.modal .modal-footer .close-modal {
+.modal .modal-footer a.close-modal {
     line-height: 33px;
     font-size: 0.9em;
     color: #777;
@@ -728,6 +742,15 @@ table.line-items .line-item .actions a {
     width: 300px;
     font-size: 0.8em;
     margin-top: 5px;
+}
+.modal .modal-body .html-content {
+    font-size: 0.9em;
+    padding: 20px;
+}
+.modal .modal-body .html-content h3 {
+    line-height: 24px;
+    margin-top: 0;
+    color: #3b0;
 }
 .modal .modal-footer button.secondary, .modal .modal-footer .button.secondary {
     background: linear-gradient(to bottom, rgba(60,60,60,1) 0%,rgba(50,50,50,1) 48%,rgba(30,30,30,1) 49%,rgba(20,20,20,1) 100%);
@@ -937,6 +960,13 @@ input[type="text"]:focus, input[type="password"]:focus {
 .product.compact .actions button {
     /* margin-right: 15px; */
     float: right;
+}
+/* warranty page */
+.warranty article {
+    margin-top: 30px;
+}
+.warranty .wrapper {
+    padding-right: 30px;
 }
 
 /*------------------------------------*\

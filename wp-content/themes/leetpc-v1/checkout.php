@@ -5,6 +5,7 @@
 	$next_step_btn_text = 'Continue';
 
 	$can_go_back = true;
+	$last_step = false;
 
 ?>
 <div class="modal-wrapper">
@@ -337,9 +338,23 @@
 
 			<?php $can_go_back = false; ?>
 
-			<pre style="font-size: 0.8em;"><?php var_export( $_SESSION['checkout_data'] ); ?></pre>
+			<div class="html-content">
+				<h3><img src="<?php echo get_template_directory_uri(); ?>/img/icons/green-tick.png" width="24"> Checkout complete</h3>
+				<p>Thanks <?php echo $_SESSION['checkout_data']['acct']['firstname']; ?>,</p>
+			<?php if ( $_SESSION['checkout_data']['payment']['method'] == 'cc' ) : ?>
+				<p>Credit card payment of <strong>&dollar;<?php echo number_format( $_SESSION['checkout_data']['payment']['amount'], 2 ); ?></strong> for your order (#<?php echo $_SESSION['checkout_data']['invoice_id']; ?>) was approved.</p>
+				<p>A copy of the invoice will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).</p>
+			<?php elseif ( $_SESSION['checkout_data']['payment']['method'] == 'bank' ) : ?>
+				<p>Please remember to send payment of <strong>&dollar;<?php echo number_format( $_SESSION['checkout_data']['cart']['total'], 2 ); ?></strong> for your order (#<?php echo $_SESSION['checkout_data']['invoice_id']; ?>) as soon as possible.</p>
+				<p>A copy of your invoice, and our bank deposit details will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).</p>
+			<?php endif;?>
+				<p>The expected delivery date for your order is <strong><?php echo $_SESSION['checkout_data']['delivery']['deliver_on']; ?></strong>.</p>
+				<p>If you have any questions about your order please contact care@leetpc.com.au.</p>
+				<textarea><?php var_export( $_SESSION['checkout_data'] ); ?></textarea>
+			</div>
 
-
+			<?php $next_step_btn_text = 'Complete'; ?>
+			<?php $last_step = true; ?>
 
 		<?php endif; ?>
 
@@ -347,9 +362,9 @@
 
 		<div class="modal-footer">
 			<input type="hidden" name="current_step" value="<?php echo intval( $step ); ?>" />
-			<a href="#" class="close-modal">Cancel</a>
+			<?php if ( !$last_step ) : ?><a href="#" class="close-modal">Cancel</a><?php endif; ?>
 			<?php if ( $step != '1' && $can_go_back ) : ?><button class="secondary previous-step">&#9664;</button><?php endif; ?>
-			<button class="next-step"><?php echo $next_step_btn_text; ?></button>
+			<button class="<?php echo $last_step ? 'close-modal' : 'next-step'; ?>"><?php echo $next_step_btn_text; ?></button>
 		</div>
 
 	</div>
