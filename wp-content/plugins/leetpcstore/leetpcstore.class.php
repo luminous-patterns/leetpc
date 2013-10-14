@@ -88,6 +88,10 @@ class leetPcStore {
 		register_activation_hook( $this->_path,                    array( &$this, 'install' ) );
 		register_deactivation_hook( $this->_path,                  array( &$this, 'uninstall' ) );
 
+		// Initialise cart
+		$GLOBALS['lpcCart'] = new lpcCart();
+		$this->cart = &$GLOBALS['lpcCart'];
+
 		$this->_actionsAndFilters();
 
 	}
@@ -157,9 +161,9 @@ class leetPcStore {
 			$this->returnAjaxError( array( 'message' => 'Invalid discount code' ) );
 		}
 
-		apply_coupon( $this->getCoupon( $c[0]->ID ) );
+		$this->cart->addPromo( $this->getCoupon( $c[0]->ID ) );
 
-		$this->exitWithJSON( array( 'cart' => get_cart() ) );
+		$this->exitWithJSON( array( 'cart' => $this->cart->toArray() ) );
 
 	}
 
@@ -191,7 +195,7 @@ class leetPcStore {
 
 	public function processCheckoutData( $reload = false ) {
 
-	    $data = $reload ? array( 'cart' => get_cart(), 'order_id' => substr( uniqid(), -8 ) ) : $_SESSION['checkout_data'];
+	    $data = $reload ? array( 'cart' => $this->cart->toArray(), 'order_id' => substr( uniqid(), -8 ) ) : $_SESSION['checkout_data'];
 
 	    foreach ( $_POST['submitted'] as $k => $v ) {
 
@@ -625,13 +629,13 @@ class leetPcStore {
 	}
 
 	public function emptyCart() {
-		empty_cart();
-		$this->exitWithJSON( array( 'cart' => get_cart() ) );
+		$this->cart->emptyCart();
+		$this->exitWithJSON( array( 'cart' => $this->cart->toArray() ) );
 	}
 
 	public function removeProductFromCart() {
-		remove_line_item( $_POST['line_item_id'] );
-		$this->exitWithJSON( array( 'cart' => get_cart() ) );
+		$this->cart->removeItem( $_POST['line_item_id'] );
+		$this->exitWithJSON( array( 'cart' => $this->cart->toArray() ) );
 	}
 
 	public function addProductToCart() {
@@ -643,9 +647,9 @@ class leetPcStore {
 		$product_id = $_POST['product_id'];
 		$component_ids = array_key_exists( 'component_ids', $_POST ) ? explode( ',', $_POST['component_ids'] ) : array();
 
-		add_product_to_cart( $product_id, $component_ids );
+		$this->cart->addItem( $product_id, $component_ids );
 
-		$this->exitWithJSON( array( 'cart' => get_cart() ) );
+		$this->exitWithJSON( array( 'cart' => $this->cart->toArray() ) );
 
 	}
 
@@ -658,9 +662,9 @@ class leetPcStore {
 		$line_item_id = $_POST['line_item_id'];
 		$qty = $_POST['qty'];
 
-		set_line_item_qty( $line_item_id, $qty );
+		$this->cart->setItemQty( $line_item_id, $qty );
 
-		$this->exitWithJSON( array( 'cart' => get_cart() ) );
+		$this->exitWithJSON( array( 'cart' => $this->cart->toArray() ) );
 
 	}
 

@@ -124,7 +124,7 @@ var LEETPCStore = {
 	},
 
 	refreshCart: function( r ) {
-
+		
 		this.updateCart( r.cart.items_count );
 
 		if ( this.pageType != 'my-cart' ) {
