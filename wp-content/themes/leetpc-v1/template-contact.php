@@ -1,7 +1,7 @@
-<?php /* Template Name: Homepage Template */ get_header( 'homepage' ); ?>
+<?php /* Template Name: Contact Page */ get_header(); ?>
 	
 	<button class="sidebar-toggle-container secondary"><div class="toggle-sidebar layer-1"></div><div class="toggle-sidebar layer-2"></div></button>
-	<h1>Welcome to LEETPC</h1>
+	<h1><?php the_title(); ?></h1>
 	
 	<!-- section -->
 	<section role="main">
@@ -16,7 +16,7 @@
 				<?php the_content(); ?>
 
 			</div>
-
+						
 		</article>
 		<!-- /article -->
 		
@@ -42,32 +42,50 @@
 	    		
 		<div class="sidebar-widget product-type-filter">
 			<ul>
-				<li class="current"><a href="/">LEETPC Home</a></li>
+				<li><a href="/">LEETPC Home</a></li>
 				<li><a href="/products/">Products</a></li>
 				<li><a href="/why-us/">Why choose us</a></li>
-				<li><a href="/contact-us/">Contact us</a></li>
+				<li class="current"><a href="/contact-us/">Contact us</a></li>
 				<li><a href="/my-cart/">My shopping cart</a></li>
 			</ul>
 		</div>
 	    		
 		<div class="sidebar-widget">
-			<h3>Need help?</h3>
-			<p>Contact us by email <a href="mailto:care@leetpc.com.au">care@leetpc.com.au</a> or phone <strong>(03) 9872 4837</strong>.</p>
+			<h3>By e-mail</h3>
+			<p>
+				<strong>Customer care</strong>
+				<br /><a href="mailto:care@leetpc.com.au">care@leetpc.com.au</a>
+			</p>
+			<p>
+				<strong>Technical support</strong>
+				<br /><a href="mailto:care@leetpc.com.au">support@leetpc.com.au</a>
+			</p>
+			<p>
+				<strong>Sales</strong>
+				<br /><a href="mailto:care@leetpc.com.au">sales@leetpc.com.au</a>
+			</p>
+			<p>
+				<strong>Feedback</strong>
+				<br /><a href="mailto:care@leetpc.com.au">feedback@leetpc.com.au</a>
+			</p>
 		</div>
 	    		
 		<div class="sidebar-widget">
-			<?php
-
-				$deliver_by = new DateTime( null, new DateTimeZone( 'Australia/Melbourne' ) );
-				$deliver_by->add( new DateInterval( 'P9D' ) );
-				if ( $deliver_by->format( 'N' ) > 5 ) {
-					$period = 9 - $deliver_by->format( 'N' );
-					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
-				}
-
-			?>
-			<h3>FREE Delivery</h3>
-			<p>Customers in <strong>Victoria, Australia</strong> receive free delivery on all PC orders.  Order today to receive your new PC by <?php echo $deliver_by->format( 'D jS \o\f M' ); ?>.</p>
+			<h3>By phone</h3>
+			<p>
+				<strong>All enquiries</strong>
+				<br />(03) 9872 4837
+			</p>
+		</div>
+	    		
+		<div class="sidebar-widget">
+			<h3>By mail</h3>
+			<p>
+				<strong>All enquiries</strong>
+				<br />4 Holyrood Dr
+				<br />Vermont VIC 3133
+				<br />AUSTRALIA
+			</p>
 		</div>
 			
 	</aside>

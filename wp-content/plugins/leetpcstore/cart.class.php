@@ -21,11 +21,11 @@ class lpcCart {
 	public $created           = null;
 
 	function __construct() {
-		$this->loadCart();
+		$this->load();
 	}
 
 	function __destruct() {
-		$this->saveCart();
+		$this->save();
 	}
 
     public function __call( $method, $arguments ) {
@@ -47,7 +47,7 @@ class lpcCart {
 		return $s;
     }
 
-    private function loadCart() {
+    private function load() {
 		if ( !array_key_exists( 'shopping_cart', $_SESSION ) ) {
 			$this->created = time();
 			return;
@@ -55,7 +55,7 @@ class lpcCart {
 		foreach ( $_SESSION['shopping_cart'] as $var => $value ) $this->$var = $value;
     }
 
-    private function saveCart() {
+    private function save() {
 		$s = array();
 		foreach ( get_object_vars( $this ) as $var => $value ) 
 			$s[$var] = $value;
@@ -70,10 +70,11 @@ class lpcCart {
 		$sub_total = 0.00;
 		$total = 0.00;
 
-		foreach ( $this->items as $k => $item ) {
-			$this->items[$k]['price'] = calc_product_price( $item['product_id'], $item['component_ids'] );
-			$items_total += calc_product_price( $item['product_id'], $item['component_ids'] ) * $item['qty'];
-			$items_count += $item['qty'];
+		foreach ( array_keys( $this->items ) as $k ) {
+			$this->items[$k]['single_price'] = calc_product_price( $this->items[$k]['product_id'], $this->items[$k]['component_ids'] );
+			$this->items[$k]['total_price'] = $this->items[$k]['single_price'] * $this->items[$k]['qty'];
+			$items_total += $this->items[$k]['total_price'];
+			$items_count += $this->items[$k]['qty'];
 		}
 
 		$sub_total = $items_total;
@@ -98,12 +99,56 @@ class lpcCart {
 		$k = $this->generateKey( $product_id, $component_ids );
 
 		if ( !array_key_exists( $k, $this->items ) ) {
-			$this->items[$k] = array(
-				'product_id'       => $product_id,
-				'component_ids'    => $component_ids,
+
+			$product = get_product( $product_id );
+			$component_ids = array_unique( array_merge( $component_ids, $product->comFixedIDs ) );
+			$price = $product->calcPrice( $component_ids );
+
+			$item = array(
+
 				'qty'              => $qty,
-				'price'            => calc_product_price( $product_id, $component_ids )
+				'product_id'       => $product_id,
+				'product_title'    => get_the_title( $product_id ),
+				'single_price'     => $price,
+				'total_price'      => $price * $qty,
+				'components'       => array(),
+
+				'component_ids'    => $component_ids,
+				'price'            => $price,
+
 			);
+
+			foreach ( $component_ids as $cid ) {
+
+				$c = get_post( preg_replace( '/\*/', '', substr( $cid, 10 ) ) );
+
+				$terms = get_the_terms( $c->ID, 'component_group' );
+				$terms_keys = array_keys( $terms );
+				list( $type, $sub_type ) = explode( '-', $terms[$terms_keys[0]]->slug );
+
+				$attrs = get_post_custom( $c->ID );
+
+				$item['components'][] = array(
+
+					'id'                  => $c->ID,
+					'title'               => $c->post_title,
+					'type'                => $type,
+					'sub_type'            => $sub_type,
+
+					'price'               => $attrs['price'][0],
+					'cost'                => $attrs['cost'][0],
+					'model'               => $attrs['model_number'][0],
+					'long_name'           => $attrs['long_name'][0],
+					'model_number'        => $attrs['model_number'][0],
+					'manufacturer_link'   => $attrs['manufacturer_link'][0],
+					'wholesale_link'      => $attrs['wholesale_link'][0]
+
+				);
+
+			}
+			
+			$this->items[$k] = $item;
+
 		}
 		else $this->items[$k]['qty'] += $qty;
 
@@ -114,7 +159,7 @@ class lpcCart {
 	private function setItemQty( $k, $qty ) {
 
 		if ( $qty == 0 ) {
-			return remove_line_item( $k );
+			return $this->removeItem( $k );
 		}
 
 		if ( array_key_exists( $k, $this->items ) ) {

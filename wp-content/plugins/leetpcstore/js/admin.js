@@ -29,7 +29,9 @@ var LEETPCStoreAdmin = {
 
 		this.invoiceMetaEl.find( '.form-table td' ).each( function() {
 
-			var obj = jQuery.parseJSON( jQuery( this ).html().trim() );
+			if ( !jQuery( this ).html().trim() ) return;
+console.log(jQuery( this ).html().trim().replace( /\//g, '\\/' ));
+			var obj = jQuery.parseJSON( jQuery( this ).html().trim().replace( /\//g, '\\/' ) );
 
 			var rLoop = function( i ) {
 				var o = '';
@@ -97,7 +99,7 @@ var LEETPCStoreAdmin = {
 			valuesEl.html( '' );
 
 			var group = jQuery( this ).text().toLowerCase();
-			var components = _.sortBy( that.getSelectedComponents( group ), function( i ) { return i.substr(-1) != '*'; } );
+			var components = _.sortBy( that.getSelectedComponents( group ), function( i ) { return i.substr( -1 ) != '*'; } );
 			var componentNames = [];
 
 			for ( var i = 0; i < components.length; i++ ) {
@@ -126,8 +128,10 @@ var LEETPCStoreAdmin = {
 			if ( jQuery( this ).hasClass( 'clear-value' ) ) return;
 
 			if ( jQuery( this ).attr( 'checked' ) ) {
-				var def = jQuery( this ).parents( 'li' ).first().find( 'input[type=radio]' ).attr( 'checked' );
-				selectedComponents[selectedComponents.length] = jQuery( this ).attr( 'name' ) + ( def ? '*' : '' );
+				var liEl = jQuery( this ).parents( 'li' ).first();
+				var fixed = liEl.parents( 'li' ).first().parents( 'li' ).first().find( 'input[type=checkbox]:checked' ).length == 1;
+				var def = !fixed ? liEl.find( 'input[type=radio]' ).attr( 'checked' ) : true;
+				selectedComponents[selectedComponents.length] = jQuery( this ).attr( 'name' ) + ( def ? '*' : '' ) + ( fixed ? '*' : '' );
 			}
 
 		} );
@@ -143,17 +147,26 @@ var LEETPCStoreAdmin = {
 		for ( var i = 0; i < ids.length; i++ ) {
 
 			var id = ids[i];
-			var def = ids[i].match( /\*$/ );
+			var def = false;
+			var fixed = false;
 
-			id = def ? id.substr( 0, id.length-1 ) : id;
+			if ( ids[i].match( /\*\*$/ ) ) {
+				def = true;
+				fixed = true;
+				id = id.substr( 0, id.length-2 );
+			}
+
+			if ( !fixed && ids[i].match( /\*$/ ) ) {
+				def = true;
+				id = id.substr( 0, id.length-1 );
+			}
+
 			var listItemEl = jQuery( 'li.' + id );
 			var costEl = listItemEl.find( '.cost' );
 
 			if ( def && costEl ) {
-
 				var cost = costEl.text().replace( /\$/g, '' ).split( ' / ' );
 				total += parseFloat( cost[0] );
-
 			}
 
 		}

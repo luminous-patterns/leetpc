@@ -13,10 +13,11 @@
 
 	?>
 	
+	<button class="sidebar-toggle-container secondary"><div class="toggle-sidebar layer-1"></div><div class="toggle-sidebar layer-2"></div></button>
+	<h1><?php echo $type_titles[$type]; ?></h1>
+	
 	<!-- section -->
 	<section role="main">
-	
-		<h1><?php echo $type_titles[$type]; ?></h1>
 
 		<div class="product-list">
 		
@@ -62,7 +63,7 @@
 				</div>
 				
 				<div class="actions">
-					<button class="small customize">Add to cart</button>
+					<button class="customize">Add to cart</button>
 					<a href="<?php echo get_permalink(); ?>" title="<?php echo get_the_title() . ' ' . $p->type->name; ?> PC">Product information</a>
 					<?php edit_post_link( 'Edit product' ); ?>
 				</div>

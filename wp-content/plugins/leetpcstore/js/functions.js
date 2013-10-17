@@ -23,6 +23,8 @@ var LEETPCStore = {
 		jQuery( '.toggle-nav' ).bind( 'click', jQuery.proxy( this.toggleNav, this ) );
 		jQuery( '.toggle-details' ).bind( 'click', jQuery.proxy( this.toggleDetailsEl, this ) );
 
+		jQuery( '.sidebar-toggle-container' ).bind( 'click', jQuery.proxy( this.toggleSidebarEl, this ) );
+
 		if ( this.bodyClasses.indexOf( 'single-product' ) > -1 ) {
 			this.pageType = 'single-product';
 		}
@@ -61,6 +63,17 @@ var LEETPCStore = {
 
 		}
 
+	},
+
+	toggleSidebarEl: function( ev ) {
+		if ( jQuery( 'body' ).hasClass( 'toggle-sidebar-on' ) ) {
+			jQuery( 'body' ).removeClass( 'toggle-sidebar-on' );
+			jQuery( '.sidebar-toggle-container' ).addClass( 'secondary' );
+		}
+		else {
+			jQuery( 'body' ).addClass( 'toggle-sidebar-on' );
+			jQuery( '.sidebar-toggle-container' ).removeClass( 'secondary' );
+		}
 	},
 
 	error: function( message ) {
@@ -320,14 +333,6 @@ var LEETPCStore = {
 		this.currentModalEl.find( 'input[name=payment-method]' ).bind( 'change', jQuery.proxy( this.onClickPayMethodToggle, this ) );
 		this.currentModalEl.find( 'input[name=delivery-use_different_addr]' ).bind( 'change', jQuery.proxy( this.onClickDeliveryUseAddr, this ) );
 
-		// if ( this.currentModalEl.find( '.error-details' ).length > 0 ) {
-		// 	var errorFields = this.currentModalEl.find( '.error-details .fields' ).attr( 'value' ).split( ',' );
-		// 	console.log(errorFields);
-		// 	if ( errorFields.length ) for ( var i = 0; i < errorFields.length; i++ ) {
-		// 		this.currentModalEl.find( '.checkout-field.' + errorFields[i] ).addClass( 'error' );
-		// 	}
-		// }
-
 		jQuery( 'body' ).css( 'overflow', 'hidden' ).append( this.currentModalEl );
 
 	},
@@ -489,5 +494,150 @@ jQuery( document ).ready( function() {
 
 	LEETPCStore.init();
 
+	jQuery( '.product-sampler' ).lpcSlider();
+
 } );
 
+( function ( $ ) {
+
+	var o = null;
+ 
+    $.fn.lpcSlider = function() {
+        o = new lpcFeaturedProductSlider( this ).init();
+        window.lpcslider = o;
+        return this;
+    };
+
+	function lpcFeaturedProductSlider( sliderEl ) {
+
+		return  {
+ 
+ 			el: null,
+			els: null,
+			currentItemIndex: 1,
+
+			mouseOver: false,
+
+			timeout: null,
+
+			use: {
+				csstransitions: false
+			},
+
+			// Functions
+			init: function() {
+
+				this.checkCompatibility();
+
+				var that = this;
+				var el = this.el = sliderEl;
+				var els = this.els = el.find( '.featured-product.hidden' );
+
+				this.containerEl = el.find( '.featured-product .inside-container' );
+
+				if ( this.use.csstransitions ) {
+					this.containerEl.css( 'transition', 'opacity 200ms' );
+				}
+
+				this.el.on( 'mouseover', function() { that.mouseOver = true; } );
+				this.el.on( 'mouseout', function() { that.mouseOver = false; } );
+
+				this.tick();
+
+				return this;
+
+			},
+
+			tick: function() {
+				if ( !this.mouseOver ) this.change();
+				return this.timeout = setTimeout( jQuery.proxy( this.tick, this ), 11000 );
+			},
+
+			checkCompatibility: function() {
+
+				if ( !window.Modernizr ) return;
+
+				this.use.csstransitions = Modernizr.csstransitions;
+
+			},
+
+			getCurrentItemIndex: function() {
+				return this.currentItemIndex;
+			},
+
+			getNextItemIndex: function() {
+				return this.currentItemIndex == this.els.length ? 1 : this.currentItemIndex + 1;
+			},
+
+			getCurrentItemEl: function() {
+				return this.getItemEl( this.getCurrentItemIndex() );
+			},
+
+			getNextItemEl: function() {
+				return this.getItemEl( this.getNextItemIndex() );
+			},
+
+			getItemEl: function( index ) {
+				return this.el.find( '.featured-product.display-order-' + index );
+			},
+
+			change: function() {
+
+				this.doChain( [
+					[ this.containerEl, { opacity: 0 }, this.nextSlide ],
+					[ this.containerEl, { opacity: 1 } ]
+				] );
+
+			},
+
+			nextSlide: function() {
+				return this.setSlide( this.getNextItemIndex() );
+			},
+
+			setSlide: function( itemIndex ) {
+				this.currentItemIndex = itemIndex;
+				this.setSliderContents( this.getItemEl( itemIndex ).html() );
+			},
+
+			setSliderContents: function( html ) {
+				this.containerEl.html( html );
+				return true;
+			},
+
+			doChain: function( chain ) {
+
+				var that = this;
+				var s = arguments.length > 1 ? arguments[1] : null;
+				var step = s ? chain[s] : chain[0];
+
+				if ( !step ) return true;
+
+				var targetEl = step[0];
+				var cssRules = step[1];
+				var onTransitionEnd = step[2];
+
+				var doNextInChain = function() {
+					targetEl.off( 'transitionend', doNextInChain );
+					if ( onTransitionEnd && typeof onTransitionEnd == 'function' ) {
+						onTransitionEnd.call( that );
+					}
+					that.doChain( chain, s + 1 );
+				};
+
+				if ( this.use.csstransitions )
+					targetEl.on( 'transitionend', doNextInChain );
+
+				targetEl.css( cssRules );
+
+				if ( !this.use.csstransitions ) 
+					doNextInChain();
+
+				return true;
+
+			}
+
+		};
+
+	}
+ 
+}( jQuery ) );

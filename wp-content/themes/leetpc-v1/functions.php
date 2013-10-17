@@ -70,7 +70,7 @@ function sort_components( $a, $b ) {
 }
 
 function component_has_value( $type, $components ) {
-    return count( $components[$type] ) < 1;
+    return count( $components[$type] ) > 0;
 }
 
 function print_component_options( $type, $components, $defaults, $attrs ) {
@@ -210,6 +210,9 @@ function html5blank_styles()
     
     wp_register_style('html5blank', get_template_directory_uri() . '/style.css', array(), '1.0', 'all');
     wp_enqueue_style('html5blank'); // Enqueue it!
+    
+    wp_register_style('iwacontactlpc', get_template_directory_uri() . '/css/iwacontact.css', array(), '1.0', 'all');
+    wp_enqueue_style('iwacontactlpc'); // Enqueue it!
 }
 
 // Register HTML5 Blank Navigation

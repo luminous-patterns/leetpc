@@ -3,6 +3,11 @@
 		<!-- /wrapper -->
 
 		<footer class="footer" role="contentinfo">
+
+			<div class="links">
+				<a href="/privacy/">Privacy Policy</a> |
+				<a href="/warranty/">Warranty T&amp;Cs</a>
+			</div>
 			
 			<p class="copyright">
 				Copyright &copy; <?php echo date("Y"); ?>

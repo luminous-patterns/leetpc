@@ -272,7 +272,7 @@ class leetPcStore {
 
 					if ( filter_var( $submitted['user-email'], FILTER_VALIDATE_EMAIL ) === false ) {
 						$e['message'] = 'Invalid email address format';
-						$e['fields'][] = array( 'name' => 'user-email', 'message' => 'Invalid email address format' );
+						$e['fields'][] = array( 'name' => 'user-email', 'message' => 'Please enter a valid email address' );
 						break;
 					}
 
@@ -421,56 +421,9 @@ class leetPcStore {
 					$period = 9 - $deliver_by->format( 'N' );
 					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
 				}
-				$_SESSION['checkout_data']['delivery']['deliver_on'] = $deliver_by->format( 'D jS \o\f M' );
 				
-				$y = array();
-
-				foreach ( $_SESSION['checkout_data']['cart']['items'] as $lid => $l ) {
-
-					$x = array(
-						'qty'              => $l['qty'],
-						'product_id'       => $l['product_id'],
-						'product_title'    => get_the_title( $l['product_id'] ),
-						'single_price'     => $l['price'],
-						'total_price'      => $l['price'] * $l['qty'],
-						'components'       => array()
-					);
-
-					foreach ( $l['component_ids'] as $cid ) {
-
-						$def = preg_match( '/\*$/', $cid );
-						$cid = $def ? substr( $cid, 10, -1 ) : substr( $cid, 10 );
-
-						$c = get_post( $cid );
-
-						$terms = get_the_terms( $c->ID, 'component_group' );
-						$terms_keys = array_keys( $terms );
-						list( $type, $sub_type ) = explode( '-', $terms[$terms_keys[0]]->slug );
-
-						$components[$type][] = $c;
-
-						if ( $def ) {
-							$defaults[$type] = $c;
-							$default_ids[] = 'component-' . $c->ID;
-						}
-
-						$attrs = get_post_custom( $c->ID );
-
-						$x['components'][] = array(
-							'id'       => $c->ID,
-							'title'    => $c->post_title,
-							'type'     => $type,
-							'price'    => $attrs['price'][0],
-							'model'    => $attrs['model_number'][0]
-						);
-
-					}
-
-					$y[] = $x;
-
-				}
-
-				$_SESSION['checkout_data']['line_items'] = $y;
+				$_SESSION['checkout_data']['delivery']['deliver_on'] = $deliver_by->format( 'D jS \o\f M' );
+				$_SESSION['checkout_data']['line_items'] = array_values( $_SESSION['checkout_data']['cart']['items'] );
 
 				$invoice_id = $this->createInvoice( $_SESSION['checkout_data'] );
 				$_SESSION['checkout_data']['invoice_id'] = $invoice_id;
@@ -524,7 +477,7 @@ class leetPcStore {
 				$subject = 'Credit card payment confirmation';
 				$body = "Hi $firstname,\n\n"
 					. "This is a payment receipt for Invoice #$invoice_id generated on " . date( 'd-m-Y' ) . ".\n\n"
-					. "Amount: $" . number_format( $d['cart']['total'], 2 ) . " AUD\n"
+					. "Amount: $" . number_format( $d['payment']['amount'], 2 ) . " AUD\n"
 					. "Status: " . $d['payment']['status'] . "\n\n"
 					. "You can view and print your copy of your invoice (#$invoice_id) via the following link:\n"
 					. "https://www.leetpc.com.au/invoice/?invoice_id=$invoice_id";
@@ -540,7 +493,7 @@ class leetPcStore {
 					. "Account name: INTEGRATED WEB SERVICES\n"
 					. "BSB: 033-349\n"
 					. "Acct #: 383009\n"
-					. "Amount: $" . number_format( $d['payment']['amount'], 2 ) . " AUD\n\n"
+					. "Amount: $" . number_format( $d['cart']['total'], 2 ) . " AUD\n\n"
 					. "** IMPORTANT ** Please remember to include your invoice number ($invoice_id) as the description for your payment.\n\n"
 					. "You can view and print your copy of your invoice (#$invoice_id) via the following link:\n"
 					. "https://www.leetpc.com.au/invoice/?invoice_id=$invoice_id";

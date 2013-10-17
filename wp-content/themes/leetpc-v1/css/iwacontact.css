@@ -1,0 +1,63 @@
+form.iwacontact ol.iwacontactform {
+    padding: 0;
+}
+form.iwacontact ol.iwacontactform li.buttons {
+    margin-top: 30px;
+    padding-left: 155px;
+}
+form.iwacontact ol.iwacontactform li.buttons span.error {
+    line-height: 33px;
+    margin-left: 20px;
+    font-size: 0.9em;
+}
+form.iwacontact ol.iwacontactform li {
+    margin-top: 15px;
+}
+
+form.iwacontact ol.iwacontactform li label {
+    display: inline-block;
+    font-size: 0.9em;
+    color: #555;
+    width: 150px;
+}
+form.iwacontact ol.iwacontactform li .ajax-feedback.error {
+    display: block;
+    margin-left: 155px;
+}
+.ajax-result {
+    display: block;
+    margin-top: 15px;
+    font-size: 0.9em;
+    padding-left: 30px;
+}
+form.iwacontact ol.iwacontactform li textarea {
+    width: 300px;
+}
+
+@media only screen and (max-width:768px) {
+    
+    form.iwacontact ol.iwacontactform li.buttons {
+        margin-top: 20px;
+        padding-left: 0;
+    }
+    form.iwacontact ol.iwacontactform li.buttons span.error {
+        line-height: 33px;
+        margin-left: 20px;
+        font-size: 0.8em;
+        display: none !important;
+    }
+    form.iwacontact ol.iwacontactform li {
+        margin-top: 15px;
+    }
+    
+    form.iwacontact ol.iwacontactform li label {
+        display: block;
+    }
+    form.iwacontact ol.iwacontactform li .ajax-feedback.error {
+        margin-left: 0;
+    }
+    form.iwacontact ol.iwacontactform li textarea {
+        width: 100%;
+    }
+    
+}

@@ -3,9 +3,14 @@
 // cURL Library
 require_once( 'curl.php' );
 
-// define( 'PIN_API_ENDPOINT_HOST',         'https://api.pin.net.au' );
-define( 'PIN_API_ENDPOINT_HOST',         'https://test-api.pin.net.au' );
-define( 'PIN_API_SECRET_KEY',            'oQIvh3BSb6aYknvc_xYJzw' );
+if ( !LIVE_PAYMENTS ) {
+	define( 'PIN_API_ENDPOINT_HOST',         'https://test-api.pin.net.au' );
+	define( 'PIN_API_SECRET_KEY',            'oQIvh3BSb6aYknvc_xYJzw' );
+}
+else {
+	define( 'PIN_API_ENDPOINT_HOST',         'https://api.pin.net.au' );
+	define( 'PIN_API_SECRET_KEY',            '0g8BWNsJZtHOJeoLRBZgEg' );
+}
 
 class Pin {
 
@@ -85,11 +90,11 @@ class Pin {
 
 	private function parseResponse( $response ) {
 
-		$json = json_decode( $response->body );
-
 		if ( $response->headers['Status-Code'] >= 300 ) {
 			throw new PIN_Exception( $response );
 		}
+
+		$json = json_decode( $response->body );
 
 		return $json->response;
 

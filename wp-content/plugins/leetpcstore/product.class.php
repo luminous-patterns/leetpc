@@ -20,13 +20,23 @@ class lpcProduct {
 
 		$components = array();
 		$default_ids = array();
+		$fixed_ids = array();
 		$defaults = array();
 		$attrs = array();
 
 		foreach ( $component_ids as $id ) {
 
-			$def = preg_match( '/\*$/', $id );
-			$id = $def ? substr( $id, 10, -1 ) : substr( $id, 10 );
+			$fixed = preg_match( '/\*\*$/', $id );
+			$id = substr( $id, 10 );
+
+			if ( $fixed ) {
+				$def = true;
+				$id = substr( $id, 0, -2 );
+			}
+			else {
+				$def = preg_match( '/\*$/', $id );
+				$id = $def ? substr( $id, 0, -1 ) : $id;
+			}
 
 			$c = get_post( $id );
 
@@ -36,9 +46,13 @@ class lpcProduct {
 
 			$components[$type][] = $c;
 
-			if ( $def ) {
+			if ( $def || $fixed ) {
 				$defaults[$type] = $c;
 				$default_ids[] = 'component-' . $c->ID;
+			}
+
+			if ( $fixed ) {
+				$fixed_ids[] = 'component-' . $c->ID;
 			}
 
 			$attrs[$c->ID] = get_post_custom( $c->ID );
@@ -59,6 +73,7 @@ class lpcProduct {
 
 		$this->componentIDs = $component_ids;
 		$this->components = $components;
+		$this->comFixedIDs = $fixed_ids;
 		$this->comDefaultIDs = $default_ids;
 		$this->comDefaults = $defaults;
 		$this->comAttrs = $attrs;

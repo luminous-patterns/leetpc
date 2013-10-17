@@ -2,6 +2,35 @@
 
 // Create cart class
 
+function lpc_log( $type, $note = '', $meta = array() ) {
+
+	$i = array(
+		'comment_status' => 'closed',
+		'ping_status'    => 'closed',
+		'post_author'    => 3,
+		'post_title'     => 'LOG ENTRY',
+		'post_type'      => 'log_entry',
+		'post_status'    => 'publish',
+		'post_content'   => $note,
+	);
+
+	$log_id = wp_insert_post( $i );
+
+	if ( !$entry_type = get_term_by( 'slug', $type, 'log_entry_type' ) ) {
+		$term = wp_insert_term( preg_replace( '/-/', ' ', $type ), 'log_entry_type', array( 'slug' => $type ) );
+		$entry_type = get_term( $term['term_id'], 'log_entry_type' );
+	}
+
+	wp_set_post_terms( $log_id, array( $entry_type->term_id ), 'log_entry_type' );
+
+	foreach ( $meta as $k => $v ) {
+		update_post_meta( $log_id, $k, $v );
+	}
+
+	return get_post( $log_id );
+
+}
+
 function get_products( $args = array() ) {
 
 	$d = array(
