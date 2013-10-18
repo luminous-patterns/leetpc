@@ -377,6 +377,25 @@ class leetPcStore {
 
 					case 4: // Process credit card info and create order
 
+						if ( $submitted['payment-method'] == 'cc' ) {
+
+							$cards = array(
+								'visa'          => '(4\d{12}(?:\d{3})?)',
+								'mastercard'    => '(5[1-5]\d{14})'
+							);
+
+							$cc_number = preg_replace( '/\D/', '', $submitted['cc-number'] );
+							$pattern = '#^(?:' . implode( '|', array_values( $cards ) ) . ')$#';
+							$valid_cc = preg_match( $pattern, $cc_number );
+							
+							if ( !$valid_cc ) {
+								$e['message'] = 'Invalid credit card number';
+								$e['fields'][] = array( 'name' => 'cc-number', 'message' => 'Invalid credit card number' );
+								break;
+							}
+
+						}
+
 						try {
 							$order->process();
 							empty_cart();

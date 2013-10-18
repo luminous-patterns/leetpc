@@ -125,10 +125,12 @@ class lpcOrder extends lpcCart {
 			'post_author'    => 2,
 			'post_title'     => 'NEW ORDER',
 			'post_type'      => 'lpc_order',
-			'post_status'    => 'published'
+			// 'post_status'    => 'published'
 		);
 
 		$this->ID = wp_insert_post( $i, true );
+
+		wp_publish_post( $this->ID );
 
 		$u = array(
 			'ID'         => $this->ID,
@@ -361,7 +363,7 @@ class lpcOrder extends lpcCart {
 			$this->payment['token']          = $gateway_response->token;
 			$this->payment['message']        = $gateway_response->status_message;
 			$this->payment['ipaddress']      = $gateway_response->ip_address;
-			$this->payment['date']           = $gateway_response->created_at;
+			$this->payment['created_at']     = $gateway_response->created_at;
 			$this->payment['amount']         = $gateway_response->amount / 100;
 			$this->payment['gateway_data']   = $gateway_response;
 
@@ -436,8 +438,21 @@ class lpcOrder extends lpcCart {
 		return in_array( $this->status, $a ) && $this->status != 'complete';
 	}
 
-	public function getPaymentMethod() {
-		return $this->payment['method'];
+	public function getPaymentMethod( $formatted = false ) {
+		$f = array(
+			'cc'      => 'VISA / MasterCard (online)',
+			'bank'    => 'Bank Transfer'
+		);
+		return !$formatted ? $this->payment['method'] : $f[$this->payment['method']];
+	}
+
+	public function getPaymentStatus( $formatted = false ) {
+		$f = array(
+			'success'      => 'Payment received',
+			'incomplete'   => 'Pending customer payment'
+		);
+		$r = $this->payment['status'] ? $this->payment['status'] : 'incomplete';
+		return !$formatted ? $r : $f[$r];
 	}
 
 	public function getLink( $t ) {
@@ -472,6 +487,10 @@ class lpcOrder extends lpcCart {
 
 			case 'deliver_on':
 				$date = $this->delivery['deliver_on'];
+				break;
+
+			case 'payment_received':
+				$date = $this->payment['created_at'];
 				break;
 
 		};

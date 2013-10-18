@@ -19,6 +19,20 @@ var LEETPCStoreAdmin = {
 			this.processInvoiceMeta();
 		}
 
+		if ( jQuery( '#order_details_metabox' ).length ) {
+			var orderDetailsMetaEl = this.orderDetailsMetaEl = jQuery( '#order_details_metabox' );
+			var orderDetailsMetaTabEls = this.orderDetailsMetaTabEls = orderDetailsMetaEl.find( '.order-details-tabs li' );
+			var orderDetailsMetaContentEls = this.orderDetailsMetaContentEls = orderDetailsMetaEl.find( '.tabs .tab-content' );
+			orderDetailsMetaTabEls.each( function() {
+				jQuery( this ).on( 'click', function() {
+					orderDetailsMetaTabEls.removeClass( 'selected' );
+					jQuery( this ).addClass( 'selected' );
+					orderDetailsMetaContentEls.addClass( 'hidden' );
+					orderDetailsMetaContentEls.filter( '.' + jQuery( this ).attr( 'data-tab-name' ) ).removeClass( 'hidden' );
+				} );
+			} );
+		}
+
 		this.finishedLoading();
 
 		jQuery( '#product_metabox .components-list .group .title' ).trigger( 'click' );
@@ -30,7 +44,7 @@ var LEETPCStoreAdmin = {
 		this.invoiceMetaEl.find( '.form-table td' ).each( function() {
 
 			if ( !jQuery( this ).html().trim() ) return;
-console.log(jQuery( this ).html().trim().replace( /\//g, '\\/' ));
+
 			var obj = jQuery.parseJSON( jQuery( this ).html().trim().replace( /\//g, '\\/' ) );
 
 			var rLoop = function( i ) {

@@ -11,7 +11,7 @@
 			
 			<p class="copyright">
 				Copyright &copy; <?php echo date("Y"); ?>
-				<br />CALLAN MILNE
+				<br />LEETPC
 				<br />ABN 62 842 988 455
 				<br />4 Holyrood Dr Vermont VIC 3133
 				<!-- <br />Designed and developed by <a href="http://www.linkedin.com/profile/view?id=45607988">Cal Milne</a> -->

@@ -1,15 +1,15 @@
 <?php /* Template Name: Service Order */
 
-	if ( !$_GET['invoice_id'] || get_post_type( $_GET['invoice_id'] ) != 'invoice' ) {
+	if ( !$_GET['order_id'] || get_post_type( $_GET['order_id'] ) != 'lpc_order' ) {
 		header( 'location: https://www.leetpc.com.au' );
 		exit;
 	}
 
-	$i = get_invoice( $_GET['invoice_id'] );
+	$o = get_order( $_GET['order_id'] );
 
 	get_header( 'invoice' );
 
-	$acct = $i->getAccountDetails();
+	$acct = $o->account;
 
 ?>
 	
@@ -23,14 +23,14 @@
 			<div class="section date">
 				<h2>Date</h2>
 				<div class="invoiced">
-					<?php echo $i->getDate(); ?>
+					<?php echo $o->getDate( 'created', 'jS \o\f F Y' ); ?>
 				</div>
 			</div>
 
 			<div class="section total">
 				<h2>Total</h2>
 				<div class="amount">
-					&dollar;<?php echo number_format( $i->getTotal(), 2 ); ?>
+					&dollar;<?php echo number_format( $o->getTotal(), 2 ); ?>
 				</div>
 			</div>
 
@@ -39,6 +39,7 @@
 		<div class="section bill-to">
 			<h2>Customer</h2>
 			<div class="address">
+				<?php if ( $acct['company'] ) echo $acct['company'] . '<br />'; ?>
 				<?php echo $acct['firstname'] . ' ' . $acct['lastname']; ?>
 				<br /><?php echo $acct['street']; ?>
 				<br /><?php echo $acct['suburb']; ?> <?php echo $acct['state']; ?> <?php echo $acct['postcode']; ?>
@@ -61,7 +62,7 @@
 
 				<tbody>
 
-				<?php foreach ( $i->getLineItems() as $l ) : ?>
+				<?php foreach ( $o->items as $l ) : ?>
 
 					<tr class="line-item">
 						<td class="qty-col"><?php echo $l['qty']; ?>x</td>

@@ -9,7 +9,7 @@ function order_add_meta() {
 	
 	add_meta_box(
 		'order_history_metabox',
-		'Order History',
+		'Event Log',
 		'order_history_metabox',
 		'lpc_order',
 		'normal',
@@ -20,6 +20,15 @@ function order_add_meta() {
 		'order_actions_metabox',
 		'Order Actions',
 		'order_actions_metabox',
+		'lpc_order',
+		'normal',
+		'high'
+	);
+	
+	add_meta_box(
+		'order_details_metabox',
+		'Order Details',
+		'order_details_metabox',
 		'lpc_order',
 		'normal',
 		'high'
@@ -66,6 +75,197 @@ function order_save_meta( $post_id ) {
 
 }
 
+function order_details_metabox() {
+	
+	$order = get_order( get_the_ID() );
+
+	?>
+
+	<div class="order-details-tabs">
+		<ul>
+			<li class="selected" data-tab-name="details">Order Details</li>
+			<li data-tab-name="components">Components</li>
+			<li data-tab-name="payment">Payment</li>
+		</ul>
+	</div>
+
+	<div class="tabs">
+
+		<div class="tab-content details">
+			<h4>Details y'all</h4>
+		</div>
+
+		<div class="tab-content components hidden">
+
+		<?php foreach ( $order->items as $l ) : ?>
+
+			<h4><?php echo $l['product_title']; ?></h4>
+
+			<table class="line-items">
+
+				<thead>
+
+					<tr>
+						<th class="qty-col">Qty</th>
+						<th class="description-col">Description</th>
+						<th class="price-col">Price</th>
+					</tr>
+
+				</thead>
+
+				<tbody>
+
+					<tr class="line-item">
+						<td class="qty-col"><?php echo $l['qty']; ?>x</td>
+						<td class="description-col" colspan="2">
+							<h5><?php echo $l['product_title']; ?></h5>
+							<div class="price">&dollar;<?php echo number_format( $l['total_price'], 2 ); ?></div>
+						</td>
+					</tr>
+
+				<?php foreach ( $l['components'] as $c ) : ?>
+
+					<tr class="line-item sub-item">
+						<td class="qty-col">&nbsp;</td>
+						<td class="description-col" colspan="3">
+							<h5><strong><?php echo strtoupper( $c['type'] ); ?></strong> <?php echo $c['title']; ?></h5>
+							<div class="model"><?php echo $c['model']; ?></div>
+							<div class="price">&dollar;<?php echo number_format( $c['price'], 2 ); ?></div>
+						</td>
+					</tr>
+
+				<?php endforeach; ?>
+					
+				</tbody>
+
+			</table>
+
+		<?php endforeach; ?>
+
+		</div>
+
+		<div class="tab-content payment hidden">
+
+			<div class="form-table-container">
+
+				<h4>General</h4>
+
+				<table class="form-table">
+
+					<tr valign="top">
+						<th scope="row"><label>Amount Due</label></th>
+						<td>&dollar;<?php echo number_format( $order->getTotal(), 2 ); ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Method</label></th>
+						<td><?php echo $order->getPaymentMethod( true ); ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Status</label></th>
+						<td><?php echo $order->getPaymentStatus( true ); ?></td>
+					</tr>
+
+				</table>
+
+			</div>
+
+	<?php if ( $order->payment['complete'] ) : ?>
+
+			<div class="form-table-container">
+
+				<h4>Payment Details</h4>
+
+				<table class="form-table">
+
+			<?php switch ( $order->getPaymentMethod() ) { 
+
+				case 'cc': 
+				?>
+
+					<tr valign="top">
+						<th scope="row"><label>Amount</label></th>
+						<td>&dollar;<?php echo number_format( $order->payment['amount'], 2 ); ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Date</label></th>
+						<td><?php echo $order->payment['date']; ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Token</label></th>
+						<td><?php echo $order->payment['token']; ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Message</label></th>
+						<td><?php echo $order->payment['message']; ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>IP Address</label></th>
+						<td><?php echo $order->payment['ipaddress']; ?></td>
+					</tr>
+
+				<?php break;
+
+			} ?>
+
+				</table>
+
+			</div>
+
+	<?php else: ?>
+
+			<div class="form-table-container">
+
+				<h4>Enter Manual Payment</h4>
+
+				<table class="form-table">
+
+					<tr valign="top">
+						<th scope="row"><label>Date Received</label></th>
+						<td><input type="text" class="widefat" /></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Payment Amount</label></th>
+						<td><input type="text" class="widefat" value="<?php echo $order->getTotal(); ?>" /></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Reference #</label></th>
+						<td><input type="text" class="widefat" /></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Payment Type</label></th>
+						<td><select class="widefat"><option>Bank Transfer</option></select></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Notes</label></th>
+						<td><textarea class="widefat"></textarea></td>
+					</tr>
+
+				</table>
+
+				<button class="button button-primary button-large">Process</button>
+
+			</div>
+
+	<?php endif; ?>
+
+		</div>
+
+	</div>
+
+	<?php
+
+}
+
 function order_status_metabox() {
 	
 	$order = get_order( get_the_ID() );
@@ -96,8 +296,8 @@ function order_account_details_metabox() {
 
 }
 
-function lpc_get_mono_price( $amount, $pad = 10 ) {
-	return '&dollar;' . preg_replace( '/ /', '&nbsp;', sprintf( "%' " . $pad . "s\n", number_format( $amount, 2 ) ) );
+function lpc_get_mono_text( $amount, $pad = 10, $prepend = '' ) {
+	return $prepend . preg_replace( '/ /', '&nbsp;', sprintf( "%' " . $pad . "s\n", number_format( $amount, 2 ) ) );
 }
 
 function order_summary_metabox() {
@@ -110,22 +310,22 @@ function order_summary_metabox() {
 
 		<tr valign="top">
 			<th scope="row"><label>Items</label></th>
-			<td><?php echo $order->items_count; ?></td>
+			<td><span>&nbsp;<?php echo lpc_get_mono_text( $order->items_count, 11 ); ?></span></td>
 		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label>Items Total</label></th>
-			<td><?php echo lpc_get_mono_price( $order->items_total ); ?></td>
+			<td><span>&nbsp;<?php echo lpc_get_mono_text( $order->items_total, 10, '&dollar;' ); ?></span></td>
 		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label>Discount</label></th>
-			<td>-<?php echo lpc_get_mono_price( $order->discount_total ); ?></td>
+			<td><span>-<?php echo lpc_get_mono_text( $order->discount_total, 10, '&dollar;' ); ?></span></td>
 		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label>Total</label></th>
-			<td><?php echo lpc_get_mono_price( $order->total ); ?></td>
+			<td><span>&nbsp;<?php echo lpc_get_mono_text( $order->total, 10, '&dollar;' ); ?></span></td>
 		</tr>
 
 	</table>
