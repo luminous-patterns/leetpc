@@ -71,6 +71,7 @@ class leetPcStore {
 	private $_couponsCache = array();
 	private $_productsCache = array();
 	private $_invoicesCache = array();
+	private $_ordersCache = array();
 
 	/**
 	 * Constructor
@@ -181,11 +182,24 @@ class leetPcStore {
 		return $this->_invoicesCache[$id];
 	}
 
+	public function &getOrder( $id ) {
+		if ( !array_key_exists( $id, $this->_ordersCache ) ) {
+			$this->_ordersCache[$id] = new lpcOrder( $id );
+		}
+		return $this->_ordersCache[$id];
+	}
+
 	public function &getCoupon( $id ) {
 		if ( !array_key_exists( $id, $this->_couponsCache ) ) {
 			$this->_couponsCache[$id] = new lpcCoupon( $id );
 		}
 		return $this->_couponsCache[$id];
+	}
+
+	public function &createNewOrder() {
+		$order = new lpcOrder();
+		$this->_ordersCache[$order->ID] = &$order;
+		return $this->_ordersCache[$order->ID];
 	}
 
 	public function getCustomizeForm() {
@@ -195,32 +209,42 @@ class leetPcStore {
 
 	public function processCheckoutData( $reload = false ) {
 
-	    $data = $reload ? array( 'cart' => $this->cart->toArray(), 'order_id' => substr( uniqid(), -8 ) ) : $_SESSION['checkout_data'];
+	    if ( $reload ) {
+    		$order = $this->createNewOrder();
+    		$_SESSION['order_id'] = $order->ID;
+    		$order->importlpcCart( $this->cart );
+	    }
+	    else {
+	    	$order = $this->getOrder( $_SESSION['order_id'] );
+	    }
 
-	    foreach ( $_POST['submitted'] as $k => $v ) {
+	    if ( array_key_exists( 'submitted', $_POST ) && is_array( $_POST['submitted'] ) ) {
 
-	        $c = explode( '-', $k );
-	        $x = count( $c );
+			$s = array();
 
-	        switch ( $x ) {
+			foreach ( $_POST['submitted'] as $k => $v ) {
 
-	            case 3:
-	                $data[$c[0]][$c[1]][$c[2]] = $v;
-	                break;
+				$c = explode( '-', $k );
 
-	            case 2:
-	                $data[$c[0]][$c[1]] = $v;
-	                break;
+				switch ( count( $c ) ) {
+					case 3:
+						$s[$c[0]][$c[1]][$c[2]] = $v;
+						break;
+					case 2:
+						$s[$c[0]][$c[1]] = $v;
+						break;
+					case 1:
+						$s[$c[0]] = $v;
+						break;
+				}
 
-	            case 1:
-	                $data[$c[0]] = $v;
-	                break;
+			}
 
-	        }
+			$order->update( $s );
 
 	    }
 
-	    $_SESSION['checkout_data'] = $data;
+	    return $order;
 
 	}
 
@@ -233,8 +257,7 @@ class leetPcStore {
 		$p = false;
 		$e = array( 'message' => null, 'fields' => array() );
 		$s = $_POST['step'] - 1;
-
-		$payment_complete = false;
+		$submitted = is_array( $_POST['submitted'] ) ? $_POST['submitted'] : array();
 
 		$skip_process_account = false;
 		if ( is_user_logged_in() ) {
@@ -245,200 +268,125 @@ class leetPcStore {
 			}
 		}
 
-		$submitted = $_POST['submitted'];
-
-		$password = $submitted['user-password'] ? $submitted['user-password'] : '';
-		$_POST['submitted']['user-password'] = '******';
-
-	    $this->processCheckoutData( $s < 1 || ( $s == 1 && $skip_process_account ) );
+	    $order = $this->processCheckoutData( $s < 1 || ( $s == 1 && $skip_process_account ) );
 
 		if ( $_POST['direction'] != -1 ) {
 
-		    $required_fields = array();
+			// Check required fields
+			$requiredFields = array(
+				'step-1'  => array( 'user-email' ),
+				'step-2'  => array( 'acct-firstname', 'acct-lastname', 'acct-phone', 'acct-street', 'acct-suburb', 'acct-postcode', 'acct-state' ),
+				'step-3'  => array( 'delivery-use_different_address' ),
+				'step-4'  => array( 'payment-method' )
+			);
 
-			switch ( $s ) {
+			if ( $skip_process_account ) {
+				$requiredFields['step-1'] = array();
+			}
 
-				case 1: // Process account info
+			if ( $submitted['delivery-use_different_address'] ) {
+				$requiredFields['step-3'] = array_merge( $requiredFields['step-3'], array( 'delivery-firstname', 'delivery-lastname', 'delivery-street', 'delivery-suburb', 'delivery-postcode', 'delivery-state' ) );
+			}
 
-					if ( $skip_process_account ) {
-						$_SESSION['checkout_data']['user_id'] = $current_user->ID;
-						$_SESSION['checkout_data']['user'] = array(
-							'id'            => $current_user->ID,
-							'email'         => $current_user->user_email,
-							'registered'    => '1'
-						);
-						break;
-					}
+			if ( array_key_exists( 'payment-method', $submitted ) && $submitted['payment-method'] == 'cc' ) {
+				$requiredFields['step-4'] = array_merge( $requiredFields['step-4'], array( 'cc-name', 'cc-number', 'cc-exp-month', 'cc-exp-year', 'cc-csc' ) );
+			}
 
-					if ( filter_var( $submitted['user-email'], FILTER_VALIDATE_EMAIL ) === false ) {
-						$e['message'] = 'Invalid email address format';
-						$e['fields'][] = array( 'name' => 'user-email', 'message' => 'Please enter a valid email address' );
-						break;
-					}
+			foreach ( $requiredFields['step-'.$s] as $field ) {
+				if ( !array_key_exists( $field, $submitted ) || ( !$submitted[$field] && $submitted[$field] !== 0  && $submitted[$field] !== '0' ) ) {
+					$e['message'] = 'Please enter a value for all required fields';
+					$e['fields'][] = array( 'name' => $field, 'message' => 'Required field cannot be left empty' );
+				}
+			}
 
-					$login = $submitted['user-registered'];
-					$user = get_user_by( 'email', $submitted['user-email'] );
-					$valid_password = !$login ? false : wp_check_password( $password, $user->data->user_pass, $user->ID );
+			if ( !$this->isError( $e ) ) {
 
-					if ( $login ) {
+				switch ( $s ) {
 
-						if ( $user ) {
+					case 1: // Process account info
 
-							if ( !$valid_password ) {
-								// Wrong password
-								$e['message'] = 'Incorrect password';
-								$e['fields'][] = array( 'name' => 'user-password', 'message' => 'Incorrect password' );
+						if ( $skip_process_account ) {
+							$order->update( array( 'user' => array(
+								'id'            => $current_user->ID,
+								'email'         => $current_user->user_email,
+								'password'      => '*********',
+								'registered'    => true
+							) ) );
+							break;
+						}
+
+						if ( filter_var( $submitted['user-email'], FILTER_VALIDATE_EMAIL ) === false ) {
+							$e['message'] = 'Invalid email address format';
+							$e['fields'][] = array( 'name' => 'user-email', 'message' => 'Please enter a valid email address' );
+							break;
+						}
+
+						$login = $submitted['user-registered'];
+						$user = get_user_by( 'email', $submitted['user-email'] );
+						$valid_password = !$login ? false : wp_check_password( $submitted['user-password'], $user->data->user_pass, $user->ID );
+
+						if ( $login ) {
+
+							if ( $user ) {
+
+								if ( !$valid_password ) { // Wrong password
+									$e['message'] = 'Incorrect password';
+									$e['fields'][] = array( 'name' => 'user-password', 'message' => 'Incorrect password' );
+									break;
+								}
+
+								// Valid user, save details
+								$order->update( array( 'user' => array(
+									'id'            => $user->ID,
+									'email'         => $user->user_email,
+									'password'      => '*********',
+									'registered'    => true
+								) ) );
 								break;
+
 							}
 
-							// Valid user, save ID
-							$_SESSION['checkout_data']['user_id'] = $user->ID;
-							$_SESSION['checkout_data']['user']['id'] = $user->ID;
+							// No such user
+							$e['message'] = 'User does not exist';
+							$e['fields'][] = array( 'name' => 'user-email', 'message' => 'User does not exist' );
 							break;
 
 						}
 
-						// No such user
-						$e['message'] = 'User does not exist';
-						$e['fields'][] = array( 'name' => 'user-email', 'message' => 'User does not exist' );
+						if ( $user ) { // User exists but no login was provided
+							$e['message'] = 'You have an account with us already';
+							$e['fields'][] = array( 'name' => 'user-email', 'message' => 'Email address already registered' );
+						}
+
+						if ( strtolower( $submitted['user-email'] ) != strtolower( $submitted['user-conf_email'] ) ) {
+							$e['message'] = 'Email address does not match';
+							$e['fields'][] = array( 'name' => 'user-conf_email', 'message' => 'Email address does not match' );
+						}
+
+						$order->update( array( 'user' => array( 'email' => strtolower( $submitted['user-email'] ) ) ) );
+
 						break;
 
-					}
+					case 2: // Process billing info
 
-					if ( $user ) {
+						break;
 
-						// User exists but no login was sent
-						$e['message'] = 'You have an account with us already';
-						$e['fields'][] = array( 'name' => 'user-email', 'message' => 'Email address already registered' );
+					case 3: // Process shipping info
 
-					}
+						break;
 
-					if ( strtolower( $submitted['user-email'] ) != strtolower( $submitted['user-conf_email'] ) ) {
-						$e['message'] = 'Email address does not match';
-						$e['fields'][] = array( 'name' => 'user-conf_email', 'message' => 'Email address does not match' );
-					}
-
-					break;
-
-				case 2: // Process billing info
-
-					$required_fields = array( 'acct-firstname', 'acct-lastname', 'acct-phone', 'acct-street', 'acct-suburb', 'acct-postcode', 'acct-state' );
-
-					break;
-
-				case 3: // Process shipping info
-
-					if ( $submitted['delivery-use_different_addr'] == 1 ) {
-						$required_fields = array( 'delivery-firstname', 'delivery-lastname', 'delivery-street', 'delivery-suburb', 'delivery-postcode', 'delivery-state' );
-					}
-
-					break;
-
-				case 4: // Process credit card info and create order
-
-					if ( $_SESSION['checkout_data']['payment']['method'] == 'cc' ) { // Process credit card
-
-						$required_fields = array( 'cc-name', 'cc-number', 'cc-exp-month', 'cc-exp-year', 'cc-csc' );
-
-						if ( $_SESSION['checkout_data']['cc']['number'] == '51631000000000' ) { // test transaction
-							$_SESSION['checkout_data']['payment']['status'] = 'success';
-							$p = true;
-						}
-
-						$this->pin = new Pin();
+					case 4: // Process credit card info and create order
 
 						try {
-
-							$gateway_response = $this->pin->postCharge( array(
-								
-								'email'         => $_SESSION['checkout_data']['user']['email'],
-								'description'   => 'PC order ' . $_SESSION['checkout_data']['order_id'],
-								'amount'        => intval( $_SESSION['checkout_data']['cart']['total'] * 100 ),
-								'ip_address'    => $_SERVER['REMOTE_ADDR'],
-								'currency'      => 'AUD',
-
-								'card[number]'             => preg_replace( '/\s+/', '', $_SESSION['checkout_data']['cc']['number'] ),
-								'card[expiry_month]'       => $_SESSION['checkout_data']['cc']['exp']['month'],
-								'card[expiry_year]'        => $_SESSION['checkout_data']['cc']['exp']['year'],
-								'card[cvc]'                => $_SESSION['checkout_data']['cc']['csc'],
-								'card[name]'               => $_SESSION['checkout_data']['cc']['name'],
-								'card[address_line1]'      => $_SESSION['checkout_data']['acct']['street'],
-								'card[address_city]'       => $_SESSION['checkout_data']['acct']['suburb'],
-								'card[address_postcode]'   => $_SESSION['checkout_data']['acct']['postcode'],
-								'card[address_state]'      => 'VIC',
-								'card[address_country]'    => 'Australia'
-
-							) );
-
-							$_SESSION['checkout_data']['cc']['number'] = substr( $_SESSION['checkout_data']['cc']['number'], 0, 4 ) . '-####-####-'  . substr( $_SESSION['checkout_data']['cc']['number'], -4 );
-							unset( $_SESSION['checkout_data']['cc']['csc'] );
-
-							if ( $gateway_response->success ) {
-								$_SESSION['checkout_data']['payment']['status'] = 'success';
-								$_SESSION['checkout_data']['payment']['gateway'] = 'pin.net.au';
-								$_SESSION['checkout_data']['payment']['token'] = $gateway_response->token;
-								$_SESSION['checkout_data']['payment']['message'] = $gateway_response->status_message;
-								$_SESSION['checkout_data']['payment']['amount'] = $gateway_response->amount / 100;
-								$_SESSION['checkout_data']['payment']['ipaddress'] = $gateway_response->ip_address;
-								$_SESSION['checkout_data']['payment']['date'] = $gateway_response->created_at;
-								$p = true;
-							}
-
+							$order->process();
+							empty_cart();
 						}
-						catch ( PIN_Exception $exception ) {
-							$e['message'] = $exception->getDescription();
-							$e['fields'][] = array( 'name' => 'cc-number', 'message' => $exception->getDescription(), 'extra' => $exception->getErrors() );
+						catch ( lpcOrderException $x ) {
+							$e = $x->e;
 						}
 
-					}
-					elseif ( $_SESSION['checkout_data']['payment']['method'] == 'bank' ) { // Process bank deposit
-						unset( $_SESSION['checkout_data']['cc'] );
-						$_SESSION['checkout_data']['payment']['status'] = 'pending';
-						$p = true;
-					}
+						break;
 
-					
-
-					break;
-
-			}
-
-			foreach ( $required_fields as $field ) {
-
-				if ( !array_key_exists( $field, $submitted ) || !$submitted[$field] ) {
-					$e['message'] = 'Please enter a value for all required fields';
-					$e['fields'][] = array( 'name' => $field, 'message' => 'Required field cannot be left empty' );
-				}
-
-			}
-
-			if ( $p ) {
-
-				// Estimate delivery based on 9 days from today (or first business day after) 
-				$deliver_by = new DateTime( null, new DateTimeZone( 'Australia/Melbourne' ) );
-				$deliver_by->add( new DateInterval( 'P9D' ) );
-				if ( $deliver_by->format( 'N' ) > 5 ) {
-					$period = 9 - $deliver_by->format( 'N' );
-					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
-				}
-				
-				$_SESSION['checkout_data']['delivery']['deliver_on'] = $deliver_by->format( 'D jS \o\f M' );
-				$_SESSION['checkout_data']['line_items'] = array_values( $_SESSION['checkout_data']['cart']['items'] );
-
-				$invoice_id = $this->createInvoice( $_SESSION['checkout_data'] );
-				$_SESSION['checkout_data']['invoice_id'] = $invoice_id;
-
-				// Send emails
-				$this->sendEmailFromCheckoutData( 'order-success', $_SESSION['checkout_data'] );
-				if ( $_SESSION['checkout_data']['payment']['method'] == 'cc' ) {
-					$this->sendEmailFromCheckoutData( 'cc-payment', $_SESSION['checkout_data'] );
-				}
-				else {
-					$this->sendEmailFromCheckoutData( 'payment-request', $_SESSION['checkout_data'] );
-				}
-
-				if ( $invoice_id ) {
-					empty_cart();
 				}
 
 			}
@@ -455,130 +403,12 @@ class leetPcStore {
 
 	}
 
-	private function sendEmailFromCheckoutData( $type, $d ) {
-
-		$to = $d['user']['email'];
-		$invoice_id = $d['invoice_id'];
-		$firstname = $d['acct']['firstname'];
-
-		switch ( $type ) {
-
-			case 'order-success':
-				$subject = "Order confirmation";
-				$body = "Thanks $firstname,\n\n"
-					. "Your PC order has been received and your expected delivery date is " . $d['delivery']['deliver_on'] . ".\n\n"
-					. "You can view and print your copy of your invoice (#$invoice_id) via the following link:\n"
-					. "https://www.leetpc.com.au/invoice/?invoice_id=$invoice_id";
-					// . "You may review your invoice history at any time via the LEETPC customer area:\n"
-					// . "https://www.leetpc.com.au/my-account/";
-				break;
-
-			case 'cc-payment':
-				$subject = 'Credit card payment confirmation';
-				$body = "Hi $firstname,\n\n"
-					. "This is a payment receipt for Invoice #$invoice_id generated on " . date( 'd-m-Y' ) . ".\n\n"
-					. "Amount: $" . number_format( $d['payment']['amount'], 2 ) . " AUD\n"
-					. "Status: " . $d['payment']['status'] . "\n\n"
-					. "You can view and print your copy of your invoice (#$invoice_id) via the following link:\n"
-					. "https://www.leetpc.com.au/invoice/?invoice_id=$invoice_id";
-					// . "You may review your invoice history at any time via the LEETPC customer area:\n"
-					// . "https://www.leetpc.com.au/my-account/";
-				break;
-
-			case 'payment-request':
-				$subject = 'Payment required';
-				$body = "Hi $firstname,\n\n"
-					. "This is an automated reminder that payment is due for Invoice #$invoice_id, generated on " . date( 'd-m-Y' ) . ".  Please make payment as soon as possible using the following account details.\n\n"
-					. "Bank name: WESTPAC\n"
-					. "Account name: INTEGRATED WEB SERVICES\n"
-					. "BSB: 033-349\n"
-					. "Acct #: 383009\n"
-					. "Amount: $" . number_format( $d['cart']['total'], 2 ) . " AUD\n\n"
-					. "** IMPORTANT ** Please remember to include your invoice number ($invoice_id) as the description for your payment.\n\n"
-					. "You can view and print your copy of your invoice (#$invoice_id) via the following link:\n"
-					. "https://www.leetpc.com.au/invoice/?invoice_id=$invoice_id";
-					// . "You may review your invoice history at any time via the LEETPC customer area:\n"
-					// . "https://www.leetpc.com.au/my-account/";
-				break;
-
-		}
-
-		$body .= "\n\nSincerely,\nCustomer care\nLEETPC.com.au";
-
-		return $this->sendEmail( $to, $subject, $body );
-
-	}
-
-	private function sendWelcomeEmail( $user_id, $password ) {
-
-		$subject = 'Your account information';
-		$body = "Hi $firstname,\n\n"
-			. "We have created an account for you.\n\n"
-			. "Username (email): $email\n"
-			. "Password: $password\n\n"
-			. "You may review your invoice history at any time via the LEETPC customer area:\n"
-			. "https://www.leetpc.com.au/my-account/";
-
-		$body .= "\n\nSincerely,\nCustomer care\nLEETPC.com.au";
-
-		return $this->sendEmail( $to, $subject, $body );
-
-	}
-
-	// private function sendServiceOrder( $user_id, $password ) {
-
-	// 	$subject = 'Your account information';
-	// 	$body = "Hi $firstname,\n\n"
-	// 		. "We have created an account for you.\n\n"
-	// 		. "Username (email): $email\n"
-	// 		. "Password: $password\n\n"
-	// 		. "You may review your invoice history at any time via the LEETPC customer area:\n"
-	// 		. "https://www.leetpc.com.au/my-account/";
-
-	// 	$body .= "\n\nSincerely,\nCustomer care\nLEETPC.com.au";
-
-	// 	return $this->sendEmail( $to, $subject, $body );
-
-	// }
-
 	private function sendEmail( $to, $subject, $body, $attach = '' ) {
 		$headers = array(
 			'Bcc: LEETPC Customer Care <care@leetpc.com.au>',
 			'Bcc: Callan Milne <cal@leetpc.com.au>',
 		);
 		return wp_mail( $to, $subject, $body, $headers, $attach );
-	}
-
-	private function createInvoice( $data ) {
-
-		$i = array(
-			'comment_status' => 'open',
-			'ping_status'    => 'closed',
-			'post_author'    => 2,
-			'post_status'    => 'waiting',
-			'post_title'     => 'NEW INVOICE',
-			'post_type'      => 'invoice'
-			// 'tags_input'     => [ '<tag>, <tag>, <...>' ] //For tags.
-			// 'to_ping'        => [ ? ] //?
-			// 'tax_input'      => [ array( 'taxonomy_name' => array( 'term', 'term2', 'term3' ) ) ] // support for custom taxonomies. 
-		);
-
-		$id = wp_insert_post( $i );
-
-		foreach ( $data as $k => $v ) {
-			add_post_meta( $id, "_{$k}", is_array( $v ) ? json_encode( $v ) : $v, true );
-		}
-
-		$u = array(
-			'ID'         => $id,
-			'post_title' => "INVOICE ID#{$id}",
-			'post_name'  => "invoice-{$id}"
-		);
-
-		wp_update_post( $u );
-
-		return $id; 
-
 	}
 
 	public function emptyCart() {

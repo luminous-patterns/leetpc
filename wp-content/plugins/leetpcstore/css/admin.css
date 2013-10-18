@@ -111,8 +111,8 @@
 #invoice_metabox .form-table td .group:last-of-type {
     border-bottom-width: 1px;
 }
-.manage-column.column-cost, .manage-column.column-price, .manage-column.column-invoice_items_total, 
-.manage-column.column-invoice_discount, .manage-column.column-invoice_total {
+.manage-column.column-cost, .manage-column.column-price, .manage-column.column-order_items_total, 
+.manage-column.column-order_discount, .manage-column.column-order_total {
     width: 80px;
 }
 .manage-column.column-margin {
@@ -121,12 +121,102 @@
 .manage-column.column-type {
     width: 150px;
 }
-.manage-column.column-invoice_number {
+.manage-column.column-order_number {
     width: 60px;
 }
-.manage-column.column-invoice_payment, .manage-column.column-invoice_deliver_on {
+.manage-column.column-order_payment, .manage-column.column-order_deliver_on {
     width: 110px;
 }
-.manage-column.column-invoice_status {
+.manage-column.column-order_status {
     width: 80px;
+}
+
+table.lpc-order-history {
+
+}
+table.lpc-order-history thead th {
+    border-bottom: 1px solid #ccc;
+}
+
+table.lpc-order-history tbody td, table.lpc-order-history tbody th {
+    background-color: #eee;
+    border-bottom: 1px solid #ddd;
+}
+table.lpc-order-history tbody tr:nth-of-type(even) td, table.lpc-order-history tbody tr:nth-of-type(even) th {
+    background-color: #fefefe;
+}
+table.lpc-order-history tbody tr th {
+    width: 30px;
+}
+table.lpc-order-history ul {
+    margin: 0;
+    font-size: 0.9em;
+    line-height: 1.2em;
+    color: #444;
+}
+table.lpc-order-history .lpc-col-superslim {
+    width: 30px;
+}
+table.lpc-order-history .lpc-col-slim {
+    width: 100px;
+}
+table.lpc-order-history .lpc-col-wide {
+    width: 200px;
+}
+table.lpc-order-history ul strong {
+    font-size: 0.9em;
+    color: #999;
+}
+#order_summary_metabox table.form-table th {
+    width: 80px;
+    padding-left: 5px;
+    text-transform: uppercase;
+}
+#order_summary_metabox table.form-table td {
+    font-size: 1.5em;
+    font-family: monospace;
+    text-align: right;
+    padding-right: 5px;
+    color: #555;
+}
+#order_account_details_metabox .inside {
+    padding: 10px 15px;
+    position: relative;
+}
+#order_account_details_metabox button {
+    bottom: 10px;
+    position: absolute;
+    right: 10px;
+}
+#order_actions_metabox li {
+    display: inline-block;
+    margin-bottom: 0;
+}
+#order_status_metabox .inside {
+    padding: 0;
+    margin: 0;
+}
+#order_status_metabox .inside .indicator {
+    border: 1px solid #fff;
+    font-size: 2em;
+    line-height: 70px;
+    border-radius: 0 0 3px 3px;
+    text-align: center;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+#order_status_metabox .inside .indicator.pending-payment {
+    background-color: #fe3;
+    color: #555;
+}
+#order_status_metabox .inside .indicator.incomplete {
+    background-color: #222;
+    color: #eee;
+}
+#order_status_metabox .inside .indicator.processed {
+    background-color: #9e3;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
+}
+#order_actions_metabox .handlediv, #order_actions_metabox .hndle {
+    display: none;
 }

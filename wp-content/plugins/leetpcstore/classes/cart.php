@@ -28,17 +28,21 @@ class lpcCart {
 		$this->save();
 	}
 
-    public function __call( $method, $arguments ) {
-        if ( method_exists( $this, $method ) && in_array( $method, self::$public_methods ) ) {
-            $result = call_user_func_array( array( $this, $method ), $arguments );
-            $this->calculateTotals();
-            return $result;
-        }
-    }
+	public function __call( $method, $arguments ) {
+		if ( method_exists( $this, $method ) && in_array( $method, self::$public_methods ) ) {
+			$result = call_user_func_array( array( $this, $method ), $arguments );
+			$this->calculateTotals();
+			return $result;
+		}
+	}
 
-    public function getTotal() {
-    	return $this->total;
-    }
+	public function getTotal() {
+		return $this->total;
+	}
+
+	public function hasPromo() {
+		return $this->promo['code'] !== null;
+	}
 
     public function toArray() {
 		$s = array();
@@ -47,7 +51,7 @@ class lpcCart {
 		return $s;
     }
 
-    private function load() {
+    protected function load() {
 		if ( !array_key_exists( 'shopping_cart', $_SESSION ) ) {
 			$this->created = time();
 			return;
@@ -55,14 +59,14 @@ class lpcCart {
 		foreach ( $_SESSION['shopping_cart'] as $var => $value ) $this->$var = $value;
     }
 
-    private function save() {
+    protected function save() {
 		$s = array();
 		foreach ( get_object_vars( $this ) as $var => $value ) 
 			$s[$var] = $value;
 		$_SESSION['shopping_cart'] = $s;
     }
 
-    private function calculateTotals() {
+    protected function calculateTotals() {
 
 		$items_count = 0;
 		$items_total = 0.00;
@@ -94,7 +98,7 @@ class lpcCart {
 
     }
 
-	private function addItem( $product_id, $component_ids = array(), $qty = 1 ) {
+	protected function addItem( $product_id, $component_ids = array(), $qty = 1 ) {
 
 		$k = $this->generateKey( $product_id, $component_ids );
 
@@ -156,7 +160,7 @@ class lpcCart {
 
 	}
 
-	private function setItemQty( $k, $qty ) {
+	protected function setItemQty( $k, $qty ) {
 
 		if ( $qty == 0 ) {
 			return $this->removeItem( $k );
@@ -170,7 +174,7 @@ class lpcCart {
 		
 	}
 
-	private function removeItem( $k ) {
+	protected function removeItem( $k ) {
 
 		if ( array_key_exists( $k, $this->items ) ) {
 			unset( $this->items[$k] );
@@ -180,7 +184,7 @@ class lpcCart {
 
 	}
 
-	private function addPromo( $p ) {
+	protected function addPromo( $p ) {
 		$this->promo = array(
 			'code'    => $p->get( 'code' ),
 			'type'    => $p->get( 'discount_type' ),
@@ -189,19 +193,19 @@ class lpcCart {
 		return true;
 	}
 
-	private function removePromo() {
+	protected function removePromo() {
 		$vars = get_class_vars( $this );
 		$this->promo = $vars['promo'];
 		return true;
 	}
 
-    private function emptyCart() {
+    protected function emptyCart() {
     	$this->removePromo();
     	$this->items = array();
     	return true;
     }
 
-	private function generateKey( $product_id, $component_ids ) {
+	protected function generateKey( $product_id, $component_ids ) {
 		sort( $component_ids );
 		return md5( $product_id . str_replace( ',', '', implode( ',', $component_ids ) ) );
 	}

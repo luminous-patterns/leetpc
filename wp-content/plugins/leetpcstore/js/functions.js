@@ -226,6 +226,7 @@ var LEETPCStore = {
 	},
 
 	onCheckoutError: function( xhr ) {
+		console.log(xhr);
 		var data = xhr.responseJSON.error;
 		var fields = data.fields;
 		this.currentModalEl.find( '.modal-header .loading-anim' ).remove();
@@ -240,7 +241,7 @@ var LEETPCStore = {
 			}
 			this.currentModalEl.find( '.' + fields[i].name ).addClass( 'field-error' );
 		}
-		console.log(data);
+		console.log(xhr);
 		//alert(data.message);
 	},
 
@@ -331,7 +332,7 @@ var LEETPCStore = {
 		this.currentModalEl.find( '.next-step' ).bind( 'click', jQuery.proxy( this.onClickNextStep, this ) );
 		this.currentModalEl.find( 'input[name=user-registered]' ).bind( 'change', jQuery.proxy( this.onClickRegisteredToggle, this ) );
 		this.currentModalEl.find( 'input[name=payment-method]' ).bind( 'change', jQuery.proxy( this.onClickPayMethodToggle, this ) );
-		this.currentModalEl.find( 'input[name=delivery-use_different_addr]' ).bind( 'change', jQuery.proxy( this.onClickDeliveryUseAddr, this ) );
+		this.currentModalEl.find( 'input[name=delivery-use_different_address]' ).bind( 'change', jQuery.proxy( this.onClickDeliveryUseAddr, this ) );
 
 		jQuery( 'body' ).css( 'overflow', 'hidden' ).append( this.currentModalEl );
 
@@ -339,7 +340,7 @@ var LEETPCStore = {
 
 	onClickDeliveryUseAddr: function() {
 
-		if ( this.currentModalEl.find( 'input[name=delivery-use_different_addr]:checked' ).val() == '1' ) {
+		if ( this.currentModalEl.find( 'input[name=delivery-use_different_address]:checked' ).val() == '1' ) {
 			this.currentModalEl.find( '.delivery-address' ).removeClass( 'hidden' );
 		}
 		else {

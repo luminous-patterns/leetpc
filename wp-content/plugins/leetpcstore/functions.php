@@ -1,7 +1,5 @@
 <?php
 
-// Create cart class
-
 function lpc_log( $type, $note = '', $meta = array() ) {
 
 	$i = array(
@@ -73,6 +71,10 @@ function &get_invoice( $invoice_id ) {
 
 function &get_coupon( $coupon_id ) {
 	return $GLOBALS['leetpc']->getCoupon( $coupon_id );
+}
+
+function &get_order( $order_id ) {
+	return $GLOBALS['leetpc']->getOrder( $order_id );
 }
 
 function calc_product_price( $product_id, $component_ids ) {

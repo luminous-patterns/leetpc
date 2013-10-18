@@ -1,15 +1,15 @@
 <?php /* Template Name: Invoice */
 
-	if ( !$_GET['invoice_id'] || get_post_type( $_GET['invoice_id'] ) != 'invoice' ) {
+	if ( !$_GET['order_id'] || get_post_type( $_GET['order_id'] ) != 'lpc_order' ) {
 		header( 'location: https://www.leetpc.com.au' );
 		exit;
 	}
 
-	$i = get_invoice( $_GET['invoice_id'] );
+	$o = get_order( $_GET['order_id'] );
 
 	get_header( 'invoice' );
 
-	$acct = $i->getAccountDetails();
+	$acct = $o->account;
 
 ?>
 	
@@ -27,21 +27,21 @@
 				<div class="section date">
 					<h2>Invoice Date</h2>
 					<div class="invoiced">
-						<?php echo $i->getDate(); ?>
+						<?php echo $o->getDate( 'created', 'jS \o\f F Y' ); ?>
 					</div>
 				</div>
 
 				<div class="section total">
 					<h2>Total Amount</h2>
 					<div class="amount">
-						&dollar;<?php echo number_format( $i->getTotal(), 2 ); ?>
+						&dollar;<?php echo number_format( $o->getTotal(), 2 ); ?>
 					</div>
 				</div>
 
 			</div>
 
 			<div class="section business-info">
-				CALLAN MILNE
+				LEETPC
 				<br />ABN 62 842 988 455
 				<br />4 Holyrood Drive
 				<br />Vermont VIC 3133
@@ -50,6 +50,7 @@
 			<div class="section bill-to">
 				<h2>Invoice To</h2>
 				<div class="address">
+					<?php if ( $acct['company'] ) echo $acct['company'] . '<br />'; ?>
 					<?php echo $acct['firstname'] . ' ' . $acct['lastname']; ?>
 					<br /><?php echo $acct['street']; ?>
 					<br /><?php echo $acct['suburb']; ?> <?php echo $acct['state']; ?> <?php echo $acct['postcode']; ?>
@@ -74,7 +75,7 @@
 
 				<tbody>
 
-				<?php foreach ( $i->getLineItems() as $l ) : ?>
+				<?php foreach ( $o->items as $l ) : ?>
 
 					<tr class="line-item">
 						<td class="qty-col"><?php echo $l['qty']; ?>x</td>
@@ -86,18 +87,18 @@
 
 				<?php endforeach; ?>
 
-				<?php if ( $i->hasPromo() ) : ?>
+				<?php if ( $o->hasPromo() ) : ?>
 
 					<?php
-						$promo = $i->getPromo();
-						$discount = $promo['type'] == '%' ? number_format( $promo['amount'] ) . '&#37;' : '&dollar;' . number_format( $promo['amount'] );
+						$promo = $promo;
+						$discount = $o->promo['type'] == '%' ? number_format( $o->promo['amount'] ) . '&#37;' : '&dollar;' . number_format( $o->promo['amount'] );
 					?>
 
 					<tr class="line-item discount-item">
 						<td class="description-col" colspan="3">
 							<div class="discount"><?php echo $discount; ?> Discount</div>
-							<div class="details">code: <?php echo $promo['code']; ?></div>
-							<div class="price">-&dollar;<?php echo number_format( $i->cart['discount_total'], 2 ); ?></div>
+							<div class="details">code: <?php echo $o->promo['code']; ?></div>
+							<div class="price">-&dollar;<?php echo number_format( $o->discount_total, 2 ); ?></div>
 						</td>
 					</tr>
 
@@ -112,7 +113,8 @@
 		<div class="section deliver-to">
 			<h2>Deliver To</h2>
 			<div class="address">
-				<?php $delivery = $i->getDeliveryAddress(); ?>
+				<?php $delivery = $o->getDeliveryAddress(); ?>
+				<?php if ( $delivery['company'] ) echo $delivery['company'] . '<br />'; ?>
 				<?php echo $delivery['firstname'] . ' ' . $delivery['lastname']; ?>
 				<br /><?php echo $delivery['street']; ?>
 				<br /><?php echo $delivery['suburb']; ?> <?php echo $delivery['state']; ?> <?php echo $delivery['postcode']; ?>

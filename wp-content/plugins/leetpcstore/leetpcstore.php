@@ -11,31 +11,26 @@ Copyright 2013 Cal Milne
 
 session_start();
 
-// Are we using making real payments here?
+/* Live payments enabled */
 define( 'LIVE_PAYMENTS', false );
 
-// Book keeping time zone
+/* Book keeping time zone */
 define( 'BOOK_KEEPING_TZ', 'Australia/Melbourne' );
 
-/**
- * Include our core functions
- **/
+/* Core functions */
 require_once( 'functions.php' );
+
+/* Custom post types and taxonomies */
 require_once( 'taxonomies.php' );
+
+/* Edit post screen metaboxes */
 require_once( 'metaboxes.php' );
 
-require_once( 'cart.class.php' );
-// require_once( 'order.class.php' );
-require_once( 'coupon.class.php' );
-require_once( 'product.class.php' );
-require_once( 'invoice.class.php' );
+/* LEETPC object classes */
+require_once( 'classes.php' );
 
-/**
- * Include the main library
- **/
+/* LEETPC plugin main router/controller  */
 require_once( 'leetpcstore.class.php' );
 
-/**
- * Get started!
- **/
+/* Get started! */
 new leetPcStore();

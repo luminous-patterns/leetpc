@@ -29,7 +29,7 @@ class lpcInvoice {
 
 	public function getDeliveryAddress() {
 		$delivery = $this->getDeliveryDetails();
-		return $delivery['use_different_addr'] ? $delivery : $this->getAccountDetails();
+		return $delivery['use_different_address'] ? $delivery : $this->getAccountDetails();
 	}
 
 	public function getPaymentDetails() {

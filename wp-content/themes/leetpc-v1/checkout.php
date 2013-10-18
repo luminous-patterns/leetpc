@@ -1,6 +1,8 @@
 <?php
 
-	$cart = get_cart();
+	if ( $step > 1 ) {
+		$order = get_order( $_SESSION['order_id'] );
+	}
 
 	$next_step_btn_text = 'Continue';
 
@@ -25,22 +27,22 @@
 			<div class="row checkout-field user-registered">
 				<label>I am a ...</label>
 				<div class="options">
-					<label><input type="radio" name="user-registered" value="0" <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> New customer</label>
-					<label><input type="radio" name="user-registered" value="1" <?php if ( $_SESSION['checkout_data']['user']['registered'] ) : ?>checked="checked"<?php endif; ?> /> Returning customer</label>
+					<label><input type="radio" name="user-registered" value="0" checked="checked" /> New customer</label>
+					<label><input type="radio" name="user-registered" value="1" /> Returning customer</label>
 				</div>
 			</div>
 
 			<div class="row checkout-field user-email">
 				<label>Email address</label>
-				<input type="text" name="user-email" value="<?php echo $_SESSION['checkout_data']['user']['email']; ?>" class="wide" />
+				<input type="text" name="user-email" value="" class="wide" />
 			</div>
 
-			<div class="row checkout-field user-conf_email <?php if ( $_SESSION['checkout_data']['user']['registered'] ) : ?>hidden<?php endif; ?>">
+			<div class="row checkout-field user-conf_email">
 				<label>Confirm email address</label>
-				<input type="text" name="user-conf_email" value="<?php echo $_SESSION['checkout_data']['user']['conf_email']; ?>" class="wide" />
+				<input type="text" name="user-conf_email" value="" class="wide" />
 			</div>
 
-			<div class="row checkout-field user-password <?php if ( !$_SESSION['checkout_data']['user']['registered'] ) : ?>hidden<?php endif; ?>">
+			<div class="row checkout-field user-password hidden">
 				<label>Password</label>
 				<input type="password" name="user-password" class="wide" />
 			</div>
@@ -57,42 +59,42 @@
 				'acct-firstname' => array( 
 					'type'      => 'input',
 					'label'     => 'First Name',
-					'value'     => $_SESSION['checkout_data']['acct']['firstname']
+					'value'     => $order->account['firstname']
 				),
 				'acct-lastname' => array( 
 					'type'      => 'input',
 					'label'     => 'Last Name',
-					'value'     => $_SESSION['checkout_data']['acct']['lastname']
+					'value'     => $order->account['lastname']
 				),
 				'acct-company' => array( 
 					'type'      => 'input',
 					'label'     => 'Company',
-					'value'     => $_SESSION['checkout_data']['acct']['company']
+					'value'     => $order->account['company']
 				),
 				'acct-phone' => array( 
 					'type'      => 'input',
 					'label'     => 'Phone',
-					'value'     => $_SESSION['checkout_data']['acct']['phone']
+					'value'     => $order->account['phone']
 				),
 				'acct-street' => array( 
 					'type'      => 'input',
 					'label'     => 'Street Address',
-					'value'     => $_SESSION['checkout_data']['acct']['street']
+					'value'     => $order->account['street']
 				),
 				'acct-suburb' => array( 
 					'type'      => 'input',
 					'label'     => 'Suburb',
-					'value'     => $_SESSION['checkout_data']['acct']['suburb']
+					'value'     => $order->account['suburb']
 				),
 				'acct-postcode' => array( 
 					'type'      => 'input',
 					'label'     => 'Postcode',
-					'value'     => $_SESSION['checkout_data']['acct']['postcode']
+					'value'     => $order->account['postcode']
 				),
 				'acct-state' => array( 
 					'type'      => 'select',
 					'label'     => 'State',
-					'value'     => $_SESSION['checkout_data']['acct']['state'],
+					'value'     => $order->account['state'],
 					'options'   => array( 'Victoria','ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' ),
 					'disabled'  => array( 'ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' )
 				)
@@ -141,15 +143,15 @@
 				</div>
 			</div>
 
-			<div class="row checkout-field delivery-use_different_addr">
+			<div class="row checkout-field delivery-use_different_address">
 				<label>Deliver to</label>
 				<div class="options">
-					<label><input type="radio" name="delivery-use_different_addr" value="0" <?php if ( !$_SESSION['checkout_data']['delivery']['use_different_addr'] ) : ?>checked="checked"<?php endif; ?> /> Same as billing address</label>
-					<label><input type="radio" name="delivery-use_different_addr" value="1" <?php if ( $_SESSION['checkout_data']['delivery']['use_different_addr'] ) : ?>checked="checked"<?php endif; ?> /> Different address...</label>
+					<label><input type="radio" name="delivery-use_different_address" value="0" <?php if ( !$order->delivery['use_different_address'] ) : ?>checked="checked"<?php endif; ?> /> Same as billing address</label>
+					<label><input type="radio" name="delivery-use_different_address" value="1" <?php if ( $order->delivery['use_different_address'] ) : ?>checked="checked"<?php endif; ?> /> Different address...</label>
 				</div>
 			</div>
 
-			<div class="delivery-address <?php if ( !$_SESSION['checkout_data']['delivery']['use_different_addr'] ) echo 'hidden'; ?>">
+			<div class="delivery-address <?php if ( !$order->delivery['use_different_address'] ) echo 'hidden'; ?>">
 
 				<h4>Delivery address</h4>
 
@@ -159,37 +161,37 @@
 					'delivery-firstname' => array( 
 						'type'      => 'input',
 						'label'     => 'First Name',
-						'value'     => $_SESSION['checkout_data']['delivery']['firstname']
+						'value'     => $order->delivery['firstname']
 					),
 					'delivery-lastname' => array( 
 						'type'      => 'input',
 						'label'     => 'Last Name',
-						'value'     => $_SESSION['checkout_data']['delivery']['lastname']
+						'value'     => $order->delivery['lastname']
 					),
 					'delivery-company' => array( 
 						'type'      => 'input',
 						'label'     => 'Company',
-						'value'     => $_SESSION['checkout_data']['delivery']['company']
+						'value'     => $order->delivery['company']
 					),
 					'delivery-street' => array( 
 						'type'      => 'input',
 						'label'     => 'Street Address',
-						'value'     => $_SESSION['checkout_data']['delivery']['street']
+						'value'     => $order->delivery['street']
 					),
 					'delivery-suburb' => array( 
 						'type'      => 'input',
 						'label'     => 'Suburb',
-						'value'     => $_SESSION['checkout_data']['delivery']['suburb']
+						'value'     => $order->delivery['suburb']
 					),
 					'delivery-postcode' => array( 
 						'type'      => 'input',
 						'label'     => 'Postcode',
-						'value'     => $_SESSION['checkout_data']['delivery']['postcode']
+						'value'     => $order->delivery['postcode']
 					),
 					'delivery-state' => array( 
 						'type'      => 'select',
 						'label'     => 'State',
-						'value'     => $_SESSION['checkout_data']['delivery']['state'],
+						'value'     => $order->delivery['state'],
 						'options'   => array( 'Victoria','ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' ),
 						'disabled'  => array( 'ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' )
 					)
@@ -244,7 +246,7 @@
 			<div class="row checkout-field total-amount">
 				<label>Payment amount</label>
 				<div class="options">
-					&dollar;<?php echo number_format( get_cart_total(), 2 ); ?>
+					&dollar;<?php echo number_format( $order->total, 2 ); ?>
 				</div>
 			</div>
 
@@ -304,7 +306,7 @@
 				<div class="row checkout-field">
 					<label>Account name</label>
 					<div class="options">
-						INTEGRATED WEB SERVICES
+						LEETPC
 					</div>
 				</div>
 
@@ -323,9 +325,16 @@
 				</div>
 
 				<div class="row checkout-field">
+					<label>Order #</label>
 					<div class="options">
-						<span class="important"><strong>IMPORTANT!</strong> Remember to use your invoice number as the description for the payment.  Otherwise there may be delays in matching your order to your payment.</span>
-						<br /><br />A copy of these deposit details, including your invoice number, will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).
+						<?php echo $order->ID; ?>
+					</div>
+				</div>
+
+				<div class="row checkout-field">
+					<div class="options">
+						<span class="important"><strong>IMPORTANT!</strong> Remember to use your order number as the description for the payment.  Otherwise there may be delays in matching your order to your payment.</span>
+						<br /><br />A copy of these deposit details, including your invoice/order number, will be sent to your email address (<?php echo $order->user['email']; ?>).
 						<br /><br />Please click 'Pay &amp; Finalise' to place your order.
 					</div>
 				</div>
@@ -340,17 +349,16 @@
 
 			<div class="html-content">
 				<h3><img src="<?php echo get_template_directory_uri(); ?>/img/icons/green-tick.png" width="24"> Checkout complete</h3>
-				<p>Thanks <?php echo $_SESSION['checkout_data']['acct']['firstname']; ?>,</p>
-			<?php if ( $_SESSION['checkout_data']['payment']['method'] == 'cc' ) : ?>
-				<p>Credit card payment of <strong>&dollar;<?php echo number_format( $_SESSION['checkout_data']['payment']['amount'], 2 ); ?></strong> for your order (#<?php echo $_SESSION['checkout_data']['invoice_id']; ?>) was approved.</p>
-				<p>A copy of your invoice will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).</p>
-			<?php elseif ( $_SESSION['checkout_data']['payment']['method'] == 'bank' ) : ?>
-				<p>Please remember to send payment of <strong>&dollar;<?php echo number_format( $_SESSION['checkout_data']['cart']['total'], 2 ); ?></strong> for your order (#<?php echo $_SESSION['checkout_data']['invoice_id']; ?>) as soon as possible.</p>
-				<p>A copy of your invoice, and our bank deposit details will be sent to your email address (<?php echo $_SESSION['checkout_data']['user']['email']; ?>).</p>
+				<p>Thanks <?php echo $order->account['firstname']; ?>,</p>
+			<?php if ( $order->payment['method'] == 'cc' ) : ?>
+				<p>Credit card payment of <strong>&dollar;<?php echo number_format( $order->payment['amount'], 2 ); ?></strong> for your order (#<?php echo $order->ID; ?>) was approved.</p>
+				<p>A copy of your invoice will be sent to your email address (<?php echo $order->user['email']; ?>).</p>
+			<?php elseif ( $order->payment['method'] == 'bank' ) : ?>
+				<p>Please remember to send payment of <strong>&dollar;<?php echo number_format( $order->total, 2 ); ?></strong> for your order (#<?php echo $order->ID; ?>) as soon as possible.</p>
+				<p>A copy of your order number, invoice, and our bank deposit details will be sent to your email address (<?php echo $order->user['email']; ?>).</p>
 			<?php endif;?>
-				<p>The expected delivery date for your order is <strong><?php echo $_SESSION['checkout_data']['delivery']['deliver_on']; ?></strong>.</p>
+				<p>The expected delivery date for your order is <strong><?php echo $order->getDate( 'deliver_on', 'D jS \o\f M' ); ?></strong>.</p>
 				<p>If you have any questions about your order please contact care@leetpc.com.au.</p>
-				<!--<textarea><?php var_export( $_SESSION['checkout_data'] ); ?></textarea>-->
 			</div>
 
 			<?php $next_step_btn_text = 'Complete'; ?>
