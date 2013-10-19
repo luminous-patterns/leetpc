@@ -2,6 +2,33 @@
 
 add_action( 'init',                                     'leetpcstore_log_entry_taxonomy_init' );
 
+function &get_log( $log_entry_id ) {
+	return $GLOBALS['leetpc']->getLogEntry( $log_entry_id );
+}
+
+function get_logs( $args = array() ) {
+
+	$d = array(
+		'posts_per_page'   => -1,
+		'orderby'          => 'ID',
+		'order'            => 'DESC',
+		'post_type'        => 'log_entry',
+		'post_status'      => 'publish',
+		'suppress_filters' => true
+	);
+
+	$posts = get_posts( array_merge( $d, $args ) );
+
+	$log_entries = array();
+
+	foreach ( $posts as $p ) {
+		$log_entries[] = get_log( $p->ID );
+	}
+
+	return $log_entries;
+
+}
+
 function leetpcstore_log_entry_taxonomy_init() {
 
 	register_post_type( 'log_entry',

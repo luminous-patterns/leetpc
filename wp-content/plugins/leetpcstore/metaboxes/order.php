@@ -92,7 +92,80 @@ function order_details_metabox() {
 	<div class="tabs">
 
 		<div class="tab-content details">
-			<h4>Details y'all</h4>
+
+			<div class="form-table-container">
+
+				<h4>Overview</h4>
+
+				<table class="form-table">
+
+					<tr valign="top">
+						<th scope="row"><label>Order #</label></th>
+						<td><?php echo $order->ID; ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Order Status</label></th>
+						<td><?php echo $order->status; ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Order Age</label></th>
+						<td><?php echo $order->getAge(); ?></td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row"><label>Customer</label></th>
+						<td><a href="#"><?php echo $order->account['firstname'] . ' ' . $order->account['lastname']; ?></a></td>
+					</tr>
+
+				</table>
+
+			</div>
+
+			<div class="form-table-container">
+
+				<h4>Timeline</h4>
+
+				<table class="form-table">
+
+					<?php
+
+					$dates = array(
+						'created'             => 'Created',
+						'payment_received'    => 'Payment Received',
+						'stock_picked'        => 'Stock Picked',
+						'ready'               => 'Assembled / Ready',
+						'dispatched'          => 'Dispatched',
+						'delivered'           => 'Delivered'
+					);
+
+					foreach ( $dates as $t => $label ) :
+
+						$date = $order->getDate( $t, LPC_PRETTY_DATETIMES );
+
+						if ( $date && $date != '-' ) : ?>
+
+					<tr valign="top">
+						<th scope="row"><label><?php echo $label; ?></label></th>
+						<td><?php echo $date; ?></td>
+					</tr>
+
+						<?php else: ?>
+
+					<tr valign="top">
+						<th scope="row"><label><?php echo $label; ?></label></th>
+						<td><button class="button set-date-<?php echo $date; ?>">Set <?php echo $label; ?></button></td>
+					</tr>
+
+						<?php break; endif; ?>
+
+					<?php endforeach; ?>
+
+				</table>
+
+			</div>
+
 		</div>
 
 		<div class="tab-content components hidden">
@@ -191,7 +264,7 @@ function order_details_metabox() {
 
 					<tr valign="top">
 						<th scope="row"><label>Date</label></th>
-						<td><?php echo $order->payment['date']; ?></td>
+						<td><?php echo $order->getDate( 'payment_received', 'D jS \o\f F Y \@ H:i:s' ); ?></td>
 					</tr>
 
 					<tr valign="top">

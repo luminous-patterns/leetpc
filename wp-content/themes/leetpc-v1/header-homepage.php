@@ -11,36 +11,7 @@
 			?>
 
 			<div class="featured-product">
-				<div class="inside-container">
-
-					<h2><a href="<?php echo get_permalink( $p->post->ID ); ?>"><?php echo $p->post->post_title; ?></a></h2>
-
-					<div class="components"><?php 
-
-						$com_lines = array(); 
-						foreach( $p->comDefaults as $type => $c ) { 
-							if ( $type == 'case' ) continue;
-							$com_lines[] = '<strong>' . strtoupper( $type ) . '</strong> ' . $c->post_title; 
-						}
-
-						echo implode( '<br />', $com_lines );
-
-					?></div>
-
-					<?php echo get_the_post_thumbnail( $p->post->ID, 'large' ); ?>
-
-					<div class="product-price">
-						<div class="amount">
-							$<?php echo number_format( $p->get( 'price' ) ); ?>
-						</div>
-					</div>
-
-					<div class="actions">
-						<a href="<?php echo get_permalink( $p->post->ID ); ?>" class="button">View info &amp; buy now</a>
-						<a href="/products/?product_type=<?php echo $p->type->slug; ?>" class="button secondary">More <?php echo $p->type->name; ?> PCs</a>
-					</div>
-
-				</div>
+				<div class="inside-container"></div>
 			</div>
 
 			<?php $count = 0; ?>
@@ -72,8 +43,8 @@
 				</div>
 
 				<div class="actions">
-					<a href="<?php echo get_permalink( $p->post->ID ); ?>" class="button">View or purchase PC</a>
 					<a href="/products/?product_type=<?php echo $p->type->slug; ?>" class="button secondary">More <?php echo $p->type->name; ?> PCs</a>
+					<a href="<?php echo get_permalink( $p->post->ID ); ?>" class="button">View or purchase PC</a>
 				</div>
 
 			</div>

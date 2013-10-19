@@ -70,8 +70,8 @@ class leetPcStore {
 
 	private $_couponsCache = array();
 	private $_productsCache = array();
-	private $_invoicesCache = array();
 	private $_ordersCache = array();
+	private $_logEntriesCache = array();
 
 	/**
 	 * Constructor
@@ -130,16 +130,6 @@ class leetPcStore {
 
 		add_action( 'after_setup_theme',                           array( &$this, 'afterSetupTheme' ) );
 
-		/*
-
-		add_action( 'init',                                        array( &$this, 'init' ) );
-		add_action( 'admin_init',                                  array( &$this, 'initAdmin' ) );
-		
-		add_action( 'wp_ajax_METHOD_NAME',                         array( &$this, 'METHOD' ) );
-		add_action( 'wp_ajax_nopriv_METHOD_NAME',                  array( &$this, 'METHOD_NOPRIV' ) );
-
-		*/
-
 	}
 
 	public function afterSetupTheme() {
@@ -175,13 +165,6 @@ class leetPcStore {
 		return $this->_productsCache[$id];
 	}
 
-	public function &getInvoice( $id ) {
-		if ( !array_key_exists( $id, $this->_invoicesCache ) ) {
-			$this->_invoicesCache[$id] = new lpcInvoice( $id );
-		}
-		return $this->_invoicesCache[$id];
-	}
-
 	public function &getOrder( $id ) {
 		if ( !array_key_exists( $id, $this->_ordersCache ) ) {
 			$this->_ordersCache[$id] = new lpcOrder( $id );
@@ -194,6 +177,13 @@ class leetPcStore {
 			$this->_couponsCache[$id] = new lpcCoupon( $id );
 		}
 		return $this->_couponsCache[$id];
+	}
+
+	public function &getLogEntry( $id ) {
+		if ( !array_key_exists( $id, $this->_logEntriesCache ) ) {
+			$this->_logEntriesCache[$id] = new lpcLogEntry( $id );
+		}
+		return $this->_logEntriesCache[$id];
 	}
 
 	public function &createNewOrder() {
@@ -387,7 +377,7 @@ class leetPcStore {
 							$cc_number = preg_replace( '/\D/', '', $submitted['cc-number'] );
 							$pattern = '#^(?:' . implode( '|', array_values( $cards ) ) . ')$#';
 							$valid_cc = preg_match( $pattern, $cc_number );
-							
+
 							if ( !$valid_cc ) {
 								$e['message'] = 'Invalid credit card number';
 								$e['fields'][] = array( 'name' => 'cc-number', 'message' => 'Invalid credit card number' );

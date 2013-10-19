@@ -515,7 +515,7 @@ ul.tick-list li:last-of-type {
     border: 1px solid rgba(255,255,255,0.2);
 }
 .product-sampler .featured-product .inside-container {
-    height: 240px;
+    height: 290px;
 }
 
 .product-sampler .featured-product h1 {
@@ -663,6 +663,9 @@ ul.tick-list li:last-of-type {
 }
 .single-product button {
     margin-left: 10px;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    line-height: 40px;
 }
 .single-product .product-type {
     color: #999;
@@ -678,6 +681,12 @@ ul.tick-list li:last-of-type {
 }
 .single-product .customizing .editor-content {
     display: none;
+}
+.single-product .product-footer {
+    margin-top: 30px;
+}
+.single-product .product-footer button {
+    margin-left: 0;
 }
 /* choose pc */
 .page.choose .wrapper {

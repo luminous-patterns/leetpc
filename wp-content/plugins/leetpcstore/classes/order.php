@@ -59,11 +59,11 @@ class lpcOrder extends lpcCart {
 
 	private $log = array();
 
-	function __construct( $id = null ) {
+	function __construct( $order_id = null ) {
 
-		if ( $id ) {
-			if ( get_post_type( $id ) == 'lpc_order' ) $this->load( $id );
-			else trigger_error( 'Trying to load non-order type as order type', E_USER_ERROR );
+		if ( $order_id ) {
+			if ( get_post_type( $order_id ) == 'lpc_order' ) $this->load( $order_id );
+			else trigger_error( "Invalid order ID: $order_id", E_USER_ERROR );
 		}
 		else $this->create();
 
@@ -93,13 +93,12 @@ class lpcOrder extends lpcCart {
 			$this->$var = json_decode( $m["$var"][0], true );
 		}
 
-		$logs = get_posts( array(
+		$logs = get_logs( array(
 			'posts_per_page'   => 20,
-			'post_type'        => 'log_entry',
 			'meta_key'         => 'order_id',
 			'meta_value'       => $this->ID,
-			'order_by'         => 'ID',
-			'order'            => 'ASC'
+			'orderby'          => 'ID',
+			'order'            => 'DESC',
 		) );
 
 		foreach ( $logs as $log ) $this->appendLogEntry( $log );
@@ -113,8 +112,8 @@ class lpcOrder extends lpcCart {
 		}
 	}
 
-	public function getLog( $order = 'ID_DESC' ) {
-		return $order == 'ID_DESC' ? array_reverse( $this->log ) : $this->log;
+	public function getLog() {
+		return $this->log;
 	}
 
 	protected function create() {
@@ -125,7 +124,6 @@ class lpcOrder extends lpcCart {
 			'post_author'    => 2,
 			'post_title'     => 'NEW ORDER',
 			'post_type'      => 'lpc_order',
-			// 'post_status'    => 'published'
 		);
 
 		$this->ID = wp_insert_post( $i, true );
@@ -187,22 +185,8 @@ class lpcOrder extends lpcCart {
 	}
 
 	protected function appendLogEntry( $log ) {
-
-		$date = new DateTime( $log->post_date_gmt, new DateTimeZone( 'UTC' ) );
-		$date->setTimezone( new DateTimeZone( BOOK_KEEPING_TZ ) );
-
-		$type = wp_get_post_terms( $log->ID, 'log_entry_type' );
-
-		$log_date = $date->format( DateTime::ATOM );
-		$log_note = $log->post_content;
-		$log_extra = array();
-
-		foreach ( get_post_custom( $log->ID ) as $k => $v ) $log_extra[$k] = $v[0];
-
-		$this->log[] = array( $log->ID, array( $date, $log_date ), $type[0]->slug, $type[0]->name, $log_note, $log_extra );
-
+		$this->log[] = $log->toArray();
 		return true;
-
 	}
 
 	protected function importlpcCart( lpcCart $cart ) {
@@ -387,7 +371,7 @@ class lpcOrder extends lpcCart {
 			$period = 9 - $deliver_on->format( 'N' );
 			$deliver_on->add( new DateInterval( 'P' . $period . 'D' ) );
 		}
-		$this->delivery['deliver_on'] = $deliver_on->format( DateTime::ATOM );
+		$this->delivery['deliver_on'] = $deliver_on->format( LPC_LOGENTRY_DATETIMES );
 		return $this->delivery['deliver_on'];
 	}
 
@@ -493,12 +477,53 @@ class lpcOrder extends lpcCart {
 				$date = $this->payment['created_at'];
 				break;
 
+			case 'stock_picked':
+
+				break;
+
+			case 'ready':
+
+				break;
+
+			case 'dispatched':
+
+				break;
+
+			case 'delivered':
+
+				break;
+
 		};
+
+		if ( !$date ) return '-';
 
 		$d = new DateTime( $date, new DateTimeZone( 'UTC' ) );
 		if ( !$utc ) $d->setTimezone( new DateTimeZone( BOOK_KEEPING_TZ ) );
 
-		return $d->format( $f );
+		return $f == 'DateTime_object' ? $d : $d->format( $f );
+
+	}
+
+	public function getAge( $f = 'pretty' ) {
+
+		$created = $this->getDate( 'created', 'DateTime_object' );
+		$today = new DateTime( null, new DateTimeZone( BOOK_KEEPING_TZ ) );
+
+		$interval = $created->diff( $today );
+
+		switch ( $f ) {
+
+			default:
+				$r = $interval->format( $f );
+				break;
+
+			case 'pretty':
+				$r = trim( preg_replace( '/^(0y 0m 0d|0y 0m|0y)/', '', $interval->format( '%yy %mm %dd %hh' ) ) );
+				break;
+
+		}
+
+		return $r;
 
 	}
 

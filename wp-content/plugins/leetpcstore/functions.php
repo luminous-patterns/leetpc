@@ -21,48 +21,10 @@ function lpc_log( $type, $note = '', $meta = array() ) {
 
 	wp_set_post_terms( $log_id, array( $entry_type->term_id ), 'log_entry_type' );
 
-	foreach ( $meta as $k => $v ) {
-		update_post_meta( $log_id, $k, $v );
-	}
+	foreach ( $meta as $k => $v ) update_post_meta( $log_id, $k, $v );
 
-	return get_post( $log_id );
+	return get_log( $log_id );
 
-}
-
-function get_products( $args = array() ) {
-
-	$d = array(
-		'post_type' => 'product',
-		'sort_order' => 'DESC',
-		'sort_column' => 'post_title',
-		'hierarchical' => 1,
-		'exclude' => '',
-		'include' => '',
-		'meta_key' => '',
-		'meta_value' => '',
-		'authors' => '',
-		'child_of' => 0,
-		'parent' => -1,
-		'exclude_tree' => '',
-		'number' => '',
-		'offset' => 0,
-		'post_status' => 'publish'
-	);
-
-	$posts = get_pages( array_merge( $d, $args ) );
-
-	$products = array();
-
-	foreach ( $posts as $p ) {
-		$products[] = get_product( $p->ID );
-	}
-
-	return $products;
-
-}
-
-function &get_product( $product_id ) {
-	return $GLOBALS['leetpc']->getProduct( $product_id );
 }
 
 function &get_invoice( $invoice_id ) {

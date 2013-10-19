@@ -2,6 +2,8 @@
 
 	<?php
 
+	$p = get_product( get_the_ID() );
+
 	$product = get_post_custom();
 
 	$component_ids = explode( ',', $product['components'][0] );
@@ -129,6 +131,12 @@
 
 				</table>
 
+			</div>
+
+			<div class="product-footer">
+				<button class="customize">Customise PC &amp; add to cart</button>
+				<p><a href="/products/?product_type=<?php echo $p->type->slug; ?>" class="button secondary">View more <?php echo $p->type->name; ?> PCs</a></p>
+				<p><a href="<?php echo home_url(); ?>">Return to the home page</a></p>
 			</div>
 			
 			<?php edit_post_link(); ?>

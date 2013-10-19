@@ -12,5 +12,5 @@ require_once( 'classes/coupon.php' );
 /* Product class */
 require_once( 'classes/product.php' );
 
-/* Invoice class */
-require_once( 'classes/invoice.php' );
+/* Log Entry class */
+require_once( 'classes/log_entry.php' );

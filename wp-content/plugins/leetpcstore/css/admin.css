@@ -282,6 +282,7 @@ table.lpc-order-history ul strong {
     text-transform: uppercase;
     padding: 0 15px 0 0;
     line-height: 30px;
+    text-align: right;
 }
 #order_details_metabox .form-table-container {
     margin-top: 20px;
