@@ -77,55 +77,57 @@
 					</tr>
 
 					<tr>
-						<th>Motherboard</th>
-						<td><?php echo $defaults['motherboard']->post_title; ?></td>
-					</tr>
-
-					<tr>
 						<th>Memory (RAM)</th>
 						<td>
 							<?php echo $defaults['ram']->post_title; ?>
-							<!-- <a href="#">upgrade/downgrade</a> -->
 						</td>
 					</tr>
+
+				<?php if ( array_key_exists( 'videocard', $defaults ) ) : ?>
+					<tr>
+						<th>Video (GFX)</th>
+						<td>
+							<?php echo $defaults['videocard']->post_title; ?>
+						</td>
+					</tr>
+				<?php endif; ?>
 
 					<tr>
 						<th>Primary HDD</th>
 						<td>
 							<?php echo $defaults['hdd']->post_title; ?>
-							<!-- <a href="#">upgrade/downgrade</a> -->
 						</td>
 					</tr>
 
+				<?php if ( array_key_exists( 'wifi', $defaults ) ) : ?>
 					<tr>
-						<th>Video (GFX)</th>
+						<th>WIFI</th>
 						<td>
-							<?php echo $defaults['videocard']->post_title; ?>
-							<!-- <a href="#">upgrade/downgrade</a> -->
+							<?php echo $defaults['wifi']->post_title; ?>
 						</td>
 					</tr>
+				<?php endif; ?>
 
 					<tr>
 						<th>Optical</th>
 						<td>
 							<?php echo $defaults['optical']->post_title; ?>
-							<!-- <a href="#">upgrade</a> -->
 						</td>
 					</tr>
 
+				<?php if ( array_key_exists( 'sound', $defaults ) ) : ?>
 					<tr>
 						<th>Sound</th>
 						<td>
-							Realtek® ALC892 8-Channel HD Audio
-							<!-- <a href="#">upgrade</a> -->
+							<?php echo $defaults['sound']->post_title; ?>
 						</td>
 					</tr>
+				<?php endif; ?>
 
 					<tr>
 						<th>Operating System</th>
 						<td>
 							<?php echo $defaults['os']->post_title; ?>
-							<!-- <a href="#">upgrade/downgrade</a> -->
 						</td>
 					</tr>
 
@@ -134,7 +136,7 @@
 			</div>
 
 			<div class="product-footer">
-				<button class="customize">Customise PC &amp; add to cart</button>
+				<p><button class="customize">Customise PC &amp; add to cart</button></p>
 				<p><a href="/products/?product_type=<?php echo $p->type->slug; ?>" class="button secondary">View more <?php echo $p->type->name; ?> PCs</a></p>
 				<p><a href="<?php echo home_url(); ?>">Return to the home page</a></p>
 			</div>

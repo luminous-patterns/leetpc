@@ -661,7 +661,7 @@ ul.tick-list li:last-of-type {
     top: 30px;
     width: 200px;
 }
-.single-product button {
+.single-product .wrapper button {
     margin-left: 10px;
     font-size: 1.2em;
     text-transform: uppercase;
@@ -683,10 +683,13 @@ ul.tick-list li:last-of-type {
     display: none;
 }
 .single-product .product-footer {
-    margin-top: 30px;
+    margin-top: 50px;
 }
 .single-product .product-footer button {
     margin-left: 0;
+}
+.single-product .product-footer p {
+    margin-bottom: 30px;
 }
 /* choose pc */
 .page.choose .wrapper {

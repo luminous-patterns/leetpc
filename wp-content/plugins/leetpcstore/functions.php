@@ -27,10 +27,6 @@ function lpc_log( $type, $note = '', $meta = array() ) {
 
 }
 
-function &get_invoice( $invoice_id ) {
-	return $GLOBALS['leetpc']->getInvoice( $invoice_id );
-}
-
 function &get_coupon( $coupon_id ) {
 	return $GLOBALS['leetpc']->getCoupon( $coupon_id );
 }

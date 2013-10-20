@@ -68,6 +68,10 @@ class leetPcStore {
 	 */
 	private $_path;
 
+	/**
+	 * Object cache
+	 * @var string
+	 */
 	private $_couponsCache = array();
 	private $_productsCache = array();
 	private $_ordersCache = array();

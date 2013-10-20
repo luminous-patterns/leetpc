@@ -143,7 +143,7 @@ table.lpc-order-history tbody td, table.lpc-order-history tbody th {
     border-bottom: 1px solid #ddd;
 }
 table.lpc-order-history tbody tr:nth-of-type(even) td, table.lpc-order-history tbody tr:nth-of-type(even) th {
-    background-color: #fefefe;
+    background-color: #ddd;
 }
 table.lpc-order-history tbody tr th {
     width: 30px;
