@@ -12,7 +12,7 @@ Copyright 2013 Cal Milne
 session_start();
 
 /* Live payments enabled */
-define( 'LIVE_PAYMENTS',               false );
+define( 'LIVE_PAYMENTS',               true );
 
 /* Book keeping time zone */
 define( 'BOOK_KEEPING_TZ',             'Australia/Melbourne' );

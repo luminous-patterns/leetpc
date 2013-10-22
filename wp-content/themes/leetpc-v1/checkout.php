@@ -321,14 +321,14 @@
 				<div class="row checkout-field">
 					<label>BSB</label>
 					<div class="options">
-						033-349
+						033127
 					</div>
 				</div>
 
 				<div class="row checkout-field">
 					<label>Account #</label>
 					<div class="options">
-						383009
+						400598
 					</div>
 				</div>
 
@@ -387,7 +387,7 @@
 			<input type="hidden" name="current_step" value="<?php echo intval( $step ); ?>" />
 			<?php if ( !$last_step ) : ?><a href="#" class="close-modal">Cancel</a><?php endif; ?>
 			<?php if ( $step != '1' && $can_go_back ) : ?><button class="secondary previous-step">&#9664;</button><?php endif; ?>
-			<button class="<?php echo $last_step ? 'close-modal' : 'next-step'; ?>"><?php echo $next_step_btn_text; ?></button>
+			<button class="<?php echo $last_step ? 'finish-checkout' : 'next-step'; ?>"><?php echo $next_step_btn_text; ?></button>
 		</div>
 
 	</div>

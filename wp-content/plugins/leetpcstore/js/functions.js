@@ -327,6 +327,7 @@ var LEETPCStore = {
 
 		this.currentModalEl = jQuery( r );
 
+		this.currentModalEl.find( '.finish-checkout' ).bind( 'click', jQuery.proxy( this.finishCheckout, this ) );
 		this.currentModalEl.find( '.close-modal' ).bind( 'click', jQuery.proxy( this.closeModal, this ) );
 		this.currentModalEl.find( '.previous-step' ).bind( 'click', jQuery.proxy( this.onClickPrevStep, this ) );
 		this.currentModalEl.find( '.next-step' ).bind( 'click', jQuery.proxy( this.onClickNextStep, this ) );
@@ -466,6 +467,10 @@ var LEETPCStore = {
 
 		this.addToCart( product_id, component_ids );
 
+	},
+
+	finishCheckout: function( e ) {
+		window.location = 'https://www.leetpc.com.au/';
 	},
 
 	closeModal: function( e ) {
