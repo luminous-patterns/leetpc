@@ -21,7 +21,14 @@ function lpc_log( $type, $note = '', $meta = array() ) {
 
 	wp_set_post_terms( $log_id, array( $entry_type->term_id ), 'log_entry_type' );
 
-	$meta = array_merge( $meta, array( 'ip_address' => $_SERVER['REMOTE_ADDR'] ) );
+	$always_log = array(
+		'ip_address' => $_SERVER['REMOTE_ADDR'],
+		'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+		'session_id' => session_id(),
+		'user_id'    => get_current_user_id()
+	);
+
+	$meta = array_merge( $meta, $always_log );
 
 	foreach ( $meta as $k => $v ) update_post_meta( $log_id, $k, $v );
 

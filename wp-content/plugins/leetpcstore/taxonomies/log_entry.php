@@ -1,6 +1,16 @@
 <?php
 
 add_action( 'init',                                     'leetpcstore_log_entry_taxonomy_init' );
+add_filter( 'manage_log_entry_posts_columns',           'leetpcstore_log_entry_columns_filter' );
+add_action( 'manage_log_entry_posts_custom_column',     'leetpcstore_log_entry_columns_action', 20, 2 );
+add_filter( 'pre_get_posts',                            'log_entry_get_posts' );
+
+function log_entry_get_posts( $query ) {
+	if ( get_post_type( get_the_ID() ) == 'log_entry' ) { 
+		$query->set( 'orderby', 'ID' );
+		$query->set( 'order', 'DESC' );
+	}
+}
 
 function &get_log( $log_entry_id ) {
 	return $GLOBALS['leetpc']->getLogEntry( $log_entry_id );
@@ -26,6 +36,65 @@ function get_logs( $args = array() ) {
 	}
 
 	return $log_entries;
+
+}
+
+function leetpcstore_log_entry_columns_filter( $columns ) {
+
+	unset( $columns['title'], $columns['date'], $columns['comments'] );
+
+	$new_columns = array(
+		'log_entry_id'             => 'ID',
+		'log_entry_date'           => 'Date',
+		'log_entry_ip'             => 'IP address',
+		'log_entry_session_id'     => 'Session ID',
+		'log_entry_type'           => 'Entry type',
+		'log_entry_meta'           => 'Meta data'
+	);
+
+    return array_merge( $columns, $new_columns );
+
+}
+
+function leetpcstore_log_entry_columns_action( $column, $post_id ) {
+
+	$l = get_log( $post_id );
+
+    switch ( $column ) {
+
+    	case 'log_entry_id':
+    		echo '<a href="' . get_edit_post_link( $post_id ) . '">' . $post_id . '</a>';
+    		break;
+
+    	case 'log_entry_session_id':
+    		echo '<a href="edit.php?post_type=log_entry&meta_key=session_id&meta_value=' . $l->get( 'session_id' ) . '">' . $l->get( 'session_id' ) . '</a>';
+    		break;
+
+    	case 'log_entry_date':
+    		echo $l->getDate( 'Y-m-d H:i:s' );
+    		break;
+
+    	case 'log_entry_ip':
+    		$rgba_vals = explode( '.', $l->get( 'ip_address' ) );
+    		array_pop( $rgba_vals );
+    		echo '<span style="background-color: rgba(' . implode( ',', $rgba_vals  ) . ',0.3);">' . ( $l->get( 'ip_address' ) ? $l->get( 'ip_address' ) : '-' ) . '</span>';
+    		break;
+
+    	case 'log_entry_type':
+    		echo '<a href="edit.php?post_type=log_entry&log_entry_type=' . $l->getTypeID() . '">' . $l->getTypeName() . '</a>';
+    		break;
+
+    	case 'log_entry_meta':
+    		$ignore_fields = array( 'ip_address', 'session_id', 'extra', 'data', '_edit_lock', 'component_ids', 'user_agent', 'request_data' );
+    		$field_rows = array();
+    		foreach ( $l->extra as $k => $v ) {
+    			if ( in_array( $k, $ignore_fields ) ) continue;
+    			$field_rows[] = "<strong>$k:</strong> $v";
+    		}
+    		echo implode( '<br />', $field_rows );
+    		break;
+
+    }
 
 }
 

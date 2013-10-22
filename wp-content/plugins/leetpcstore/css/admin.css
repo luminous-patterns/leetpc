@@ -336,3 +336,21 @@ table.lpc-order-history ul strong {
     background-image: linear-gradient(to top,#6d6d6d,#808080);
     border-left: 1px solid #555;
 }
+.column-log_entry_id {
+    width: 60px;
+}
+.column-log_entry_date {
+    width: 120px;
+}
+.column-log_entry_session_id {
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.column-log_entry_ip {
+    width: 100px;
+}
+.column-log_entry_type {
+    width: 150px;
+}
