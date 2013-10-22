@@ -58,42 +58,50 @@
 			$fields = array(
 				'acct-firstname' => array( 
 					'type'      => 'input',
-					'label'     => 'First Name',
+					'label'     => 'First name',
+					'class'     => 'wide',
 					'value'     => $order->account['firstname']
 				),
 				'acct-lastname' => array( 
 					'type'      => 'input',
-					'label'     => 'Last Name',
+					'label'     => 'Last name',
+					'class'     => 'wide',
 					'value'     => $order->account['lastname']
 				),
 				'acct-company' => array( 
 					'type'      => 'input',
 					'label'     => 'Company',
+					'class'     => 'wide',
 					'value'     => $order->account['company']
 				),
 				'acct-phone' => array( 
 					'type'      => 'input',
-					'label'     => 'Phone',
+					'label'     => 'Phone number',
+					'class'     => 'wide',
 					'value'     => $order->account['phone']
 				),
 				'acct-street' => array( 
 					'type'      => 'input',
-					'label'     => 'Street Address',
+					'label'     => 'Street address',
+					'class'     => 'wide',
 					'value'     => $order->account['street']
 				),
 				'acct-suburb' => array( 
 					'type'      => 'input',
 					'label'     => 'Suburb',
+					'class'     => 'wide',
 					'value'     => $order->account['suburb']
 				),
 				'acct-postcode' => array( 
 					'type'      => 'input',
 					'label'     => 'Postcode',
+					'class'     => 'slim',
 					'value'     => $order->account['postcode']
 				),
 				'acct-state' => array( 
 					'type'      => 'select',
 					'label'     => 'State',
+					'class'     => '',
 					'value'     => $order->account['state'],
 					'options'   => array( 'Victoria','ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' ),
 					'disabled'  => array( 'ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' )
@@ -109,7 +117,7 @@
 				<?php switch ( $f['type'] ) { 
 
 				case 'input' : ?>
-				<input type="text" name="<?php echo $k; ?>" value="<?php echo $f['value']; ?>" class="wide" />
+				<input type="text" name="<?php echo $k; ?>" value="<?php echo $f['value']; ?>" class="<?php echo $f['class']; ?>" />
 					<?php break; ?>
 
 				<?php case 'select' : ?>
@@ -160,37 +168,44 @@
 				$fields = array(
 					'delivery-firstname' => array( 
 						'type'      => 'input',
-						'label'     => 'First Name',
+						'label'     => 'First name',
+						'class'     => 'wide',
 						'value'     => $order->delivery['firstname']
 					),
 					'delivery-lastname' => array( 
 						'type'      => 'input',
-						'label'     => 'Last Name',
+						'label'     => 'Last name',
+						'class'     => 'wide',
 						'value'     => $order->delivery['lastname']
 					),
 					'delivery-company' => array( 
 						'type'      => 'input',
 						'label'     => 'Company',
+						'class'     => 'wide',
 						'value'     => $order->delivery['company']
 					),
 					'delivery-street' => array( 
 						'type'      => 'input',
-						'label'     => 'Street Address',
+						'label'     => 'Street address',
+						'class'     => 'wide',
 						'value'     => $order->delivery['street']
 					),
 					'delivery-suburb' => array( 
 						'type'      => 'input',
 						'label'     => 'Suburb',
+						'class'     => 'wide',
 						'value'     => $order->delivery['suburb']
 					),
 					'delivery-postcode' => array( 
 						'type'      => 'input',
 						'label'     => 'Postcode',
+						'class'     => 'slim',
 						'value'     => $order->delivery['postcode']
 					),
 					'delivery-state' => array( 
 						'type'      => 'select',
 						'label'     => 'State',
+						'class'     => '',
 						'value'     => $order->delivery['state'],
 						'options'   => array( 'Victoria','ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' ),
 						'disabled'  => array( 'ACT','New South Wales','Northern Territory','Queensland','Tasmania','Western Australia' )
@@ -206,7 +221,7 @@
 					<?php switch ( $f['type'] ) { 
 
 					case 'input' : ?>
-					<input type="text" name="<?php echo $k; ?>" value="<?php echo $f['value']; ?>" class="wide" />
+					<input type="text" name="<?php echo $k; ?>" value="<?php echo $f['value']; ?>" class="<?php echo $f['class']; ?>" />
 						<?php break; ?>
 
 					<?php case 'select' : ?>
@@ -240,13 +255,6 @@
 				<div class="options">
 					<label><input type="radio" name="payment-method" value="cc" checked="checked" /> VISA / MasterCard</label>
 					<label><input type="radio" name="payment-method" value="bank" /> Bank deposit</label>
-				</div>
-			</div>
-
-			<div class="row checkout-field total-amount">
-				<label>Payment amount</label>
-				<div class="options">
-					&dollar;<?php echo number_format( $order->total, 2 ); ?>
 				</div>
 			</div>
 
@@ -325,7 +333,7 @@
 				</div>
 
 				<div class="row checkout-field">
-					<label>Order #</label>
+					<label>Payment description</label>
 					<div class="options">
 						<?php echo $order->ID; ?>
 					</div>
@@ -333,12 +341,19 @@
 
 				<div class="row checkout-field">
 					<div class="options">
-						<span class="important"><strong>IMPORTANT!</strong> Remember to use your order number as the description for the payment.  Otherwise there may be delays in matching your order to your payment.</span>
+						<span class="important"><strong>IMPORTANT!</strong> Remember to use your order number as the payment note / description.  Otherwise there may be delays in matching your order to your payment.</span>
 						<br /><br />A copy of these deposit details, including your invoice/order number, will be sent to your email address (<?php echo $order->user['email']; ?>).
 						<br /><br />Please click 'Pay &amp; Finalise' to place your order.
 					</div>
 				</div>
 
+			</div>
+
+			<div class="row checkout-field total-amount">
+				<label>Payment amount</label>
+				<div class="options">
+					&dollar;<?php echo number_format( $order->total, 2 ); ?>
+				</div>
 			</div>
 
 			<?php $next_step_btn_text = 'Pay &amp; Finalise'; ?>
@@ -352,10 +367,10 @@
 				<p>Thanks <?php echo $order->account['firstname']; ?>,</p>
 			<?php if ( $order->payment['method'] == 'cc' ) : ?>
 				<p>Credit card payment of <strong>&dollar;<?php echo number_format( $order->payment['amount'], 2 ); ?></strong> for your order (#<?php echo $order->ID; ?>) was approved.</p>
-				<p>A copy of your invoice will be sent to your email address (<?php echo $order->user['email']; ?>).</p>
+				<p>In the next few minutes, a copy of your payment receipt and order confirmation will be sent to your email address (<?php echo $order->user['email']; ?>).</p>
 			<?php elseif ( $order->payment['method'] == 'bank' ) : ?>
 				<p>Please remember to send payment of <strong>&dollar;<?php echo number_format( $order->total, 2 ); ?></strong> for your order (#<?php echo $order->ID; ?>) as soon as possible.</p>
-				<p>A copy of your order number, invoice, and our bank deposit details will be sent to your email address (<?php echo $order->user['email']; ?>).</p>
+				<p>In the next few minutes, a copy of your order confirmation and a payment request, including our bank deposit details will be sent to your email address (<?php echo $order->user['email']; ?>).</p>
 			<?php endif;?>
 				<p>The expected delivery date for your order is <strong><?php echo $order->getDate( 'deliver_on', 'D jS \o\f M' ); ?></strong>.</p>
 				<p>If you have any questions about your order please contact care@leetpc.com.au.</p>

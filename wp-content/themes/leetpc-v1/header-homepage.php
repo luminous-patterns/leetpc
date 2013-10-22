@@ -24,9 +24,11 @@
 
 				<div class="components"><?php 
 
+					$types = array( 'cpu', 'ram', 'videocard', 'hdd', 'wifi', 'optical', 'os' );
 					$com_lines = array(); 
-					foreach( $p->comDefaults as $type => $c ) { 
-						if ( $type == 'case' ) continue;
+					foreach( $types as $type ) {
+						if ( !array_key_exists( $type, $p->comDefaults ) ) continue;
+						$c = $p->comDefaults[$type];
 						$com_lines[] = '<strong>' . strtoupper( $type ) . '</strong> ' . $c->post_title; 
 					}
 

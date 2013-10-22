@@ -515,7 +515,7 @@ ul.tick-list li:last-of-type {
     border: 1px solid rgba(255,255,255,0.2);
 }
 .product-sampler .featured-product .inside-container {
-    height: 290px;
+    height: 260px;
 }
 
 .product-sampler .featured-product h1 {
@@ -583,6 +583,7 @@ ul.tick-list li:last-of-type {
     width: 430px;
     font-family: roboto;
     font-size: 1em;
+    height: 10.5em;
 }
 .product-sampler .featured-product .components strong {
     font-size: 0.9em;

@@ -97,10 +97,9 @@
 	    		
 		<div class="sidebar-widget product-type-filter">
 			<ul>
-				<li class="<?php if ( !$_GET['product_type'] ) echo 'current'; ?>"><a href="/products/">All Products (6)</a></li>
+				<li class="<?php if ( !$_GET['product_type'] ) echo 'current'; ?>"><a href="/products/">All Products (5)</a></li>
 				<li class="<?php if ( $_GET['product_type'] == 'home-and-student' ) echo 'current'; ?>"><a href="/products/?product_type=home-and-student">Home &amp; Student PCs (2)</a></li>
 				<li class="<?php if ( $_GET['product_type'] == 'professional' ) echo 'current'; ?>"><a href="/products/?product_type=professional">Professional PCs (1)</a></li>
-				<li class="<?php if ( $_GET['product_type'] == 'enterprise' ) echo 'current'; ?>"><a href="/products/?product_type=enterprise">Enterprise PCs (1)</a></li>
 				<li class="<?php if ( $_GET['product_type'] == 'gaming-and-multimedia' ) echo 'current'; ?>"><a href="/products/?product_type=gaming-and-multimedia">Gaming &amp; Multimedia PCs (2)</a></li>
 			</ul>
 		</div>

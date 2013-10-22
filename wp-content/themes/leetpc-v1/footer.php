@@ -11,8 +11,7 @@
 			
 			<p class="copyright">
 				Copyright &copy; <?php echo date("Y"); ?>
-				<br />LEETPC
-				<br />ABN 62 842 988 455
+				<br /><strong>LEETPC</strong> ABN 62 842 988 455
 				<br />4 Holyrood Dr Vermont VIC 3133
 			</p>
 			
