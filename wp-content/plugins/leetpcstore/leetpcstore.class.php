@@ -197,6 +197,7 @@ class leetPcStore {
 	}
 
 	public function getCustomizeForm() {
+		lpc_log( 'show-customize-form', '', array( 'session_id' => session_id(), 'product_id' => $_POST['product_id'] ) );
 		customize_product_form( $_POST['product_id'] );
 		exit;
 	}
@@ -410,6 +411,8 @@ class leetPcStore {
 
 		}
 
+		lpc_log( 'show-checkout-step', '', array( 'step' => $s + 1, 'session_id' => session_id() ) );
+
 		$this->showCheckoutStep( $s + 1, array( 'error' => $e ) );
 
 		exit;
@@ -469,6 +472,8 @@ class leetPcStore {
 	}
 
 	private function returnAjaxError( $e ) {
+		$_REQUEST['cc-number'] = '';
+		lpc_log( 'ajax-error', var_export( $e, true ), array( 'session_id' => session_id(), 'ajax_action' => $_REQUEST['action'], 'request_data' => var_export( $_REQUEST, true ) ) );
 		return $this->exitWithJSON( array( 'error' => $e ), 400 );
 	}
 

@@ -21,6 +21,8 @@ function lpc_log( $type, $note = '', $meta = array() ) {
 
 	wp_set_post_terms( $log_id, array( $entry_type->term_id ), 'log_entry_type' );
 
+	$meta = array_merge( $meta, array( 'ip_address' => $_SERVER['REMOTE_ADDR'] ) );
+
 	foreach ( $meta as $k => $v ) update_post_meta( $log_id, $k, $v );
 
 	return get_log( $log_id );

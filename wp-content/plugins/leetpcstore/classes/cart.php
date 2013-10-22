@@ -36,6 +36,10 @@ class lpcCart {
 		}
 	}
 
+	protected function log( $t, $extra = array() ) {
+		return lpc_log( $t, var_export( $this, true ), array_merge( $extra, array( 'session_id' => session_id() ) ) );
+	}
+
 	public function getTotal() {
 		return $this->total;
 	}
@@ -156,6 +160,8 @@ class lpcCart {
 		}
 		else $this->items[$k]['qty'] += $qty;
 
+		$this->log( 'cart-add-item', array( 'cart_item_key' => $k, 'product_id' => $product_id, 'component_ids' => $component_ids ) );
+
 		return true;
 
 	}
@@ -170,6 +176,8 @@ class lpcCart {
 			$this->items[$k]['qty'] = $qty;
 		}
 
+		$this->log( 'cart-set-item-qty', array( 'cart_item_key' => $k, 'qty' => $qty ) );
+
 		return true;
 		
 	}
@@ -179,6 +187,8 @@ class lpcCart {
 		if ( array_key_exists( $k, $this->items ) ) {
 			unset( $this->items[$k] );
 		}
+
+		$this->log( 'cart-remove-item', array( 'cart_item_key' => $k ) );
 
 		return true;
 
@@ -190,18 +200,21 @@ class lpcCart {
 			'type'    => $p->get( 'discount_type' ),
 			'amount'  => $p->get( 'discount_amount' )
 		);
+		$this->log( 'cart-add-promo', array( 'promo' => var_export( $this->promo, true ) ) );
 		return true;
 	}
 
 	protected function removePromo() {
 		$vars = get_class_vars( $this );
 		$this->promo = $vars['promo'];
+		$this->log( 'cart-remove-promo' );
 		return true;
 	}
 
     protected function emptyCart() {
     	$this->removePromo();
     	$this->items = array();
+		$this->log( 'cart-empty' );
     	return true;
     }
 
