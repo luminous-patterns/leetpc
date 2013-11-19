@@ -1,10 +1,10 @@
 LEETPC WordPress Source
 ======
 
-Beware
+Oooh shiney....
 ------
 
-This repo contains the code (wordpress plugins and themes) that power LEETPC.  Use your access wisely.
+This repo contains the code (wordpress plugins and themes) that power LEETPC.com.au.  I have made this repo public for strange reasons including to impress potential employers.
 
 Useful links
 ------
