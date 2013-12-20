@@ -44,12 +44,14 @@
 
 				<div class="components"><?php 
 
-					$types = array( 'cpu', 'ram', 'videocard', 'hdd', 'wifi', 'optical', 'os' );
+					$types = array( 'cpu', 'ram', 'videocard', 'hdd', 'wifi', 'optical', 'os', 'service' );
 					$com_lines = array(); 
 					foreach( $types as $type ) {
 						if ( !array_key_exists( $type, $p->comDefaults ) ) continue;
 						$c = $p->comDefaults[$type];
-						$com_lines[] = '<strong>' . strtoupper( $type ) . '</strong> ' . $c->post_title; 
+						$label = $type;
+						if ( $type == 'service' ) $label = 'warranty';
+						$com_lines[] = '<strong>' . strtoupper( $label ) . '</strong> ' . $c->post_title; 
 					}
 
 					echo implode( '<br />', $com_lines );

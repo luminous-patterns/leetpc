@@ -131,6 +131,15 @@
 						</td>
 					</tr>
 
+				<?php if ( array_key_exists( 'service', $defaults ) ) : ?>
+					<tr>
+						<th>Warranty</th>
+						<td>
+							<?php echo $defaults['service']->post_title; ?>
+						</td>
+					</tr>
+				<?php endif; ?>
+
 				</table>
 
 			</div>
