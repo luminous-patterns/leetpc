@@ -85,6 +85,14 @@ class lpcProduct {
 		return $this->meta[$k][0];
 	}
 
+	public function getType() {
+		return $this->type;
+	}
+
+	public function getTypeName() {
+		return $this->type->name;
+	}
+
 	public function printComponentOptions( $type ) {
 		return print_component_options( $type, $this->components, $this->comDefaults, $this->comAttrs );
 	}
