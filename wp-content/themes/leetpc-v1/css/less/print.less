@@ -1,0 +1,132 @@
+@media print {
+    * {
+        background:transparent !important;
+        color:#000 !important;
+        box-shadow:none !important;
+        text-shadow:none !important;
+    }
+    a,
+    a:visited {
+        text-decoration:underline;
+    }
+    a[href]:after {
+        content:" (" attr(href) ")";
+    }
+    abbr[title]:after {
+        content:" (" attr(title) ")";
+    }
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content:"";
+    }
+    pre,blockquote {
+        border:1px solid #999;
+        page-break-inside:avoid;
+    }
+    thead {
+        display:table-header-group;
+    }
+    tr,img {
+        page-break-inside:avoid;
+    }
+    img {
+        max-width:100% !important;
+    }
+    @page {
+        margin:0.5cm;
+    }
+    p,
+    h2,
+    h3 {
+        orphans:3;
+        widows:3;
+    }
+    header {
+        display: none;
+    }
+    footer {
+        display: none;
+    }
+
+    .wrapper {
+        padding: 5%;
+        width: auto;
+        margin: 0;
+        max-width: none;
+    }
+
+    .nav {
+        display: none;
+    }
+    table.line-items th {
+        background: #111 !important;
+        color: #fff !important;
+    }
+
+}
+
+.print-view {
+    background: #fff;
+}
+.print-view * {
+    background:transparent !important;
+    color:#000 !important;
+    box-shadow:none !important;
+    text-shadow:none !important;
+}
+.print-view a,
+.print-view a:visited {
+    text-decoration:underline;
+}
+.print-view a[href]:after {
+    content:" (" attr(href) ")";
+}
+.print-view abbr[title]:after {
+    content:" (" attr(title) ")";
+}
+.print-view .ir a:after,
+.print-view a[href^="javascript:"]:after,
+.print-view a[href^="#"]:after {
+    content:"";
+}
+.print-view pre, .print-view blockquote {
+    border:1px solid #999;
+    page-break-inside:avoid;
+}
+.print-view thead {
+    display:table-header-group;
+}
+.print-view tr,.print-view img {
+    page-break-inside:avoid;
+}
+.print-view img {
+    max-width:100% !important;
+}
+.print-view p,
+.print-view h2,
+.print-view h3 {
+    orphans:3;
+    widows:3;
+}
+.print-view header {
+    display: none;
+}
+.print-view footer {
+    display: none;
+}
+
+.print-view .wrapper {
+    padding: 5%;
+    width: auto;
+    margin: 0;
+    max-width: none;
+}
+
+.print-view .nav {
+    display: none;
+}
+.print-view table.line-items th {
+    background: #111 !important;
+    color: #fff !important;
+}

@@ -1,0 +1,63 @@
+.wrapper {
+
+    max-width:1280px;
+    width: 900px;
+    margin:0 auto;
+    position:relative;
+    background: #eee url('../img/wrapper-bg-head.png') repeat-x top;
+    display: block;
+    min-height: 600px;
+    padding: 30px 240px 100px 30px;
+
+    .editor-content {
+        font-family: roboto;
+        line-height: 1.6em;
+        color: #777;
+    }
+    button.sidebar-toggle-container {
+
+        display: none;
+        padding: 0;
+        height: 24px;
+        width: 28px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+
+        .toggle-sidebar {
+            background: url('../img/menu-dark.svg');
+            background-position: 4px 2px;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        .toggle-sidebar.layer-2 {
+            background-image: url('../img/menu.svg');
+            background-position: 5px 3px;
+            opacity: 0.9;
+            z-index: 1;
+        }
+
+    }
+    button.sidebar-toggle-container.secondary {
+
+        .toggle-sidebar {
+            opacity: 0.8;
+            z-index: 1;
+            background-position: 5px 3px;
+        }
+        .toggle-sidebar.layer-2 {
+            opacity: 0.4;
+            z-index: 0;
+            background-position: 6px 4px;
+        }
+
+    }
+
+}

@@ -172,6 +172,8 @@ function html5blank_header_scripts() {
 function html5blank_styles() {
     wp_register_style( 'normalize', get_template_directory_uri() . '/normalize.css', array(), '1.0', 'all' );
     wp_enqueue_style( 'normalize' );
+    wp_register_style( 'leetpcv1main', get_template_directory_uri() . '/css/main.css', array(), '1.0', 'all' );
+    wp_enqueue_style( 'leetpcv1main' );
     wp_register_style( 'html5blank', get_template_directory_uri() . '/style.css', array(), '1.0', 'all' );
     wp_enqueue_style( 'html5blank' );
     wp_register_style( 'iwacontactlpc', get_template_directory_uri() . '/css/iwacontact.css', array(), '1.0', 'all' );
