@@ -1,5 +1,5 @@
-<?php get_header(); $post = get_post(); ?>
-
+<?php /* Template Name: Service and repair Page */ get_header(); ?>
+	
 	<button class="sidebar-toggle-container secondary"><div class="toggle-sidebar layer-1"></div><div class="toggle-sidebar layer-2"></div></button>
 	
 	<!-- section -->
@@ -9,16 +9,15 @@
 	
 		<!-- article -->
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<div class="editor-content">
 
+			<div class="editor-content">
+		
 				<?php the_content(); ?>
 
 			</div>
-			
+						
 		</article>
 		<!-- /article -->
-			
-		<?php edit_post_link(); ?>
 		
 	<?php endwhile; ?>
 	
@@ -44,11 +43,19 @@
 			<ul>
 				<li><a href="/">LEETPC Home</a></li>
 				<li><a href="/products/">Products</a></li>
-				<li><a href="/service-and-repair/">Service and repair</a></li>
-				<li <?php if ( $post->post_name == 'why-us' ) echo 'class="current"'; ?>><a href="/why-us/">Why choose us</a></li>
+				<li class="current"><a href="/service-and-repair/">Service and repair</a></li>
+				<li><a href="/why-us/">Why choose us</a></li>
 				<li><a href="/contact-us/">Contact us</a></li>
 				<li><a href="/my-cart/">My shopping cart</a></li>
 			</ul>
+		</div>
+	    		
+		<div class="sidebar-widget">
+			<h3>Contact us now!</h3>
+			<p>
+				<strong>PC Service &amp; Repair</strong>
+				<br />0400 935 853
+			</p>
 		</div>
 			
 	</aside>

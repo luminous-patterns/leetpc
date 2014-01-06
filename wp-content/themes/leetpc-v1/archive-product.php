@@ -35,7 +35,7 @@
 				
 				<!-- post title -->
 				<h2>
-					<a href="<?php the_permalink(); ?>" title="<?php echo get_the_title() . ' ' . $p->type->name; ?> PC"><?php the_title(); ?></a>
+					<a href="<?php the_permalink(); ?>?utm_content=listitemtitle" title="<?php echo get_the_title() . ' ' . $p->type->name; ?> PC"><?php the_title(); ?></a>
 				</h2>
 				<!-- /post title -->
 
@@ -43,7 +43,7 @@
 
 				<div class="components"><?php 
 
-					$types = array( 'cpu', 'ram', 'videocard', 'hdd', 'wifi', 'optical', 'os', 'service' );
+					$types = array( 'cpu', 'ram', 'videocard', 'hdd', 'wifi', 'optical', 'os', 'service', 'display' );
 					$com_lines = array(); 
 					foreach( $types as $type ) {
 						if ( !array_key_exists( $type, $p->comDefaults ) ) continue;
@@ -65,7 +65,7 @@
 				
 				<div class="actions">
 					<button class="customize">Add to cart</button>
-					<a href="<?php echo get_permalink(); ?>" title="<?php echo get_the_title() . ' ' . $p->type->name; ?> PC">Product information</a>
+					<a href="<?php echo get_permalink(); ?>?utm_content=listitemlink" title="<?php echo get_the_title() . ' ' . $p->type->name; ?> PC">View product</a>
 					<?php edit_post_link( 'Edit product' ); ?>
 				</div>
 				
@@ -109,15 +109,22 @@
 			<?php
 
 				$deliver_by = new DateTime( null, new DateTimeZone( 'Australia/Melbourne' ) );
-				$deliver_by->add( new DateInterval( 'P9D' ) );
+				$deliver_by->add( new DateInterval( 'P4D' ) );
 				if ( $deliver_by->format( 'N' ) > 5 ) {
-					$period = 9 - $deliver_by->format( 'N' );
+					$period = 4 - $deliver_by->format( 'N' );
 					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
 				}
 
 			?>
 			<h3>FREE Delivery</h3>
 			<p>Customers in <strong>Victoria, Australia</strong> receive free delivery on all PC orders.  Order today to receive your new PC by <?php echo $deliver_by->format( 'D jS \o\f M' ); ?>.</p>
+		</div>
+	    		
+		<div class="sidebar-widget">
+			<h3>Can't decide?</h3>
+			<p>
+				<a href="/contact-us/" title="Contact LEETPC" class="button secondary">Contact us for help</a>
+			</p>
 		</div>
 			
 	</aside>

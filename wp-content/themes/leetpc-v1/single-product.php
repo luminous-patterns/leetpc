@@ -144,6 +144,15 @@
 					</tr>
 				<?php endif; ?>
 
+				<?php if ( array_key_exists( 'display', $defaults ) ) : ?>
+					<tr>
+						<th>Monitor</th>
+						<td>
+							<?php echo $defaults['display']->post_title; ?>
+						</td>
+					</tr>
+				<?php endif; ?>
+
 				</table>
 
 			</div>

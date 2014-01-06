@@ -20,7 +20,7 @@
 
 			<div class="featured-product display-order-<?php echo $count; ?> hidden">
 
-				<h2><a href="<?php echo get_permalink( $p->post->ID ); ?>"><?php echo $p->post->post_title; ?></a></h2>
+				<h2><a href="<?php echo get_permalink( $p->post->ID ); ?>?utm_content=homeslidertitle"><?php echo $p->post->post_title; ?></a></h2>
 
 				<div class="components"><?php 
 
@@ -47,8 +47,8 @@
 				</div>
 
 				<div class="actions">
-					<a href="/products/?product_type=<?php echo $p->type->slug; ?>" class="button secondary">More <?php echo $p->type->name; ?> PCs</a>
-					<a href="<?php echo get_permalink( $p->post->ID ); ?>" class="button">View or purchase PC</a>
+					<a href="/products/?product_type=<?php echo $p->type->slug; ?>&utm_content=homesliderbutton" class="button secondary">More <?php echo $p->type->name; ?> PCs</a>
+					<a href="<?php echo get_permalink( $p->post->ID ); ?>?utm_content=homeslidercta" class="button">View or purchase PC</a>
 				</div>
 
 			</div>

@@ -104,6 +104,15 @@ if ( get_post_type() == 'product' ) :
 						</div>
 					</div>
 
+				<?php if ( component_has_value( 'display', $components ) ) : ?>
+					<div class="component component-display">
+						<h4>Monitor</h4>
+						<div class="component-options">
+							<?php print_component_options( 'display', $components, $defaults, $attrs ); ?>
+						</div>
+					</div>
+				<?php endif; ?>
+
 				</div>
 			
 			</div>

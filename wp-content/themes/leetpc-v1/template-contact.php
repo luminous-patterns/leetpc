@@ -43,6 +43,7 @@
 			<ul>
 				<li><a href="/">LEETPC Home</a></li>
 				<li><a href="/products/">Products</a></li>
+				<li><a href="/service-and-repair/">Service and repair</a></li>
 				<li><a href="/why-us/">Why choose us</a></li>
 				<li class="current"><a href="/contact-us/">Contact us</a></li>
 				<li><a href="/my-cart/">My shopping cart</a></li>
@@ -73,7 +74,7 @@
 			<h3>By phone</h3>
 			<p>
 				<strong>All enquiries</strong>
-				<br />(03) 9872 4837
+				<br />0400 935 853
 			</p>
 		</div>
 	    		

@@ -43,6 +43,7 @@
 			<ul>
 				<li class="current"><a href="/">LEETPC Home</a></li>
 				<li><a href="/products/">Products</a></li>
+				<li><a href="/service-and-repair/">Service and repair</a></li>
 				<li><a href="/why-us/">Why choose us</a></li>
 				<li><a href="/contact-us/">Contact us</a></li>
 				<li><a href="/my-cart/">My shopping cart</a></li>
@@ -58,9 +59,9 @@
 			<?php
 
 				$deliver_by = new DateTime( null, new DateTimeZone( 'Australia/Melbourne' ) );
-				$deliver_by->add( new DateInterval( 'P9D' ) );
+				$deliver_by->add( new DateInterval( 'P4D' ) );
 				if ( $deliver_by->format( 'N' ) > 5 ) {
-					$period = 9 - $deliver_by->format( 'N' );
+					$period = 4 - $deliver_by->format( 'N' );
 					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
 				}
 

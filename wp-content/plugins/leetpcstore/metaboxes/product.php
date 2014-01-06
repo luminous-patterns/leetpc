@@ -97,7 +97,7 @@
 									?>
 
 										<li>
-											<input type="radio" class="clear-value" name="<?php echo $o; ?>" value="" />
+											<input type="radio" class="clear-value" name="<?php echo $o; ?>" value="0" />
 											<label>
 												<input type="checkbox" class="clear-value" />
 												None
