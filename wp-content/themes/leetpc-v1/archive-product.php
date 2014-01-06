@@ -1,4 +1,4 @@
-<?php get_header(); ?>
+<?php get_header( 'archive-product' ); ?>
 
 	<?php 
 
@@ -14,7 +14,6 @@
 	?>
 	
 	<button class="sidebar-toggle-container secondary"><div class="toggle-sidebar layer-1"></div><div class="toggle-sidebar layer-2"></div></button>
-	<h1><?php echo $type_titles[$type]; ?></h1>
 	
 	<!-- section -->
 	<section role="main">

@@ -19,18 +19,31 @@ h1 {
 }
 .single.single-product {
 
+    .page-header {
+
+        h1 {
+            font-size: 1.5em
+        }
+        .product-category {
+            font-size: 0.85em;
+        }
+        .product-price {
+            font-size: 2em;
+        }
+
+    }
     .wrapper {
 
         padding: 20px;
         
         .wp-post-image {
-            float: left;
-            margin-right: 20px;
+            float: right;
+            margin: 20px;
             position: inherit;
-            width: 30px;
+            width: 90px;
         }
         .editor-content {
-            margin-top: 70px;
+            margin-top: 20px;
             padding: 20px 20px 15px;
         }
         .product-price .customize {
@@ -270,6 +283,17 @@ table.line-items .line-item.discount-item td.description-col .details {
             display: none;
         }
 
+    }
+
+}
+.page-header {
+    
+    width: auto;
+    padding: 20px;
+    border-top: 1px solid #555;
+
+    h1 {
+        font-size: 1.5em;
     }
 
 }

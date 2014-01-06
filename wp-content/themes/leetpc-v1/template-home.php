@@ -1,7 +1,6 @@
 <?php /* Template Name: Homepage Template */ get_header( 'homepage' ); ?>
 	
 	<button class="sidebar-toggle-container secondary"><div class="toggle-sidebar layer-1"></div><div class="toggle-sidebar layer-2"></div></button>
-	<h1>Welcome to LEETPC</h1>
 	
 	<!-- section -->
 	<section role="main">

@@ -1,7 +1,6 @@
 <?php /* Template Name: Contact Page */ get_header(); ?>
 	
 	<button class="sidebar-toggle-container secondary"><div class="toggle-sidebar layer-1"></div><div class="toggle-sidebar layer-2"></div></button>
-	<h1><?php the_title(); ?></h1>
 	
 	<!-- section -->
 	<section role="main">

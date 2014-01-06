@@ -4,7 +4,7 @@
 
 	?>
 
-		<div class="product-header">
+		<div class="page-header product-header">
 
 			<?php if ( has_post_thumbnail() ) : ?>
 			<div class="featured-image"><?php the_post_thumbnail(); ?></div>
@@ -13,13 +13,11 @@
 			<div class="product-summary">
 
 				<h1><a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a></h1>
-				<span class="product-category"><?php echo $p->getTypeName(); ?></span>
+				<span class="product-category"><?php echo $p->getTypeName(); ?> PC</span>
 
-				<div class="product-price">$<?php echo number_format( $p->getPrice() ); ?></div>
+				<div class="product-price">$<?php echo number_format( $p->getPrice() ); ?><span>INC. GST</span></div>
 				
 			</div>
-
-			<button class="customize">Add to cart</button>
 
 			<div class="product-tabs">
 				<ul>
@@ -29,6 +27,8 @@
 					<li class="tab-reviews">Reviews (0)</li>
 				</ul>
 			</div>
+
+			<button class="customize"><strong>Customize</strong> &amp; Add to cart</button>
 
 		</div>
 	

@@ -39,7 +39,7 @@ var LEETPCStore = {
 
 		if ( this.pageType == 'single-product' ) {
 			this.postID = jQuery( 'article.product' ).attr( 'id' ).split( '-' )[1];
-			jQuery( 'article.product button.customize' ).bind( 'click', jQuery.proxy( this.customizeCurrentProduct, this ) );
+			jQuery( 'article.product button.customize, div.product-header button.customize' ).bind( 'click', jQuery.proxy( this.customizeCurrentProduct, this ) );
 		}
 
 		if ( this.pageType == 'product-list' ) {

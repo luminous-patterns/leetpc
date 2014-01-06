@@ -44,6 +44,8 @@
 				</a>
 			<?php endif; ?>
 			
+			<!--
+
 			<h1>
 				<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a>
 			</h1>
@@ -56,6 +58,8 @@
 			</div>
 			
 			<div class="product-type"><?php $cat = wp_get_post_terms( get_the_ID(), 'product_type' ); echo $cat[0]->name; ?> PC</div>
+
+			-->
 
 			<div class="editor-content">
 
