@@ -60,10 +60,6 @@
 
 				$deliver_by = new DateTime( null, new DateTimeZone( 'Australia/Melbourne' ) );
 				$deliver_by->add( new DateInterval( 'P4D' ) );
-				if ( $deliver_by->format( 'N' ) > 5 ) {
-					$period = 4 - $deliver_by->format( 'N' );
-					$deliver_by->add( new DateInterval( 'P' . $period . 'D' ) );
-				}
 
 			?>
 			<h3>FREE Delivery</h3>
